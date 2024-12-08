@@ -77,10 +77,10 @@ const Navbar = () => {
                 About
               </Link>
               <div className="flex flex-col space-y-2 pt-2">
-                <button className="bg-[#FFC300] text-black py-2 px-3 rounded-md">
+                <button className="bg-yellow-400 text-black py-2 px-3 rounded-md">
                   Sign in
                 </button>
-                <button className="bg-[#00C49A] text-black py-2 px-3 rounded-md">
+                <button className="bg-teal-400 text-black py-2 px-3 rounded-md">
                   Donate as guest
                 </button>
               </div>
