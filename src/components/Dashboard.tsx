@@ -16,21 +16,21 @@ const DashboardContent = () => {
             <TabsList className="bg-blue-500 p-1">
               <TabsTrigger
                 value="projects"
-                className="flex items-center gap-2 text-white data-[state=active]:bg-blue-600"
+                className="flex items-center gap-2 text-white data-[state=active]:bg-yellow-500"
               >
                 <FolderKanban className="h-4 w-4" />
                 Projects
               </TabsTrigger>
               <TabsTrigger
                 value="users"
-                className="flex items-center gap-2 text-white data-[state=active]:bg-blue-600"
+                className="flex items-center gap-2 text-white data-[state=active]:bg-yellow-500"
               >
                 <Users className="h-4 w-4" />
                 Users
               </TabsTrigger>
               <TabsTrigger
                 value="statistics"
-                className="flex items-center gap-2 text-white data-[state=active]:bg-blue-600"
+                className="flex items-center gap-2 text-white data-[state=active]:bg-yellow-500"
               >
                 <BarChart3 className="h-4 w-4" />
                 Statistics
