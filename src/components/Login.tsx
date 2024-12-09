@@ -1,10 +1,15 @@
 "use client";
 
 import React from "react";
+import { useState } from "react";
 import { FcGoogle } from "react-icons/fc";
 import { FaFacebook } from "react-icons/fa";
+import { Eye, EyeOff } from "lucide-react";
 
-const LoginContent = () => {
+const Login = () => {
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    
     return (
         <div className="flex h-screen bg-white">
             {/* Left Image Section */}
@@ -35,6 +40,9 @@ const LoginContent = () => {
                             id="email"
                             placeholder=" "
                             className="w-full border-2 border-gray-500 rounded-md h-12 px-4 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            required
                         />
                     </div>
 
@@ -50,7 +58,10 @@ const LoginContent = () => {
                             type="password"
                             id="password"
                             placeholder=" "
+                            value={password}
+                            onChange={(p) => setPassword(p.target.value)}
                             className="w-full border-2 border-gray-500 rounded-md h-12 px-4 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
+                            required
                         />
                     </div>
 
@@ -97,4 +108,4 @@ const LoginContent = () => {
     );
 };
 
-export default LoginContent;
+export default Login;
