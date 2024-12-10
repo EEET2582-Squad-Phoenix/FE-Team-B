@@ -6,10 +6,16 @@ import { FcGoogle } from "react-icons/fc";
 import { FaFacebook } from "react-icons/fa";
 import { Eye, EyeOff } from "lucide-react";
 
-const Login = () => {
+export default function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [showPassword, setShowPassword] = useState(false);
     
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        console.log("Login attempt with:", {email, password});
+    };
+
     return (
         <div className="flex h-screen bg-white">
             {/* Left Image Section */}
@@ -59,7 +65,7 @@ const Login = () => {
                             id="password"
                             placeholder=" "
                             value={password}
-                            onChange={(p) => setPassword(p.target.value)}
+                            onChange={(e) => setPassword(e.target.value)}
                             className="w-full border-2 border-gray-500 rounded-md h-12 px-4 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
                             required
                         />
@@ -79,7 +85,10 @@ const Login = () => {
                     </div>
 
                     {/* Sign In Button */}
-                    <button type="submit" className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 my-4">
+                    <button 
+                        type="submit" 
+                        className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 my-4"
+                    >
                         Sign in
                     </button>
 
@@ -107,5 +116,3 @@ const Login = () => {
         </div>
     );
 };
-
-export default Login;

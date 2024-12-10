@@ -1,4 +1,5 @@
 "use client";
+
 import { useState } from "react";
 import Link from "next/link";
 import { Menu, X } from "lucide-react";
@@ -35,9 +36,11 @@ const Navbar = () => {
             </div>
 
             <div className="flex items-center space-x-4">
-              <button className="bg-yellow-400 text-black py-2 px-3 rounded-md">
-                Sign in
-              </button>
+              <Link href="/login">
+                <button className="bg-yellow-400 text-black py-2 px-3 rounded-md">
+                  Sign in
+                </button>
+              </Link>
               <button className="bg-teal-400 text-black py-2 px-3 rounded-md">
                 Donate as guest
               </button>
