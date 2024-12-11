@@ -12,7 +12,7 @@ export default function Login() {
     
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        console.log("Login attempt with:", {email, password, role});
+        console.log("Signup attempt with:", {email, password, role});
     };
 
     return (
