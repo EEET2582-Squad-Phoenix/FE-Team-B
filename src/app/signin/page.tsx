@@ -5,13 +5,13 @@ import { useState } from "react";
 import { FcGoogle } from "react-icons/fc";
 import { FaFacebook } from "react-icons/fa";
 
-export default function Login() {
+export default function Signin() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        console.log("Login attempt with:", {email, password});
+        console.log("Signin attempt with:", {email, password});
     };
 
     return (
@@ -101,7 +101,7 @@ export default function Login() {
                         </div>
                     </div>
 
-                    {/* Social Login Buttons */}
+                    {/* Social Signin Buttons */}
                     <div className="flex justify-center gap-4 my-6">
                         <button className="flex w-full justify-center items-center gap-2 px-4 py-2 border rounded-lg hover:bg-gray-100">
                             <FcGoogle size={30} />
