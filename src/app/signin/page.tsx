@@ -73,7 +73,7 @@ export default function Login() {
                     <div className="flex justify-between text-xs my-2">
                         <div>
                             <span className="text-black">Need an account? </span>
-                            <a href="#" className="text-blue-500 hover:underline">
+                            <a href="/signup" className="text-blue-500 hover:underline">
                                 Sign up
                             </a>
                         </div>
@@ -86,6 +86,7 @@ export default function Login() {
                     <button 
                         type="submit" 
                         className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 my-4"
+                        onClick={handleSubmit}
                     >
                         Sign in
                     </button>

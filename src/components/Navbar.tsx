@@ -36,7 +36,7 @@ const Navbar = () => {
             </div>
 
             <div className="flex items-center space-x-4">
-              <Link href="/login">
+              <Link href="/signin">
                 <button className="bg-yellow-400 text-black py-2 px-3 rounded-md">
                   Sign in
                 </button>
