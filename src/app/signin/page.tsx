@@ -77,7 +77,7 @@ export default function Signin() {
                                 Sign up
                             </a>
                         </div>
-                        <a href="#" className="text-blue-500 hover:underline">
+                        <a href="/forgot" className="text-blue-500 hover:underline">
                             Forgot password?
                         </a>
                     </div>
