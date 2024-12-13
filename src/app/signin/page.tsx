@@ -16,7 +16,6 @@ export default function Signin() {
         setLoading(true);
 
         try {
-            // Make API request to the backend
             const response = await fetch("http://localhost:8080/auth/login", {
                 method: "POST",
                 headers: {
@@ -25,16 +24,11 @@ export default function Signin() {
                 body: JSON.stringify({ email, password }),
             });
 
-            const data = await response.text(); // Backend sends response as a string
+            const data = await response.text();
 
             if (response.ok) {
                 console.log("Signin successful:", data);
-
-                // You can save the token or result to localStorage/sessionStorage if needed:
-                // localStorage.setItem("authToken", data);
-
-                // Redirect the user to a protected route after successful sign-in
-                window.location.href = "/dashboard"; // Example: redirect to dashboard
+                window.location.href = "/dashboard";
             } else {
                 console.error("Error signing in:", data);
                 setError(data); // Display error message from backend

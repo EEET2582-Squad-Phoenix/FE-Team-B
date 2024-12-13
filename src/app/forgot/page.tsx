@@ -15,9 +15,8 @@ export default function ForgotPassword() {
 
         try {
             console.log("Resetting password for:", { email });
-            // Simulate delay (remove this in production)
             await new Promise((resolve) => setTimeout(resolve, 1000));
-            setIsCompleted(true); // Mark action as completed
+            setIsCompleted(true);
         } catch (err) {
             setError("Something went wrong. Please try again.");
         } finally {
