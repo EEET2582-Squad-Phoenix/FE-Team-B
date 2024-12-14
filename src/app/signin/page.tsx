@@ -1,6 +1,6 @@
 "use client";
 
-import React , { useState} from "react";
+import React , { useState } from "react";
 import { FcGoogle } from "react-icons/fc";
 import { FaFacebook } from "react-icons/fa";
 
@@ -65,15 +65,15 @@ export default function Signin() {
                                 htmlFor="email"
                                 className="absolute -top-2.5 left-4 bg-white px-1 text-sm text-gray-500"
                             >
-                                Email
+                                Email <span className="text-red-500">*</span>
                             </label>
                             <input
                                 type="email"
                                 id="email"
                                 placeholder=" "
-                                className="w-full border-2 border-gray-500 rounded-md h-12 px-4 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
+                                className="w-full border-2 border-gray-500 rounded-md h-12 px-4 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
                                 required
                             />
                         </div>
@@ -84,7 +84,7 @@ export default function Signin() {
                                 htmlFor="password"
                                 className="absolute -top-2.5 left-4 bg-white px-1 text-sm text-gray-500"
                             >
-                                Password
+                                Password <span className="text-red-500">*</span>
                             </label>
                             <input
                                 type="password"

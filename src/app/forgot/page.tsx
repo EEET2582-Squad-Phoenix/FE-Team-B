@@ -74,7 +74,7 @@ export default function ForgotPassword() {
                                     htmlFor="email"
                                     className="absolute -top-2.5 left-4 bg-white px-1 text-sm text-gray-500"
                                 >
-                                    Email
+                                    Email  <span className="text-red-500">*</span>
                                 </label>
                                 <input
                                     type="email"

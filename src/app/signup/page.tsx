@@ -68,7 +68,7 @@ export default function Signup() {
                             htmlFor="email"
                             className="absolute -top-2.5 left-4 bg-white px-1 text-sm text-gray-500"
                         >
-                            Email
+                            Email <span className="text-red-500">*</span>
                         </label>
                         <input
                             type="email"
@@ -87,7 +87,7 @@ export default function Signup() {
                             htmlFor="password"
                             className="absolute -top-2.5 left-4 bg-white px-1 text-sm text-gray-500"
                         >
-                            Password
+                            Password <span className="text-red-500">*</span>
                         </label>
                         <input
                             type="password"
@@ -106,7 +106,7 @@ export default function Signup() {
                             htmlFor="role"
                             className="absolute -top-2.5 left-4 bg-white px-1 text-sm text-gray-500"
                         >
-                            Role
+                            Role <span className="text-red-500">*</span>
                         </label>
                         <select
                             id="role"
@@ -115,11 +115,8 @@ export default function Signup() {
                             className="w-full border-2 border-gray-500 rounded-md h-12 px-4 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
                             required
                         >
-                            <option value="" disabled>
-                                Select Role
-                            </option>
                             <option value="donor">Donor</option>
-                            <option value="charity">Fundraiser</option>
+                            <option value="charity">Charity</option>
                         </select>
                     </div>
 
