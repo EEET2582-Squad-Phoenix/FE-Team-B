@@ -1,7 +1,6 @@
 "use client";
 
-import React from "react";
-import { useState } from "react";
+import React, { useState } from "react";
 import { FcGoogle } from "react-icons/fc";
 import { FaFacebook } from "react-icons/fa";
 
@@ -9,10 +8,41 @@ export default function Signup() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [role, setRole] = useState("");
+    const [error, setError] = useState("");
+    const [success, setSuccess] = useState("");
     
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        console.log("Signup attempt with:", {email, password, role});
+        setError("");
+        setSuccess("");
+
+        try {
+            const response = await fetch("http://localhost:8080/auth/register", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    email,
+                    password,
+                    role,
+                }),
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                setSuccess(
+                    "Registration successful. Please check your email for verification."
+                );
+            } else if (response.status === 409) {
+                setError("Email already exists. Please use a different email.");
+            } else {
+                const errorText = await response.text();
+                setError(`Error: ${errorText}`);
+            }
+        } catch (err) {
+            setError("An error occurred while registering. Please try again.");
+        }
     };
 
     return (
@@ -78,15 +108,19 @@ export default function Signup() {
                         >
                             Role
                         </label>
-                        <input
-                            type="role"
+                        <select
                             id="role"
-                            placeholder=" "
                             value={role}
                             onChange={(e) => setRole(e.target.value)}
                             className="w-full border-2 border-gray-500 rounded-md h-12 px-4 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
                             required
-                        />
+                        >
+                            <option value="" disabled>
+                                Select Role
+                            </option>
+                            <option value="donor">Donor</option>
+                            <option value="charity">Fundraiser</option>
+                        </select>
                     </div>
 
                     {/* Signin Links */}
