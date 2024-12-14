@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { Checkbox } from "@/components/ui/checkbox"
+import { useRouter, useSearchParams } from "next/navigation";
 
 export default function SignupDonor() {
     const [firstName, setFirstName] = useState("");
@@ -12,6 +13,11 @@ export default function SignupDonor() {
     const [video, setVideo] = useState<File | null>(null);
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
+
+    const searchParams = useSearchParams();
+    const email = searchParams.get("email");
+    const password = searchParams.get("password");
+    const role = searchParams.get("role");
     
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -25,6 +31,9 @@ export default function SignupDonor() {
         }
 
         const payload = {
+            email,
+            password,
+            role,
             firstName,
             lastName,
             address: address || null,

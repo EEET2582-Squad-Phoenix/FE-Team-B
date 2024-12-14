@@ -3,37 +3,36 @@
 import React, { useState } from "react";
 import { FcGoogle } from "react-icons/fc";
 import { FaFacebook } from "react-icons/fa";
+import { useRouter } from "next/navigation";
 
 export default function Signup() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [role, setRole] = useState("");
     const [error, setError] = useState("");
-    const [success, setSuccess] = useState("");
+    const [loading, setLoading] = useState(false);
+    const router = useRouter();
     
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setError("");
-        setSuccess("");
+        setLoading(true);
 
         try {
-            const response = await fetch("http://localhost:8080/auth/register", {
+            const response = await fetch("http://localhost:8080/auth/check", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                    email,
-                    password,
-                    role,
+                    email
                 }),
             });
 
             if (response.ok) {
-                const data = await response.json();
-                setSuccess(
-                    "Registration successful. Please check your email for verification."
-                );
+                const nextPage = role === "donor" ? "/signup-donor" : "/signup-charity";
+                const queryString = `?email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}&role=${encodeURIComponent(role)}`;
+                router.push(nextPage + queryString);
             } else if (response.status === 409) {
                 setError("Email already exists. Please use a different email.");
             } else {
@@ -42,6 +41,8 @@ export default function Signup() {
             }
         } catch (err) {
             setError("An error occurred while registering. Please try again.");
+        } finally {
+            setLoading(false);
         }
     };
 

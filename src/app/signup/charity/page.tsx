@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { Checkbox } from "@/components/ui/checkbox"
+import { useRouter, useSearchParams } from "next/navigation";
 
 export default function SignupCharity() {
     const [name, setName] = useState("");
@@ -13,6 +14,11 @@ export default function SignupCharity() {
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
     
+    const searchParams = useSearchParams();
+    const email = searchParams.get("email");
+    const password = searchParams.get("password");
+    const role = searchParams.get("role");
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setError("");
@@ -25,6 +31,9 @@ export default function SignupCharity() {
         }
 
         const payload = {
+            email,
+            password,
+            role,
             name,
             address,
             taxCode,
