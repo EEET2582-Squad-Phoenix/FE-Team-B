@@ -169,8 +169,12 @@ export default function SignupDonor() {
                             onChange={(e) => setLanguage(e.target.value)}
                             className="w-full border-2 border-gray-500 rounded-md h-12 px-4 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
                         >
-                            <option value="english">English</option>
-                            <option value="vietnamese">Vietnamese</option>
+                            {["English", "Vietnamese", "Spanish", "French", "Chinese", "Japanese", "Korean", "Russian", "Arabic", "German", "Hindi", "Portuguese"]
+                            .map((lang) => (
+                                <option key={lang.toLowerCase()} value={lang.toLowerCase()}>
+                                    {lang}
+                                </option>
+                            ))}
                         </select>
                     </div>
 

@@ -25,7 +25,7 @@ export default function SignupCharity() {
         setLoading(true);
 
         if (!name.trim() || !address.trim() || !taxCode.trim()|| !type.trim()) {
-            setError("are required.");
+            setError("You need to fill in all the mandatory fields");
             setLoading(false);
             return;
         }
