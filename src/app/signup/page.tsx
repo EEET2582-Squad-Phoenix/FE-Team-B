@@ -8,7 +8,7 @@ import { useRouter } from "next/navigation";
 export default function Signup() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [role, setRole] = useState("");
+    const [role, setRole] = useState("DONOR");
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
     const router = useRouter();
@@ -18,8 +18,14 @@ export default function Signup() {
         setError("");
         setLoading(true);
 
+        if (!email.trim() || !password.trim()) {
+            setError("Email and password are required.");
+            setLoading(false);
+            return;
+        }
+
         try {
-            const response = await fetch("http://localhost:8080/auth/check", {
+            const response = await fetch("http://localhost:8080/auth/check-email", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -30,7 +36,7 @@ export default function Signup() {
             });
 
             if (response.ok) {
-                const nextPage = role === "donor" ? "/signup-donor" : "/signup-charity";
+                const nextPage = role === "DONOR" ? "/signup/donor" : "/signup/charity";
                 const queryString = `?email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}&role=${encodeURIComponent(role)}`;
                 router.push(nextPage + queryString);
             } else if (response.status === 409) {
@@ -101,7 +107,7 @@ export default function Signup() {
                         />
                     </div>
 
-                    {/* Role Input */}
+                    {/* Role Selection */}
                     <div className="relative w-full mt-4">
                         <label
                             htmlFor="role"
@@ -116,8 +122,8 @@ export default function Signup() {
                             className="w-full border-2 border-gray-500 rounded-md h-12 px-4 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
                             required
                         >
-                            <option value="donor">Donor</option>
-                            <option value="charity">Charity</option>
+                            <option value="DONOR">Donor</option>
+                            <option value="CHARITY">Charity</option>
                         </select>
                     </div>
 
@@ -136,8 +142,9 @@ export default function Signup() {
                         type="submit" 
                         className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 my-4"
                         onClick={handleSubmit}
+                        disabled={loading}
                     >
-                        Continue
+                        {loading ? "Checking email..." : "Continue"}
                     </button>
 
                     {/* Divider */}
@@ -159,6 +166,9 @@ export default function Signup() {
                             <FaFacebook size={30} />
                         </button>
                     </div>
+                    
+                    {/* Error Message */}
+                    {error && <p className="text-red-500 text-sm">{error}</p>}
                 </div>
             </div>
         </div>
