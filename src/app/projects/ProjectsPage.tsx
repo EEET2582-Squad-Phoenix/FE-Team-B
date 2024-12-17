@@ -3,56 +3,12 @@ import React from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import ProjectsTable from "./ProjectsTable";
-import { Project } from "@/types/Project";
+import { projectListSelector } from "@/lib/features/projects/selectors";
+import { useSelector } from "react-redux";
 
 const ProjectsPage = () => {
-  const projectsData: Project[] = [
-    {
-      id: "PRJ01",
-      name: "Project 1",
-      country: "Country 1",
-      category: "Food",
-      goal: "10,000$",
-      status: "pending",
-      isHighlighted: false,
-    },
-    {
-      id: "PRJ02",
-      name: "Project 2",
-      country: "Country 2",
-      category: "Food",
-      goal: "25,000$",
-      status: "approved",
-      isHighlighted: true,
-    },
-    {
-      id: "PRJ03",
-      name: "Project 3",
-      country: "Country 3",
-      category: "Education",
-      goal: "15,000$",
-      status: "halted",
-      isHighlighted: false,
-    },
-    {
-      id: "PRJ04",
-      name: "Project 4",
-      country: "Country 4",
-      category: "Health",
-      goal: "30,000$",
-      status: "pending",
-      isHighlighted: false,
-    },
-    {
-      id: "PRJ05",
-      name: "Project 5",
-      country: "Country 5",
-      category: "Education",
-      goal: "20,000$",
-      status: "deleted",
-      isHighlighted: false,
-    },
-  ];
+  
+  const projectList = useSelector(projectListSelector)
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mt-6">
@@ -145,7 +101,7 @@ const ProjectsPage = () => {
         </div>
 
         <div className="bg-white rounded-lg shadow overflow-x-auto">
-          <ProjectsTable projectsData={projectsData} />
+          <ProjectsTable projectsData={projectList} />
         </div>
       </div>
     </div>
