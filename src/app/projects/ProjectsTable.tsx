@@ -1,5 +1,14 @@
+import { deleteProject } from "@/lib/features/projects/projectsSlice";
 import { Project } from "@/types/Project";
-import { Pencil, Trash2, CheckCircle, Star, Pause, LucideIcon } from "lucide-react";
+import {
+  Pencil,
+  Trash2,
+  CheckCircle,
+  Star,
+  Pause,
+  LucideIcon,
+} from "lucide-react";
+import { useDispatch } from "react-redux";
 
 interface ProjectsTableProps {
   projectsData: Project[];
@@ -12,24 +21,13 @@ interface ActionButtonProps {
   className?: string;
 }
 
-const ActionButton: React.FC<ActionButtonProps> = ({
-  icon: Icon,
-  onClick,
-  disabled,
-  className = "",
-}) => (
-  <button
-    onClick={onClick}
-    disabled={disabled}
-    className={`p-1.5 transition-colors ${
-      disabled ? "text-gray-300" : `${className} `
-    }`}
-  >
-    <Icon size={18} />
-  </button>
-);
-
 const ProjectsTable = ({ projectsData }: ProjectsTableProps) => {
+  const dispatch = useDispatch();
+
+  const handleDeleteProject = (id: string) => {
+    dispatch(deleteProject(id));
+  };
+
   return (
     <table className="w-full">
       <thead>
@@ -70,7 +68,7 @@ const ProjectsTable = ({ projectsData }: ProjectsTableProps) => {
                 <ActionButton
                   icon={Trash2}
                   disabled={project.status === "deleted"}
-                  onClick={() => console.log("Delete", project.id)}
+                  onClick={() => handleDeleteProject(project.id)}
                   className="text-red-600"
                 />
                 <ActionButton
@@ -108,3 +106,20 @@ const ProjectsTable = ({ projectsData }: ProjectsTableProps) => {
 };
 
 export default ProjectsTable;
+
+const ActionButton: React.FC<ActionButtonProps> = ({
+  icon: Icon,
+  onClick,
+  disabled,
+  className = "",
+}) => (
+  <button
+    onClick={onClick}
+    disabled={disabled}
+    className={`p-1.5 transition-colors ${
+      disabled ? "text-gray-300" : `${className} `
+    }`}
+  >
+    <Icon size={18} />
+  </button>
+);

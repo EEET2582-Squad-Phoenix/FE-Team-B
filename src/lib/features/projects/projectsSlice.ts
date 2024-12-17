@@ -49,7 +49,7 @@ const initialState: Project[] = [
   },
 ];
 
-export const projectSlice = createSlice({
+export const projectsSlice = createSlice({
   name: "projectList",
   initialState,
   reducers: {
@@ -77,6 +77,6 @@ export const projectSlice = createSlice({
 });
 
 export const { addProject, deleteProject, updateProject, highlightProject } =
-  projectSlice.actions;
+  projectsSlice.actions;
 
-export default projectSlice.reducer;
+export default projectsSlice.reducer;

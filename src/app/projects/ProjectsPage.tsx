@@ -1,14 +1,43 @@
 "use client";
-import React from "react";
+
+import React, { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import ProjectsTable from "./ProjectsTable";
 import { projectListSelector } from "@/lib/features/projects/selectors";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { Project } from "@/types/Project";
+import { ProjectModal } from "./ProjectModal";
+import { addProject } from "@/lib/features/projects/projectsSlice";
 
 const ProjectsPage = () => {
-  
-  const projectList = useSelector(projectListSelector)
+  const projectList = useSelector(projectListSelector);
+  const dispatch = useDispatch();
+
+  // State to control modal visibility and new project details
+  const [isModalOpen, setModalOpen] = useState(false);
+  const [newProject, setNewProject] = useState<Project | null>(null);
+
+  // Handler for opening the modal
+  const addNewProjectHandler = () => {
+    setNewProject({
+      id: "", 
+      name: "",
+      country: "",
+      category: "Food",
+      goal: "",
+      status: "pending",
+      isHighlighted: false,
+    });
+    setModalOpen(true); // Open the modal
+  };
+
+  // Handler for saving the new project
+  const handleSave = (updatedProject: Project) => {
+    dispatch(addProject(updatedProject)); 
+    setModalOpen(false); 
+    setNewProject(null); 
+  };
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mt-6">
@@ -95,7 +124,10 @@ const ProjectsPage = () => {
       <div className="md:col-span-3">
         <div className="flex justify-between items-center mb-4">
           <Input type="search" placeholder="Search..." className="max-w-sm" />
-          <Button className="bg-blue-500 hover:bg-blue-600">
+          <Button
+            className="bg-blue-500 hover:bg-blue-600"
+            onClick={addNewProjectHandler}
+          >
             + NEW PROJECT
           </Button>
         </div>
@@ -104,6 +136,11 @@ const ProjectsPage = () => {
           <ProjectsTable projectsData={projectList} />
         </div>
       </div>
+
+      {/* Project Modal */}
+      {isModalOpen && newProject && (
+        <ProjectModal project={newProject} onSave={handleSave} />
+      )}
     </div>
   );
 };
