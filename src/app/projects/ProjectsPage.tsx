@@ -14,29 +14,28 @@ const ProjectsPage = () => {
   const projectList = useSelector(projectListSelector);
   const dispatch = useDispatch();
 
-  // State to control modal visibility and new project details
-  const [isModalOpen, setModalOpen] = useState(false);
-  const [newProject, setNewProject] = useState<Project | null>(null);
+  // State to control modal visibility
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // Handler for opening the modal
+  // Handler for opening the modal to create a new project
   const addNewProjectHandler = () => {
-    setNewProject({
-      id: "", 
-      name: "",
-      country: "",
-      category: "Food",
-      goal: "",
-      status: "pending",
-      isHighlighted: false,
-    });
-    setModalOpen(true); // Open the modal
+    setIsModalOpen(true);
   };
 
   // Handler for saving the new project
-  const handleSave = (updatedProject: Project) => {
-    dispatch(addProject(updatedProject)); 
-    setModalOpen(false); 
-    setNewProject(null); 
+  const handleSave = (newProject: Project) => {
+    // Generate a unique ID if not provided
+    const projectToSave = {
+      ...newProject,
+      id: newProject.id || `${Date.now()}`,
+      // Ensure default values
+      status: newProject.status || "pending",
+      category: newProject.category || "Food",
+      isHighlighted: newProject.isHighlighted || false,
+    };
+
+    dispatch(addProject(projectToSave));
+    setIsModalOpen(false);
   };
 
   return (
@@ -138,9 +137,11 @@ const ProjectsPage = () => {
       </div>
 
       {/* Project Modal */}
-      {isModalOpen && newProject && (
-        <ProjectModal project={newProject} onSave={handleSave} />
-      )}
+      <ProjectModal
+        open={isModalOpen}
+        onOpenChange={setIsModalOpen}
+        onSave={handleSave}
+      />
     </div>
   );
 };
