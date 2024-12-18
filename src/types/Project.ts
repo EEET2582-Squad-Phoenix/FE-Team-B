@@ -1,13 +1,24 @@
-export type ProjectStatus = "pending" | "approved" | "halted" | "deleted";
+export type ProjectStatus = "Pending" | "Approved" | "Halted" | "Deleted";
 
-export type ProjectCategory = "Food" | "Education" | "Health";
+export const ProjectCategories = [
+  "Food",
+  "Health",
+  "Education",
+  "Environment",
+  "Religion",
+  "Humanitarian",
+  "Housing",
+  "Other",
+] as const;
+
+export type ProjectCategory = (typeof ProjectCategories)[number];
 
 export interface Project {
   id: string;
   name: string;
   country: string;
   category: ProjectCategory;
-  goal: string;
+  goal: number;
   status: ProjectStatus;
   isHighlighted: boolean;
 }
