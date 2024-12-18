@@ -26,7 +26,7 @@ const ProjectsPage = () => {
     const projectToSave = {
       ...newProject,
       id: newProject.id || uuidv4(),
-      status: newProject.status || "pending",
+      status: newProject.status || "Pending",
       category: newProject.category || "Food",
       isHighlighted: newProject.isHighlighted || false,
     };

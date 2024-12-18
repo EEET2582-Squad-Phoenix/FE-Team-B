@@ -17,7 +17,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Project, ProjectCategory, ProjectStatus } from "@/types/Project";
+import {
+  Project,
+  ProjectCategories,
+  ProjectCategory,
+  ProjectStatus,
+} from "@/types/Project";
 
 interface ProjectModalProps {
   project?: Project;
@@ -37,39 +42,54 @@ export function ProjectModal({
     name: project?.name || "",
     country: project?.country || "",
     category: project?.category || "Food",
-    goal: project?.goal || "",
-    status: project?.status || "pending",
+    goal: project?.goal || 0,
+    status: project?.status || "Pending",
     isHighlighted: project?.isHighlighted || false,
   });
 
+  // Update form data when project or open state changes
   useEffect(() => {
     setFormData({
       id: project?.id || "",
       name: project?.name || "",
       country: project?.country || "",
       category: project?.category || "Food",
-      goal: project?.goal || "",
-      status: project?.status || "pending",
+      goal: project?.goal || 0,
+      status: project?.status || "Pending",
       isHighlighted: project?.isHighlighted || false,
     });
   }, [project, open]);
 
-  const handleChange = (
-    field: keyof Project,
-    value: string | boolean | ProjectCategory | ProjectStatus | number
+  // Generic change handler for form fields with explicit type handling for special cases
+  const handleChange = <K extends keyof Project>(
+    field: K,
+    value: K extends "category"
+      ? ProjectCategory
+      : K extends "status"
+      ? ProjectStatus
+      : K extends "goal" | "isHighlighted"
+      ? number | boolean
+      : string
   ) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
+  // Validation and saving
   const handleSave = () => {
-    if (!formData.name) {
-      alert("Project name is required");
-      return;
+    // Validate required fields
+    const errors: string[] = [];
+
+    if (!formData.name.trim()) {
+      errors.push("Project name is required");
     }
 
-    const goalNumber = Number(formData.goal);
-    if (isNaN(goalNumber) || goalNumber < 0) {
-      alert("Goal must be a valid positive number");
+    if (formData.goal < 0) {
+      errors.push("Goal must be a non-negative number");
+    }
+
+    // Display all validation errors
+    if (errors.length > 0) {
+      alert(errors.join("\n"));
       return;
     }
 
@@ -78,18 +98,18 @@ export function ProjectModal({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent>
         <DialogHeader>
           <DialogTitle>{project ? "Edit Project" : "New Project"}</DialogTitle>
           <DialogDescription>
             {project
               ? "Update the project details."
-              : "Enter the details for your new project."}
+              : "Enter the details for your new project."}{" "}
             Click save when you&apos;re done.
           </DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4">
-          {/* ID field (optional, disabled for new projects) */}
+          {/* ID field (optional, disabled for existing projects) */}
           {project && (
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="id" className="text-right">
@@ -99,7 +119,7 @@ export function ProjectModal({
                 id="id"
                 value={formData.id}
                 onChange={(e) => handleChange("id", e.target.value)}
-                className="col-span-3"
+                className="col-span-3 bg-gray-100 border-gray-300 "
                 disabled
               />
             </div>
@@ -113,7 +133,7 @@ export function ProjectModal({
               id="name"
               value={formData.name}
               onChange={(e) => handleChange("name", e.target.value)}
-              className="col-span-3"
+              className="col-span-3 bg-gray-100 border-gray-300 "
               placeholder="Enter project name"
               required
             />
@@ -127,7 +147,7 @@ export function ProjectModal({
               id="country"
               value={formData.country}
               onChange={(e) => handleChange("country", e.target.value)}
-              className="col-span-3"
+              className="col-span-3 bg-gray-100 border-gray-300 "
               placeholder="Enter project country"
             />
           </div>
@@ -142,13 +162,15 @@ export function ProjectModal({
                 handleChange("category", value as ProjectCategory)
               }
             >
-              <SelectTrigger className="col-span-3">
+              <SelectTrigger className="col-span-3 bg-gray-100 border-gray-300 ">
                 <SelectValue placeholder="Select a category" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="Food">Food</SelectItem>
-                <SelectItem value="Education">Education</SelectItem>
-                <SelectItem value="Health">Health</SelectItem>
+                {ProjectCategories.map((category) => (
+                  <SelectItem key={category} value={category}>
+                    {category}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>
@@ -162,10 +184,11 @@ export function ProjectModal({
                 id="goal"
                 type="number"
                 value={formData.goal}
-                onChange={(e) =>
-                  handleChange("goal", parseFloat(e.target.value))
-                }
-                className="w-full"
+                onChange={(e) => {
+                  const value = parseFloat(e.target.value);
+                  handleChange("goal", isNaN(value) ? 0 : value);
+                }}
+                className="w-full bg-gray-100 border-gray-300 "
                 placeholder="Enter project goal"
                 min={0}
                 step={1}
@@ -183,14 +206,14 @@ export function ProjectModal({
                 handleChange("status", value as ProjectStatus)
               }
             >
-              <SelectTrigger className="col-span-3">
+              <SelectTrigger className="col-span-3 bg-gray-100 border-gray-300">
                 <SelectValue placeholder="Select a status" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="pending">Pending</SelectItem>
-                <SelectItem value="approved">Approved</SelectItem>
-                <SelectItem value="halted">Halted</SelectItem>
-                <SelectItem value="deleted">Deleted</SelectItem>
+                <SelectItem value="Pending">Pending</SelectItem>
+                <SelectItem value="Approved">Approved</SelectItem>
+                <SelectItem value="Halted">Halted</SelectItem>
+                <SelectItem value="Deleted">Deleted</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -207,13 +230,16 @@ export function ProjectModal({
                 onChange={(e) =>
                   handleChange("isHighlighted", e.target.checked)
                 }
-                className="h-4 w-4 text-blue-600 rounded focus:ring-blue-500 mr-2"
+                className="h-4 w-4 mr-2"
               />
             </div>
           </div>
         </div>
         <DialogFooter>
-          <Button onClick={handleSave}>
+          <Button
+            onClick={handleSave}
+            className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          >
             {project ? "Update Project" : "Save Project"}
           </Button>
         </DialogFooter>
