@@ -9,26 +9,23 @@ import { useDispatch, useSelector } from "react-redux";
 import { Project } from "@/types/Project";
 import { ProjectModal } from "./ProjectModal";
 import { addProject } from "@/lib/features/projects/projectsSlice";
+import { v4 as uuidv4 } from "uuid";
 
 const ProjectsPage = () => {
   const projectList = useSelector(projectListSelector);
   const dispatch = useDispatch();
 
-  // State to control modal visibility
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // Handler for opening the modal to create a new project
   const addNewProjectHandler = () => {
     setIsModalOpen(true);
   };
 
-  // Handler for saving the new project
   const handleSave = (newProject: Project) => {
     // Generate a unique ID if not provided
     const projectToSave = {
       ...newProject,
-      id: newProject.id || `${Date.now()}`,
-      // Ensure default values
+      id: newProject.id || uuidv4(),
       status: newProject.status || "pending",
       category: newProject.category || "Food",
       isHighlighted: newProject.isHighlighted || false,
