@@ -1,58 +1,39 @@
 "use client";
-import React from "react";
+
+import React, { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import ProjectsTable from "./ProjectsTable";
+import { projectListSelector } from "@/lib/features/projects/selectors";
+import { useDispatch, useSelector } from "react-redux";
 import { Project } from "@/types/Project";
+import { ProjectModal } from "./ProjectModal";
+import { addProject } from "@/lib/features/projects/projectsSlice";
+import { v4 as uuidv4 } from "uuid";
 
 const ProjectsPage = () => {
-  const projectsData: Project[] = [
-    {
-      id: "PRJ01",
-      name: "Project 1",
-      country: "Country 1",
-      category: "Food",
-      goal: "10,000$",
-      status: "pending",
-      isHighlighted: false,
-    },
-    {
-      id: "PRJ02",
-      name: "Project 2",
-      country: "Country 2",
-      category: "Food",
-      goal: "25,000$",
-      status: "approved",
-      isHighlighted: true,
-    },
-    {
-      id: "PRJ03",
-      name: "Project 3",
-      country: "Country 3",
-      category: "Education",
-      goal: "15,000$",
-      status: "halted",
-      isHighlighted: false,
-    },
-    {
-      id: "PRJ04",
-      name: "Project 4",
-      country: "Country 4",
-      category: "Health",
-      goal: "30,000$",
-      status: "pending",
-      isHighlighted: false,
-    },
-    {
-      id: "PRJ05",
-      name: "Project 5",
-      country: "Country 5",
-      category: "Education",
-      goal: "20,000$",
-      status: "deleted",
-      isHighlighted: false,
-    },
-  ];
+  const projectList = useSelector(projectListSelector);
+  const dispatch = useDispatch();
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const addNewProjectHandler = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleSave = (newProject: Project) => {
+    // Generate a unique ID if not provided
+    const projectToSave = {
+      ...newProject,
+      id: newProject.id || uuidv4(),
+      status: newProject.status || "Pending",
+      category: newProject.category || "Food",
+      isHighlighted: newProject.isHighlighted || false,
+    };
+
+    dispatch(addProject(projectToSave));
+    setIsModalOpen(false);
+  };
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mt-6">
@@ -139,15 +120,25 @@ const ProjectsPage = () => {
       <div className="md:col-span-3">
         <div className="flex justify-between items-center mb-4">
           <Input type="search" placeholder="Search..." className="max-w-sm" />
-          <Button className="bg-blue-500 hover:bg-blue-600">
+          <Button
+            className="bg-blue-500 hover:bg-blue-600"
+            onClick={addNewProjectHandler}
+          >
             + NEW PROJECT
           </Button>
         </div>
 
         <div className="bg-white rounded-lg shadow overflow-x-auto">
-          <ProjectsTable projectsData={projectsData} />
+          <ProjectsTable projectsData={projectList} />
         </div>
       </div>
+
+      {/* Project Modal */}
+      <ProjectModal
+        open={isModalOpen}
+        onOpenChange={setIsModalOpen}
+        onSave={handleSave}
+      />
     </div>
   );
 };
