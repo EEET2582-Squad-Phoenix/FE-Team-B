@@ -1,37 +1,46 @@
 "use-client";
 
+import Link from "next/link";
+import Image from "next/image";
 export default function Home() {
-  return (
+    return (
     <main className="bg-white">
       {/* Hero Section */}
-      <section className="relative h-screen bg-cover bg-center" style={{ backgroundImage: "url('/path-to-your-image.jpg')" }}>
+      <section className="relative h-screen">
+        <img
+          src="/background.jpg"
+          alt="background"
+          className="absolute inset-0 object-cover w-full h-full"
+        />
         <div className="absolute inset-0 bg-black/50"></div>
-        <div className="relative z-10 flex flex-col items-center justify-center h-full text-center text-white px-4">
+        <div className="relative z-10 flex flex-col items-start justify-start h-full text-left text-white p-40">
           <h1 className="text-5xl font-bold">Make a Difference Today</h1>
-          <p className="mt-4 text-xl">
-            Join a global community of change-makers supporting impactful projects. Discover meaningful causes, donate securely, and create lasting change.
+          <p className="mt-4 text-base max-w-lg">
+            Join a global community of change-makers supporting impactful
+            projects. Discover meaningful causes, donate securely, and create
+            lasting change.
           </p>
         </div>
       </section>
 
       {/* Statistics Section */}
-      <section className="py-10 bg-blue-500 text-white text-center">
+      <section className="py-5 bg-blue-500 text-white text-center">
         <div className="container mx-auto grid grid-cols-2 md:grid-cols-4 gap-6">
-          <div>
+          <div className="flex flex-col items-center">
             <h2 className="text-2xl font-bold">172,000</h2>
-            <p className="mt-2">people helped</p>
+            <p className="mt-2 text-sm">people helped</p>
           </div>
-          <div>
+          <div className="flex flex-col items-center">
             <h2 className="text-2xl font-bold">194,000,000 $</h2>
-            <p className="mt-2">in donations</p>
+            <p className="mt-2 text-sm">in donations</p>
           </div>
-          <div>
+          <div className="flex flex-col items-center">
             <h2 className="text-2xl font-bold">2,437</h2>
-            <p className="mt-2">charities</p>
+            <p className="mt-2 text-sm">charities</p>
           </div>
-          <div>
+          <div className="flex flex-col items-center">
             <h2 className="text-2xl font-bold">20+</h2>
-            <p className="mt-2">countries</p>
+            <p className="mt-2 text-sm">countries</p>
           </div>
         </div>
       </section>
@@ -39,25 +48,49 @@ export default function Home() {
       {/* How It Works Section */}
       <section className="py-20 bg-gray-100">
         <div className="container mx-auto text-center">
-          <h2 className="text-3xl font-bold mb-8">How it works</h2>
+          <h2 className="text-3xl font-bold mb-8 text-blue-500">How it works</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {/* Donors */}
             <div className="p-6 bg-white shadow-md rounded-lg">
-              <div className="text-4xl text-yellow-500 mb-4">🎁</div>
-              <h3 className="text-xl font-bold mb-4">Donors</h3>
-              <p>Support impactful projects by donating to verified causes and tracking your contributions in real-time.</p>
+              <div className="text-4xl mb-4 flex justify-center">
+                <Image 
+                  src="/gift.svg"
+                  alt="Donor icon"
+                  width={40}
+                  height={40}
+                  className="text-yellow-500"
+                />
+              </div>
+              <h3 className="text-xl font-bold mb-4 text-yellow-500">Donors</h3>
+              <p className="text-sm">Support impactful projects by donating to verified causes and tracking your contributions in real-time.</p>
             </div>
             {/* Volunteers */}
             <div className="p-6 bg-white shadow-md rounded-lg">
-              <div className="text-4xl text-blue-500 mb-4">🙌</div>
-              <h3 className="text-xl font-bold mb-4">Volunteers</h3>
-              <p>Join hands with communities and organizations in need—your skills and time can drive meaningful change.</p>
+              <div className="text-4xl mb-4 flex justify-center">
+                <Image 
+                  src="/heart.svg"
+                  alt="Volunteer icon"
+                  width={40}
+                  height={40}
+                  className="text-blue-500"
+                />
+              </div>
+              <h3 className="text-xl font-bold mb-4 text-blue-500">Volunteers</h3>
+              <p className="text-sm">Join hands with communities and organizations in need—your skills and time can drive meaningful change.</p>
             </div>
             {/* Fundraisers */}
             <div className="p-6 bg-white shadow-md rounded-lg">
-              <div className="text-4xl text-green-500 mb-4">🔒</div>
-              <h3 className="text-xl font-bold mb-4">Fundraisers</h3>
-              <p>Expand your reach by connecting with a broader network of donors and volunteers. Share your mission.</p>
+              <div className="text-4xl mb-4 flex justify-center">
+                <Image 
+                  src="/hospital.svg"
+                  alt="Fundraiser icon"
+                  width={40}
+                  height={40}
+                  className="text-green-500"
+                />
+              </div>
+              <h3 className="text-xl font-bold mb-4 text-green-500">Fundraisers</h3>
+              <p className="text-sm">Expand your reach by connecting with a broader network of donors and volunteers</p>
             </div>
           </div>
         </div>
@@ -66,8 +99,16 @@ export default function Home() {
       {/* Footer */}
       <footer className="py-6 bg-blue-600 text-white text-center">
         <div className="container mx-auto">
+          {/* Logo section */}
+          <Link href="/" className="flex-shrink-0 flex items-center">
+            <span className="text-2xl font-semibold text-yellow-400 mr-2">
+              Charitan
+            </span>
+          </Link>
+
           <p>&copy; 2024 Charitan. All Rights Reserved.</p>
           <div className="flex justify-center space-x-6 mt-4">
+            <a href="#" className="hover:underline">About</a>
             <a href="#" className="hover:underline">Privacy</a>
             <a href="#" className="hover:underline">Terms</a>
             <a href="#" className="hover:underline">Contact Us</a>
