@@ -46,9 +46,9 @@ export default function Home() {
       </section>
 
       {/* How It Works Section */}
-      <section className="py-20 bg-gray-100">
+      <section className="py-10 bg-gray-100">
         <div className="container mx-auto text-center">
-          <h2 className="text-3xl font-bold mb-8 text-blue-500">How it works</h2>
+          <h2 className="text-5xl font-bold mb-8 text-blue-500">How it works</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {/* Donors */}
             <div className="p-6 bg-white shadow-md rounded-lg">
@@ -66,13 +66,13 @@ export default function Home() {
             </div>
             {/* Volunteers */}
             <div className="p-6 bg-white shadow-md rounded-lg">
-              <div className="text-4xl mb-4 flex justify-center">
+              <div className="text-4xl mb-4 flex justify-center text-blue-500">
                 <Image 
                   src="/heart.svg"
                   alt="Volunteer icon"
                   width={40}
                   height={40}
-                  className="text-blue-500"
+                  style={{ color: '#3B82F6' }}
                 />
               </div>
               <h3 className="text-xl font-bold mb-4 text-blue-500">Volunteers</h3>
@@ -80,34 +80,33 @@ export default function Home() {
             </div>
             {/* Fundraisers */}
             <div className="p-6 bg-white shadow-md rounded-lg">
-              <div className="text-4xl mb-4 flex justify-center">
+              <div className="text-4xl mb-4 flex justify-center text-green-500">
                 <Image 
                   src="/hospital.svg"
                   alt="Fundraiser icon"
                   width={40}
                   height={40}
-                  className="text-green-500"
+                  style={{ color: '#22C55E' }}
                 />
               </div>
               <h3 className="text-xl font-bold mb-4 text-green-500">Fundraisers</h3>
-              <p className="text-sm">Expand your reach by connecting with a broader network of donors and volunteers</p>
+              <p className="text-sm">Expand your reach by connecting with a broader network of donors and volunteers. Share your mission and amplify your impact like never before.</p>
             </div>
           </div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="py-6 bg-blue-600 text-white text-center">
+      <footer className="py-5 bg-blue-600 text-white text-center">
         <div className="container mx-auto">
           {/* Logo section */}
-          <Link href="/" className="flex-shrink-0 flex items-center">
-            <span className="text-2xl font-semibold text-yellow-400 mr-2">
-              Charitan
-            </span>
-          </Link>
-
-          <p>&copy; 2024 Charitan. All Rights Reserved.</p>
-          <div className="flex justify-center space-x-6 mt-4">
+          <div className="flex items-center justify-center space-x-6">
+            <Link href="/" className="flex-shrink-0 flex items-center">
+              <span className="text-2xl font-semibold text-yellow-400 mr-2">
+                Charitan
+              </span>
+            </Link>
+            <p>&copy; 2024 Charitan. All Rights Reserved.</p>
             <a href="#" className="hover:underline">About</a>
             <a href="#" className="hover:underline">Privacy</a>
             <a href="#" className="hover:underline">Terms</a>
