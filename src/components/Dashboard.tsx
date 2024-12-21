@@ -3,9 +3,9 @@
 import React from "react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Users, BarChart3, FolderKanban } from "lucide-react";
-import ProjectsPage from "@/app/projects/ProjectsPage";
-import UsersPage from "@/app/users/UsersPage";
-import StatisticsPage from "@/app/statistics/StatisticsPage";
+import ProjectsPage from "@/components/projects/ProjectsPage";
+import UsersPage from "@/components/users/UsersPage";
+import StatisticsPage from "@/components/statistics/StatisticsPage";
 
 const DashboardContent = () => {
   return (

@@ -197,28 +197,6 @@ export function ProjectModal({
           </div>
 
           <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="status" className="text-right">
-              Status
-            </Label>
-            <Select
-              value={formData.status}
-              onValueChange={(value) =>
-                handleChange("status", value as ProjectStatus)
-              }
-            >
-              <SelectTrigger className="col-span-3 bg-gray-100 border-gray-300">
-                <SelectValue placeholder="Select a status" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="Pending">Pending</SelectItem>
-                <SelectItem value="Approved">Approved</SelectItem>
-                <SelectItem value="Halted">Halted</SelectItem>
-                <SelectItem value="Deleted">Deleted</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-
-          <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="isHighlighted" className="text-right">
               Highlighted
             </Label>

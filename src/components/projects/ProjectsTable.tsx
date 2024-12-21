@@ -4,29 +4,25 @@ import {
   updateProject,
 } from "@/lib/features/projects/projectsSlice";
 import { Project } from "@/types/Project";
-import {
-  Pencil,
-  Trash2,
-  CheckCircle,
-  Star,
-  Pause,
-  LucideIcon,
-} from "lucide-react";
+import { Pencil, Trash2, CheckCircle, Star, Pause } from "lucide-react";
 import { useDispatch } from "react-redux";
-import { ProjectModal } from "./ProjectModal"; // Assuming the modal is in the same directory
+import { ProjectModal } from "./ProjectModal";
+import ActionButton from "@/components/table/ActionButton";
+
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 
 interface ProjectsTableProps {
-  projectsData: Project[];
+  projects: Project[];
 }
 
-interface ActionButtonProps {
-  icon: LucideIcon;
-  onClick: () => void;
-  disabled: boolean;
-  className?: string;
-}
-
-const ProjectsTable = ({ projectsData }: ProjectsTableProps) => {
+const ProjectsTable = ({ projects }: ProjectsTableProps) => {
   const dispatch = useDispatch();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -38,13 +34,11 @@ const ProjectsTable = ({ projectsData }: ProjectsTableProps) => {
     dispatch(deleteProject(id));
   };
 
-  // Open modal for editing a project
   const handleEditProject = (project: Project) => {
     setCurrentProject(project);
     setIsModalOpen(true);
   };
 
-  // Handle project update from modal
   const handleUpdateProject = (updatedProject: Project) => {
     dispatch(updateProject(updatedProject));
     setIsModalOpen(false);
@@ -53,35 +47,35 @@ const ProjectsTable = ({ projectsData }: ProjectsTableProps) => {
 
   return (
     <>
-      <table className="w-full">
-        <thead>
-          <tr className="bg-gray-50 border-b">
-            <th className="text-left py-3 px-4 font-medium">ID</th>
-            <th className="text-left py-3 px-4 font-medium">Name</th>
-            <th className="text-left py-3 px-4 font-medium">Country</th>
-            <th className="text-left py-3 px-4 font-medium">Category</th>
-            <th className="text-left py-3 px-4 font-medium">Goal</th>
-            <th className="text-left py-3 px-4 font-medium">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {projectsData.map((project) => (
-            <tr
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead>ID</TableHead>
+            <TableHead>Name</TableHead>
+            <TableHead>Country</TableHead>
+            <TableHead>Category</TableHead>
+            <TableHead>Goal</TableHead>
+            <TableHead>Actions</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {projects.map((project) => (
+            <TableRow
               key={project.id}
-              className={`border-b ${
+              className={
                 project.isHighlighted
-                  ? "bg-yellow-200"
+                  ? "bg-yellow-200 hover:bg-yellow-300"
                   : project.status === "Halted"
-                  ? "bg-gray-600 text-white"
+                  ? "bg-gray-600 text-white hover:bg-gray-700"
                   : ""
-              }`}
+              }
             >
-              <td className="py-3 px-4">{project.id}</td>
-              <td className="py-3 px-4">{project.name}</td>
-              <td className="py-3 px-4">{project.country}</td>
-              <td className="py-3 px-4">{project.category}</td>
-              <td className="py-3 px-4">{project.goal}</td>
-              <td className="py-3 px-4">
+              <TableCell>{project.id}</TableCell>
+              <TableCell>{project.name}</TableCell>
+              <TableCell>{project.country}</TableCell>
+              <TableCell>{project.category}</TableCell>
+              <TableCell>{project.goal}</TableCell>
+              <TableCell>
                 <div className="flex items-center space-x-1">
                   <ActionButton
                     icon={Pencil}
@@ -122,11 +116,11 @@ const ProjectsTable = ({ projectsData }: ProjectsTableProps) => {
                     className="text-orange-600"
                   />
                 </div>
-              </td>
-            </tr>
+              </TableCell>
+            </TableRow>
           ))}
-        </tbody>
-      </table>
+        </TableBody>
+      </Table>
 
       <ProjectModal
         project={currentProject}
@@ -139,20 +133,3 @@ const ProjectsTable = ({ projectsData }: ProjectsTableProps) => {
 };
 
 export default ProjectsTable;
-
-const ActionButton: React.FC<ActionButtonProps> = ({
-  icon: Icon,
-  onClick,
-  disabled,
-  className = "",
-}) => (
-  <button
-    onClick={onClick}
-    disabled={disabled}
-    className={`p-1.5 transition-colors ${
-      disabled ? "text-gray-300" : `${className} `
-    }`}
-  >
-    <Icon size={18} />
-  </button>
-);

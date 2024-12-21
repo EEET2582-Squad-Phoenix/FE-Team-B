@@ -129,7 +129,7 @@ const ProjectsPage = () => {
         </div>
 
         <div className="bg-white rounded-lg shadow overflow-x-auto">
-          <ProjectsTable projectsData={projectList} />
+          <ProjectsTable projects={projectList} />
         </div>
       </div>
 
