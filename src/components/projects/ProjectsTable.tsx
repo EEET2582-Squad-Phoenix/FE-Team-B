@@ -1,11 +1,6 @@
-import React, { useState } from "react";
-import {
-  deleteProject,
-  updateProject,
-} from "@/lib/features/projects/projectsSlice";
+import React from "react";
 import { Project } from "@/types/Project";
 import { Pencil, Trash2, CheckCircle, Star, Pause } from "lucide-react";
-import { useDispatch } from "react-redux";
 import { ProjectModal } from "./ProjectModal";
 import ActionButton from "@/components/table/ActionButton";
 
@@ -17,33 +12,29 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { useProjectActions } from "./hooks/useProjectActions";
+import { useProjectModal } from "./hooks/useProjectModal";
 
 interface ProjectsTableProps {
   projects: Project[];
 }
 
 const ProjectsTable = ({ projects }: ProjectsTableProps) => {
-  const dispatch = useDispatch();
+  const {
+    handleDeleteProject,
+    handleUpdateProject,
+    handleApproveProject,
+    handleHighlightProject,
+    handleHaltProject,
+  } = useProjectActions();
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [currentProject, setCurrentProject] = useState<Project | undefined>(
-    undefined
-  );
-
-  const handleDeleteProject = (id: string) => {
-    dispatch(deleteProject(id));
-  };
-
-  const handleEditProject = (project: Project) => {
-    setCurrentProject(project);
-    setIsModalOpen(true);
-  };
-
-  const handleUpdateProject = (updatedProject: Project) => {
-    dispatch(updateProject(updatedProject));
-    setIsModalOpen(false);
-    setCurrentProject(undefined);
-  };
+  const {
+    isModalOpen,
+    currentProject,
+    setIsModalOpen,
+    handleEditProject,
+    handleModalSave,
+  } = useProjectModal(handleUpdateProject);
 
   return (
     <>
@@ -95,7 +86,7 @@ const ProjectsTable = ({ projects }: ProjectsTableProps) => {
                       project.status === "Approved" ||
                       project.status === "Deleted"
                     }
-                    onClick={() => console.log("Approve", project.id)}
+                    onClick={() => handleApproveProject(project.id)}
                     className="text-green-600"
                   />
                   <ActionButton
@@ -103,7 +94,7 @@ const ProjectsTable = ({ projects }: ProjectsTableProps) => {
                     disabled={
                       project.isHighlighted || project.status === "Deleted"
                     }
-                    onClick={() => console.log("Highlight", project.id)}
+                    onClick={() => handleHighlightProject(project.id)}
                     className="text-yellow-600"
                   />
                   <ActionButton
@@ -112,7 +103,7 @@ const ProjectsTable = ({ projects }: ProjectsTableProps) => {
                       project.status === "Halted" ||
                       project.status === "Deleted"
                     }
-                    onClick={() => console.log("Halt", project.id)}
+                    onClick={() => handleHaltProject(project.id)}
                     className="text-orange-600"
                   />
                 </div>
@@ -126,7 +117,7 @@ const ProjectsTable = ({ projects }: ProjectsTableProps) => {
         project={currentProject}
         open={isModalOpen}
         onOpenChange={setIsModalOpen}
-        onSave={handleUpdateProject}
+        onSave={handleModalSave}
       />
     </>
   );
