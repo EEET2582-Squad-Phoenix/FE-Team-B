@@ -5,17 +5,24 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import ProjectsTable from "./ProjectsTable";
 import { useDispatch, useSelector } from "react-redux";
-import { Project } from "@/types/Project";
+import { Project, ProjectCategory, ProjectStatus } from "@/types/Project";
 import { ProjectModal } from "./ProjectModal";
 import { addProject } from "@/lib/features/projects/projectsSlice";
 import { v4 as uuidv4 } from "uuid";
 import { filteredProjectsSelector } from "@/lib/features/projects/selectors";
+import { setCategory, setStatus } from "@/lib/features/projects/filtersSlice";
+import StatusFilter from "../table/StatusFilter";
+import CategoryFilter from "../table/CategoryFilter";
 
 const ProjectsPage = () => {
   const projectList = useSelector(filteredProjectsSelector);
   const dispatch = useDispatch();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedCategories, setSelectedCategories] = useState<
+    ProjectCategory[]
+  >([]);
+  const [selectedStatuses, setSelectedStatuses] = useState<ProjectStatus[]>([]);
 
   const addNewProjectHandler = () => {
     setIsModalOpen(true);
@@ -35,53 +42,28 @@ const ProjectsPage = () => {
     setIsModalOpen(false);
   };
 
+  const handleCategoryChange = (categories: ProjectCategory[]) => {
+    setSelectedCategories(categories);
+    dispatch(setCategory(categories));
+  };
+
+  const handleStatusChange = (statuses: ProjectStatus[]) => {
+    setSelectedStatuses(statuses);
+    dispatch(setStatus(statuses));
+  };
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mt-6">
       {/* Left Sidebar */}
       <div className="space-y-6">
-        <div className="bg-white p-4 rounded-lg shadow">
-          <h3 className="font-medium mb-3">Status</h3>
-          <div className="space-y-2">
-            <label className="flex items-center space-x-2">
-              <input type="checkbox" defaultChecked />
-              <span>Approved</span>
-            </label>
-            <label className="flex items-center space-x-2">
-              <input type="checkbox" />
-              <span>Pending</span>
-            </label>
-            <label className="flex items-center space-x-2">
-              <input type="checkbox" />
-              <span>Halted</span>
-            </label>
-            <label className="flex items-center space-x-2">
-              <input type="checkbox" />
-              <span>Deleted</span>
-            </label>
-            <label className="flex items-center space-x-2">
-              <input type="checkbox" />
-              <span>Highlighted</span>
-            </label>
-          </div>
-        </div>
-
-        <div className="bg-white p-4 rounded-lg shadow">
-          <h3 className="font-medium mb-3">Category</h3>
-          <div className="space-y-2">
-            <label className="flex items-center space-x-2">
-              <input type="checkbox" defaultChecked />
-              <span>Food</span>
-            </label>
-            <label className="flex items-center space-x-2">
-              <input type="checkbox" />
-              <span>Education</span>
-            </label>
-            <label className="flex items-center space-x-2">
-              <input type="checkbox" />
-              <span>Health</span>
-            </label>
-          </div>
-        </div>
+        <StatusFilter
+          onStatusChange={handleStatusChange}
+          selectedStatuses={selectedStatuses}
+        />
+        <CategoryFilter
+          onCategoryChange={handleCategoryChange}
+          selectedCategories={selectedCategories}
+        />
 
         <div className="bg-white p-4 rounded-lg shadow">
           <h3 className="font-medium mb-3">Country</h3>
