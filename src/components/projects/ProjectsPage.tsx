@@ -4,15 +4,15 @@ import React, { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import ProjectsTable from "./ProjectsTable";
-import { projectListSelector } from "@/lib/features/projects/selectors";
 import { useDispatch, useSelector } from "react-redux";
 import { Project } from "@/types/Project";
 import { ProjectModal } from "./ProjectModal";
 import { addProject } from "@/lib/features/projects/projectsSlice";
 import { v4 as uuidv4 } from "uuid";
+import { filteredProjectsSelector } from "@/lib/features/projects/selectors";
 
 const ProjectsPage = () => {
-  const projectList = useSelector(projectListSelector);
+  const projectList = useSelector(filteredProjectsSelector);
   const dispatch = useDispatch();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -138,6 +138,7 @@ const ProjectsPage = () => {
         open={isModalOpen}
         onOpenChange={setIsModalOpen}
         onSave={handleSave}
+        onApprove={() => {}}
       />
     </div>
   );
