@@ -24,6 +24,7 @@ import {
   ProjectStatus,
 } from "@/types/Project";
 import { CheckCircle } from "lucide-react";
+import { CountryDropdown } from "react-country-region-selector";
 
 interface ProjectModalProps {
   project?: Project;
@@ -163,6 +164,13 @@ export function ProjectModal({
               className="col-span-3 bg-gray-100 border-gray-300 "
               placeholder="Enter project country"
             />
+          </div>
+
+          <div className="grid grid-cols-4 items-center gap-4">
+            <Label htmlFor="category" className="text-right">
+              Country
+            </Label>
+            <CountryDropdown />
           </div>
 
           <div className="grid grid-cols-4 items-center gap-4">
