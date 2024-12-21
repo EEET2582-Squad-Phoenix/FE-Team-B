@@ -47,7 +47,7 @@ export function ProjectModal({
     country: project?.country || "",
     category: project?.category || "Food",
     goal: project?.goal || 0,
-    status: project?.status || "Pending",
+    status: project?.status || "Approved",
     isHighlighted: project?.isHighlighted || false,
   });
 
@@ -59,7 +59,7 @@ export function ProjectModal({
       country: project?.country || "",
       category: project?.category || "Food",
       goal: project?.goal || 0,
-      status: project?.status || "Pending",
+      status: project?.status || "Approved",
       isHighlighted: project?.isHighlighted || false,
     });
   }, [project, open]);
