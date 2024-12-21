@@ -1,6 +1,12 @@
-import { useDispatch } from 'react-redux';
-import { deleteProject, updateProject } from '@/lib/features/projects/projectsSlice';
-import { Project } from '@/types/Project';
+import { useDispatch } from "react-redux";
+import {
+  deleteProject,
+  updateProject,
+  highlightProject,
+  approveProject,
+  haltProject,
+} from "@/lib/features/projects/projectsSlice";
+import { Project } from "@/types/Project";
 
 export const useProjectActions = () => {
   const dispatch = useDispatch();
@@ -14,15 +20,15 @@ export const useProjectActions = () => {
   };
 
   const handleApproveProject = (id: string) => {
-    console.log("Approve", id);
+    dispatch(approveProject(id));
   };
 
   const handleHighlightProject = (id: string) => {
-    console.log("Highlight", id);
+    dispatch(highlightProject(id));
   };
 
   const handleHaltProject = (id: string) => {
-    console.log("Halt", id);
+    dispatch(haltProject(id));
   };
 
   return {

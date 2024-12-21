@@ -73,10 +73,28 @@ export const projectsSlice = createSlice({
         project.isHighlighted = !project.isHighlighted;
       }
     },
+    approveProject: (state, action: PayloadAction<string>) => {
+      const project = state.find((project) => project.id === action.payload);
+      if (project) {
+        project.status = "Approved";
+      }
+    },
+    haltProject: (state, action: PayloadAction<string>) => {
+      const project = state.find((project) => project.id === action.payload);
+      if (project) {
+        project.status = "Halted";
+      }
+    },
   },
 });
 
-export const { addProject, deleteProject, updateProject, highlightProject } =
-  projectsSlice.actions;
+export const {
+  addProject,
+  deleteProject,
+  updateProject,
+  highlightProject,
+  approveProject,
+  haltProject,
+} = projectsSlice.actions;
 
 export default projectsSlice.reducer;

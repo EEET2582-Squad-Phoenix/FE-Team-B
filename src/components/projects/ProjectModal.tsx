@@ -23,12 +23,14 @@ import {
   ProjectCategory,
   ProjectStatus,
 } from "@/types/Project";
+import { CheckCircle } from "lucide-react";
 
 interface ProjectModalProps {
   project?: Project;
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onSave: (project: Project) => void;
+  onApprove: (id: string) => void;
 }
 
 export function ProjectModal({
@@ -36,6 +38,7 @@ export function ProjectModal({
   open,
   onOpenChange,
   onSave,
+  onApprove,
 }: ProjectModalProps) {
   const [formData, setFormData] = useState<Project>({
     id: project?.id || "",
@@ -60,7 +63,6 @@ export function ProjectModal({
     });
   }, [project, open]);
 
-  // Generic change handler for form fields with explicit type handling for special cases
   const handleChange = <K extends keyof Project>(
     field: K,
     value: K extends "category"
@@ -107,6 +109,17 @@ export function ProjectModal({
               : "Enter the details for your new project."}{" "}
             Click save when you&apos;re done.
           </DialogDescription>
+          {project?.status === "Pending" && (
+            <div className="mt-2">
+              <Button
+                onClick={() => onApprove(project.id)}
+                className="w-full bg-green-600 hover:bg-green-700 text-white"
+              >
+                <CheckCircle className="mr-2 h-4 w-4" />
+                Approve Project
+              </Button>
+            </div>
+          )}
         </DialogHeader>
         <div className="grid gap-4 py-4">
           {/* ID field (optional, disabled for existing projects) */}

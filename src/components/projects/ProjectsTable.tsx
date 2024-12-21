@@ -118,6 +118,7 @@ const ProjectsTable = ({ projects }: ProjectsTableProps) => {
         open={isModalOpen}
         onOpenChange={setIsModalOpen}
         onSave={handleModalSave}
+        onApprove={handleApproveProject}
       />
     </>
   );
