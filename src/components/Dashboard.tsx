@@ -11,7 +11,7 @@ const DashboardContent = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="p-4">
-        <div className="max-w-7xl mx-auto">
+        <div className="lg:mx-8 mx-4">
           <Tabs defaultValue="projects" className="w-full">
             <TabsList className="bg-blue-500 p-1">
               <TabsTrigger
