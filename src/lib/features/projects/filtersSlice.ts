@@ -1,5 +1,5 @@
 import { ProjectCategory, ProjectStatus } from "@/types/Project";
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface FiltersState {
   search: string;
@@ -14,21 +14,20 @@ const initialState: FiltersState = {
 };
 
 export const filtersSlice = createSlice({
-  name: "projectList",
+  name: "filters",
   initialState,
   reducers: {
-    setSearch: (state, action) => {
+    setSearch: (state, action: PayloadAction<string>) => {
       state.search = action.payload;
     },
-    setCategory: (state, action) => {
+    setCategory: (state, action: PayloadAction<ProjectCategory[]>) => {
       state.category = action.payload;
     },
-    setStatus: (state, action) => {
+    setStatus: (state, action: PayloadAction<ProjectStatus[]>) => {
       state.status = action.payload;
     },
   },
 });
 
 export const { setSearch, setCategory, setStatus } = filtersSlice.actions;
-
 export default filtersSlice.reducer;

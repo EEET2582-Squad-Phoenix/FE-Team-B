@@ -10,7 +10,7 @@ import { ProjectModal } from "./ProjectModal";
 import { addProject } from "@/lib/features/projects/projectsSlice";
 import { v4 as uuidv4 } from "uuid";
 import { filteredProjectsSelector } from "@/lib/features/projects/selectors";
-import { setCategory, setStatus } from "@/lib/features/projects/filtersSlice";
+import { setCategory, setSearch, setStatus } from "@/lib/features/projects/filtersSlice";
 import StatusFilter from "../table/StatusFilter";
 import CategoryFilter from "../table/CategoryFilter";
 
@@ -19,17 +19,15 @@ const ProjectsPage = () => {
   const dispatch = useDispatch();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedCategories, setSelectedCategories] = useState<
-    ProjectCategory[]
-  >([]);
+  const [selectedCategories, setSelectedCategories] = useState<ProjectCategory[]>([]);
   const [selectedStatuses, setSelectedStatuses] = useState<ProjectStatus[]>([]);
+  const [searchQuery, setSearchQuery] = useState("");
 
   const addNewProjectHandler = () => {
     setIsModalOpen(true);
   };
 
   const handleSave = (newProject: Project) => {
-    // Generate a unique ID if not provided
     const projectToSave = {
       ...newProject,
       id: newProject.id || uuidv4(),
@@ -50,6 +48,12 @@ const ProjectsPage = () => {
   const handleStatusChange = (statuses: ProjectStatus[]) => {
     setSelectedStatuses(statuses);
     dispatch(setStatus(statuses));
+  };
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const query = e.target.value;
+    setSearchQuery(query);
+    dispatch(setSearch(query));
   };
 
   return (
@@ -101,7 +105,13 @@ const ProjectsPage = () => {
       {/* Main Content */}
       <div className="md:col-span-3">
         <div className="flex justify-between items-center mb-4">
-          <Input type="search" placeholder="Search..." className="max-w-sm" />
+          <Input 
+            type="search" 
+            placeholder="Search..." 
+            className="max-w-sm" 
+            value={searchQuery}
+            onChange={handleSearchChange}
+          />
           <Button
             className="bg-blue-500 hover:bg-blue-600"
             onClick={addNewProjectHandler}
