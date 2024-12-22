@@ -1,60 +1,28 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import ProjectsTable from "./ProjectsTable";
-import { useDispatch, useSelector } from "react-redux";
-import { Project, ProjectCategory, ProjectStatus } from "@/types/Project";
 import { ProjectModal } from "./ProjectModal";
-import { addProject } from "@/lib/features/projects/projectsSlice";
-import { v4 as uuidv4 } from "uuid";
-import { filteredProjectsSelector } from "@/lib/features/projects/selectors";
-import { setCategory, setSearch, setStatus } from "@/lib/features/projects/filtersSlice";
 import StatusFilter from "../table/StatusFilter";
 import CategoryFilter from "../table/CategoryFilter";
+import useProjectPage from "./hooks/useProjectPage";
 
 const ProjectsPage = () => {
-  const projectList = useSelector(filteredProjectsSelector);
-  const dispatch = useDispatch();
-
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedCategories, setSelectedCategories] = useState<ProjectCategory[]>([]);
-  const [selectedStatuses, setSelectedStatuses] = useState<ProjectStatus[]>([]);
-  const [searchQuery, setSearchQuery] = useState("");
-
-  const addNewProjectHandler = () => {
-    setIsModalOpen(true);
-  };
-
-  const handleSave = (newProject: Project) => {
-    const projectToSave = {
-      ...newProject,
-      id: newProject.id || uuidv4(),
-      status: newProject.status || "Pending",
-      category: newProject.category || "Food",
-      isHighlighted: newProject.isHighlighted || false,
-    };
-
-    dispatch(addProject(projectToSave));
-    setIsModalOpen(false);
-  };
-
-  const handleCategoryChange = (categories: ProjectCategory[]) => {
-    setSelectedCategories(categories);
-    dispatch(setCategory(categories));
-  };
-
-  const handleStatusChange = (statuses: ProjectStatus[]) => {
-    setSelectedStatuses(statuses);
-    dispatch(setStatus(statuses));
-  };
-
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const query = e.target.value;
-    setSearchQuery(query);
-    dispatch(setSearch(query));
-  };
+  const {
+    projectList,
+    isModalOpen,
+    setIsModalOpen,
+    selectedCategories,
+    selectedStatuses,
+    searchQuery,
+    addNewProjectHandler,
+    handleSave,
+    handleCategoryChange,
+    handleStatusChange,
+    handleSearchChange,
+  } = useProjectPage();
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mt-6">
@@ -105,10 +73,10 @@ const ProjectsPage = () => {
       {/* Main Content */}
       <div className="md:col-span-3">
         <div className="flex justify-between items-center mb-4">
-          <Input 
-            type="search" 
-            placeholder="Search..." 
-            className="max-w-sm" 
+          <Input
+            type="search"
+            placeholder="Search..."
+            className="max-w-sm"
             value={searchQuery}
             onChange={handleSearchChange}
           />
