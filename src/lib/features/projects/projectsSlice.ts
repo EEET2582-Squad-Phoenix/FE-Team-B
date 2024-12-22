@@ -8,7 +8,7 @@ const initialState: Project[] = [
     country: "Country 1",
     category: "Food",
     goal: 10000,
-    status: "Pending",
+    status: "Unapproved",
     isHighlighted: false,
   },
   {
@@ -17,7 +17,7 @@ const initialState: Project[] = [
     country: "Country 2",
     category: "Food",
     goal: 25000,
-    status: "Approved",
+    status: "Active",
     isHighlighted: true,
   },
   {
@@ -35,7 +35,7 @@ const initialState: Project[] = [
     country: "Country 4",
     category: "Health",
     goal: 30000,
-    status: "Pending",
+    status: "Unapproved",
     isHighlighted: false,
   },
   {
@@ -44,7 +44,7 @@ const initialState: Project[] = [
     country: "Country 5",
     category: "Education",
     goal: 20000,
-    status: "Deleted",
+    status: "Inactive",
     isHighlighted: false,
   },
 ];
@@ -76,7 +76,7 @@ export const projectsSlice = createSlice({
     approveProject: (state, action: PayloadAction<string>) => {
       const project = state.find((project) => project.id === action.payload);
       if (project) {
-        project.status = "Approved";
+        project.status = "Active";
       }
     },
     haltProject: (state, action: PayloadAction<string>) => {

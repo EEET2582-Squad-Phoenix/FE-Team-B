@@ -1,4 +1,12 @@
-export type ProjectStatus = "Pending" | "Approved" | "Halted" | "Deleted";
+export const ProjectStatuses = [
+  "Unapproved",
+  "Active",
+  "Halted",
+  "Inactive",
+  "Completed",
+] as const;
+
+export type ProjectStatus = (typeof ProjectStatuses)[number];
 
 export const ProjectCategories = [
   "Food",

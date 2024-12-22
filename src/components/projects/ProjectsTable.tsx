@@ -70,21 +70,21 @@ const ProjectsTable = ({ projects }: ProjectsTableProps) => {
                 <div className="flex items-center space-x-1">
                   <ActionButton
                     icon={Pencil}
-                    disabled={project.status === "Deleted"}
+                    disabled={project.status === "Inactive"}
                     onClick={() => handleEditProject(project)}
                     className="text-blue-600"
                   />
                   <ActionButton
                     icon={Trash2}
-                    disabled={project.status === "Deleted"}
+                    disabled={project.status === "Inactive"}
                     onClick={() => handleDeleteProject(project.id)}
                     className="text-red-600"
                   />
                   <ActionButton
                     icon={CheckCircle}
                     disabled={
-                      project.status === "Approved" ||
-                      project.status === "Deleted"
+                      project.status === "Active" ||
+                      project.status === "Inactive"
                     }
                     onClick={() => handleApproveProject(project.id)}
                     className="text-green-600"
@@ -92,7 +92,7 @@ const ProjectsTable = ({ projects }: ProjectsTableProps) => {
                   <ActionButton
                     icon={Star}
                     disabled={
-                      project.isHighlighted || project.status === "Deleted"
+                      project.isHighlighted || project.status === "Inactive"
                     }
                     onClick={() => handleHighlightProject(project.id)}
                     className="text-yellow-600"
@@ -101,7 +101,7 @@ const ProjectsTable = ({ projects }: ProjectsTableProps) => {
                     icon={Pause}
                     disabled={
                       project.status === "Halted" ||
-                      project.status === "Deleted"
+                      project.status === "Inactive"
                     }
                     onClick={() => handleHaltProject(project.id)}
                     className="text-orange-600"

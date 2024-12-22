@@ -47,7 +47,7 @@ export function ProjectModal({
     country: project?.country || "",
     category: project?.category || "Food",
     goal: project?.goal || 0,
-    status: project?.status || "Approved",
+    status: project?.status || "Active",
     isHighlighted: project?.isHighlighted || false,
   });
 
@@ -59,7 +59,7 @@ export function ProjectModal({
       country: project?.country || "",
       category: project?.category || "Food",
       goal: project?.goal || 0,
-      status: project?.status || "Approved",
+      status: project?.status || "Active",
       isHighlighted: project?.isHighlighted || false,
     });
   }, [project, open]);
@@ -110,7 +110,7 @@ export function ProjectModal({
               : "Enter the details for your new project."}{" "}
             Click save when you&apos;re done.
           </DialogDescription>
-          {project?.status === "Pending" && (
+          {project?.status === "Unapproved" && (
             <div className="mt-2">
               <Button
                 onClick={() => onApprove(project.id)}
