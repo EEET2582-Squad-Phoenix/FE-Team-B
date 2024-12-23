@@ -8,6 +8,7 @@ import {
   setStatus,
 } from "@/lib/features/projects/filtersSlice";
 import { filteredProjectsSelector } from "@/lib/features/projects/selectors";
+import { v4 as uuidv4 } from "uuid";
 
 const useProjectPage = () => {
   const projectList = useSelector(filteredProjectsSelector);
@@ -26,7 +27,11 @@ const useProjectPage = () => {
 
   const handleSave = useCallback(
     (newProject: Project) => {
-      dispatch(addProject(newProject));
+      const projectToSave = {
+        ...newProject,
+        id: newProject.id || uuidv4(),
+      };
+      dispatch(addProject(projectToSave));
       setIsModalOpen(false);
     },
     [dispatch]
