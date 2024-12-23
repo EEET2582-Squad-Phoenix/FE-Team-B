@@ -1,0 +1,18 @@
+<svg viewBox="-0.5 -0.5 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" id="Hospital--Streamline-Solar-Ar" height="16" width="16">
+    <desc>Hospital Streamline Icon: https://streamlinehq.com</desc>
+    <path d="M13.75 13.75 1.25 13.75" stroke="currentColor" stroke-linecap="round" stroke-width="1"></path>
+    <path d="M10.625 13.75V3.75c0 -1.1785125 0 -1.76776875 -0.366125 -2.13388125C9.89275 1.25 9.3035 1.25 8.125 1.25h-1.25c-1.1785125 0 -1.76776875 0 -2.13388125 0.36611875000000005C4.375 1.98223125 4.375 2.5714875 4.375 3.75v10" stroke="currentColor" stroke-width="1"></path>
+    <path d="M13.125 13.75V5.3125c0 -0.8777875 0 -1.31668125 -0.2106875 -1.6319624999999998 -0.0911875 -0.13648749999999998 -0.20837499999999998 -0.253675 -0.344875 -0.344875C12.2541875 3.125 11.8153125 3.125 10.9375 3.125" stroke="currentColor" stroke-width="1"></path>
+    <path d="M1.875 13.75V5.3125c0 -0.8777875 0 -1.31668125 0.21066250000000003 -1.6319624999999998 0.0912 -0.13648749999999998 0.2083875 -0.253675 0.344875 -0.344875C2.7458187499999998 3.125 3.1847125 3.125 4.0625 3.125" stroke="currentColor" stroke-width="1"></path>
+    <path d="M7.5 13.75v-1.875" stroke="currentColor" stroke-linecap="round" stroke-width="1"></path>
+    <path d="M6.25 7.5h2.5" stroke="currentColor" stroke-linecap="round" stroke-width="1"></path>
+    <path d="M3.4375 6.875H4.375" stroke="currentColor" stroke-linecap="round" stroke-width="1"></path>
+    <path d="M3.4375 8.75H4.375" stroke="currentColor" stroke-linecap="round" stroke-width="1"></path>
+    <path d="M10.625 6.875h0.9375" stroke="currentColor" stroke-linecap="round" stroke-width="1"></path>
+    <path d="M10.625 8.75h0.9375" stroke="currentColor" stroke-linecap="round" stroke-width="1"></path>
+    <path d="M3.4375 5H4.375" stroke="currentColor" stroke-linecap="round" stroke-width="1"></path>
+    <path d="M10.625 5h0.9375" stroke="currentColor" stroke-linecap="round" stroke-width="1"></path>
+    <path d="M6.25 9.375h2.5" stroke="currentColor" stroke-linecap="round" stroke-width="1"></path>
+    <path d="M7.5 5.625V3.125" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"></path>
+    <path d="m8.75 4.375 -2.5 0" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"></path>
+</svg>

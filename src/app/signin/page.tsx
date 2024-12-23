@@ -28,7 +28,7 @@ export default function Signin() {
 
             if (response.ok) {
                 console.log("Signin successful:", data);
-                window.location.href = "/";
+                window.location.href = "/dashboard";
             } else {
                 console.error("Error signing in:", data);
                 setError(data); // Display error message from backend

@@ -14,7 +14,7 @@ export default function ForgotPassword() {
         setLoading(true);
 
         try {
-            console.log("Resetting password for:", { email });
+            console.log("Resetting password for:", { email }); // Only animation not working yet
             await new Promise((resolve) => setTimeout(resolve, 1000));
             setIsCompleted(true);
         } catch (err) {
