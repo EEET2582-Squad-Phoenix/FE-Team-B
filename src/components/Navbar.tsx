@@ -8,8 +8,8 @@ const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
-    <nav className="bg-blue-500">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <nav className="bg-blue-500 fixed h-16 top-0 w-full z-10">
+      <div className="lg:mx-8 mx-4 px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo section */}
           <Link href="/" className="flex-shrink-0 flex items-center">
@@ -21,16 +21,10 @@ const Navbar = () => {
           {/* Desktop menu */}
           <div className="hidden md:flex items-center space-x-6">
             <div className="flex items-center space-x-6 text-white">
-              <Link
-                href=""
-                className="hover:text-yellow-400 duration-200"
-              >
+              <Link href="" className="hover:text-yellow-400 duration-200">
                 Contact
               </Link>
-              <Link
-                href=""
-                className="hover:text-yellow-400 duration-200"
-              >
+              <Link href="" className="hover:text-yellow-400 duration-200">
                 About
               </Link>
             </div>

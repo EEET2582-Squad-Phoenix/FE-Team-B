@@ -18,7 +18,7 @@ export default function RootLayout({
       <html lang="en">
         <body className="min-h-screen bg-gray-50">
           <Navbar />
-          <main>{children}</main>
+          <main className="mt-16">{children}</main>
         </body>
       </html>
     </StoreProvider>

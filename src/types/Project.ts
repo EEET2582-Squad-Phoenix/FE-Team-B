@@ -1,4 +1,12 @@
-export type ProjectStatus = "Pending" | "Approved" | "Halted" | "Deleted";
+export const ProjectStatuses = [
+  "Unapproved",
+  "Active",
+  "Halted",
+  "Inactive",
+  "Completed",
+] as const;
+
+export type ProjectStatus = (typeof ProjectStatuses)[number];
 
 export const ProjectCategories = [
   "Food",
@@ -16,9 +24,21 @@ export type ProjectCategory = (typeof ProjectCategories)[number];
 export interface Project {
   id: string;
   name: string;
+  thumbnailURL?: string;
+  imageURLs?: string[]; // 15
+  videoURLs?: string[]; // 4
+  description?: string;
   country: string;
+  goalAmount: number;
+  raisedAmount: number;
+  isGlobal: boolean;
   category: ProjectCategory;
-  goal: number;
   status: ProjectStatus;
+  haltedReason?: string[];
   isHighlighted: boolean;
+  isFullyFunded: boolean;
+  startedAt: string;
+  createdAt: string;
+  updatedAt: string;
+  endedAt?: string;
 }

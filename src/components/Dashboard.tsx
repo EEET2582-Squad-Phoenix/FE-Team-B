@@ -3,15 +3,15 @@
 import React from "react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Users, BarChart3, FolderKanban } from "lucide-react";
-import ProjectsPage from "@/app/projects/ProjectsPage";
-import UsersPage from "@/app/users/UsersPage";
-import StatisticsPage from "@/app/statistics/StatisticsPage";
+import ProjectsPage from "@/components/projects/ProjectsPage";
+import UsersPage from "@/components/users/UsersPage";
+import StatisticsPage from "@/components/statistics/StatisticsPage";
 
 const DashboardContent = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="p-4">
-        <div className="max-w-7xl mx-auto">
+        <div className="lg:mx-8 mx-4">
           <Tabs defaultValue="projects" className="w-full">
             <TabsList className="bg-blue-500 p-1">
               <TabsTrigger
