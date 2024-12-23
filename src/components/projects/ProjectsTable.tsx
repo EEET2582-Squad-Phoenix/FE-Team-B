@@ -45,7 +45,7 @@ const ProjectsTable = ({ projects }: ProjectsTableProps) => {
             <TableHead>Name</TableHead>
             <TableHead>Country</TableHead>
             <TableHead>Category</TableHead>
-            <TableHead>Goal</TableHead>
+            <TableHead>goalAmount</TableHead>
             <TableHead>Actions</TableHead>
           </TableRow>
         </TableHeader>
@@ -54,18 +54,14 @@ const ProjectsTable = ({ projects }: ProjectsTableProps) => {
             <TableRow
               key={project.id}
               className={
-                project.isHighlighted
-                  ? "bg-yellow-200 hover:bg-yellow-300"
-                  : project.status === "Halted"
-                  ? "bg-gray-600 text-white hover:bg-gray-700"
-                  : ""
+                project.isHighlighted ? "bg-yellow-200 hover:bg-yellow-300" : ""
               }
             >
               <TableCell>{project.id}</TableCell>
               <TableCell>{project.name}</TableCell>
               <TableCell>{project.country}</TableCell>
               <TableCell>{project.category}</TableCell>
-              <TableCell>{project.goal}</TableCell>
+              <TableCell>{project.goalAmount}</TableCell>
               <TableCell>
                 <div className="flex items-center space-x-1">
                   <ActionButton

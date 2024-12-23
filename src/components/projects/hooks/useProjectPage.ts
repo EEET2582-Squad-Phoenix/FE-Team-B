@@ -1,7 +1,6 @@
 import { useState, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Project, ProjectCategory, ProjectStatus } from "@/types/Project";
-import { v4 as uuidv4 } from "uuid";
 import { addProject } from "@/lib/features/projects/projectsSlice";
 import {
   setCategory,
@@ -27,15 +26,7 @@ const useProjectPage = () => {
 
   const handleSave = useCallback(
     (newProject: Project) => {
-      const projectToSave = {
-        ...newProject,
-        id: newProject.id || uuidv4(),
-        status: newProject.status || "Pending",
-        category: newProject.category || "Food",
-        isHighlighted: newProject.isHighlighted || false,
-      };
-
-      dispatch(addProject(projectToSave));
+      dispatch(addProject(newProject));
       setIsModalOpen(false);
     },
     [dispatch]
