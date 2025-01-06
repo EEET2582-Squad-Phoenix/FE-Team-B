@@ -1,11 +1,25 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Menu, X } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isLoggedin, setIsLoggedin] = useState(false);
+  const router = useRouter();
+
+  useEffect(() => {
+    const token = localStorage.getItem("auth_token");
+    setIsLoggedin(!!token);
+  } , []);
+
+  const handleLogout = () => {
+    localStorage.removeItem("auth_token");
+    setIsLoggedin(false);
+    router.push("/");
+  }
 
   return (
     <nav className="bg-blue-500 fixed h-16 top-0 w-full z-10">
@@ -30,11 +44,18 @@ const Navbar = () => {
             </div>
 
             <div className="flex items-center space-x-4">
-              <Link href="/signin">
+              {isLoggedin ? (
+                <button onClick={handleLogout} className="bg-red-500 text-white py-2 px-3 rounded-md">
+                  Logout
+                </button>
+              ) : (
+                <Link href="/signin">
                 <button className="bg-yellow-400 text-black py-2 px-3 rounded-md">
                   Sign in
                 </button>
-              </Link>
+                </Link>
+              )}
+              
               <button className="bg-teal-400 text-black py-2 px-3 rounded-md">
                 Donate as guest
               </button>
