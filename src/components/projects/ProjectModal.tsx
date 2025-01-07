@@ -314,21 +314,6 @@ export function ProjectModal({
             </div>
 
             <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="isHighlighted" className="text-right">
-                Highlighted
-              </Label>
-              <div className="col-span-3 flex items-center">
-                <input
-                  id="isHighlighted"
-                  type="checkbox"
-                  checked={formData.isHighlighted}
-                  onChange={(e) => handleChange("isHighlighted", e.target.checked)}
-                  className="h-4 w-4 mr-2"
-                />
-              </div>
-            </div>
-
-            <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="isGlobal" className="text-right">
                 Global
               </Label>
