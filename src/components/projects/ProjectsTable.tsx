@@ -2,6 +2,7 @@ import React from "react";
 import { Project } from "@/types/Project";
 import { Pencil, Trash2, CheckCircle, Star, Pause } from "lucide-react";
 import { ProjectModal } from "./ProjectModal";
+import { HaltProjectModal } from "./HaltProjectModal";
 import ActionButton from "@/components/table/ActionButton";
 import { Badge } from "@/components/ui/badge";
 import Image from "next/image";
@@ -18,6 +19,7 @@ import { useProjectActions } from "./hooks/useProjectActions";
 import { useProjectModal } from "./hooks/useProjectModal";
 import { formatAmount, formatDuration } from "@/utils/formatValues";
 import { getStatusColor } from "@/utils/getCssValues";
+import { useHaltProjectModal } from "./hooks/useHaltProjectModal";
 
 interface ProjectsTableProps {
   projects: Project[];
@@ -39,6 +41,22 @@ const ProjectsTable = ({ projects }: ProjectsTableProps) => {
     handleEditProject,
     handleModalSave,
   } = useProjectModal(handleUpdateProject);
+
+  const {
+    isOpen: isHaltModalOpen,
+    selectedProject,
+    reason,
+    setReason,
+    openModal: openHaltModal,
+    closeModal: closeHaltModal,
+  } = useHaltProjectModal();
+
+  const handleHaltProjectSubmit = () => {
+    if (selectedProject) {
+      handleHaltProject(selectedProject);
+      closeHaltModal();
+    }
+  };
 
   return (
     <>
@@ -132,7 +150,7 @@ const ProjectsTable = ({ projects }: ProjectsTableProps) => {
                       project.status === "Halted" ||
                       project.status === "Inactive"
                     }
-                    onClick={() => handleHaltProject(project.id)}
+                    onClick={() => openHaltModal(project.id)}
                     className="text-orange-600"
                   />
                 </div>
@@ -148,6 +166,13 @@ const ProjectsTable = ({ projects }: ProjectsTableProps) => {
         onOpenChange={setIsModalOpen}
         onSave={handleModalSave}
         onApprove={handleApproveProject}
+      />
+
+      <HaltProjectModal
+        projectName={selectedProject || ""}
+        open={isHaltModalOpen}
+        onOpenChange={closeHaltModal}
+        onSubmit={handleHaltProjectSubmit}
       />
     </>
   );

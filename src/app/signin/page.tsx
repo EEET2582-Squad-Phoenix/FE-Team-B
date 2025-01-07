@@ -24,10 +24,11 @@ export default function Signin() {
                 body: JSON.stringify({ email, password }),
             });
 
-            const data = await response.text();
+            const data = await response.json();
 
             if (response.ok) {
                 console.log("Signin successful:", data);
+                localStorage.setItem("auth_token", data.token);
                 window.location.href = "/dashboard";
             } else {
                 console.error("Error signing in:", data);
