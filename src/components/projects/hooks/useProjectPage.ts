@@ -1,9 +1,15 @@
 import { useState, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Project, ProjectCategory, ProjectStatus } from "@/types/Project";
+import {
+  Project,
+  ProjectCategory,
+  ProjectProgressType,
+  ProjectStatus,
+} from "@/types/Project";
 import { addProject } from "@/lib/features/projects/projectsSlice";
 import {
   setCategory,
+  setProgress,
   setSearch,
   setStatus,
 } from "@/lib/features/projects/filtersSlice";
@@ -20,6 +26,9 @@ const useProjectPage = () => {
   >([]);
   const [selectedStatuses, setSelectedStatuses] = useState<ProjectStatus[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
+  const [selectedProgress, setSelectedProgress] = useState<ProjectProgressType[]>(
+    []
+  );
 
   const addNewProjectHandler = useCallback(() => {
     setIsModalOpen(true);
@@ -53,6 +62,14 @@ const useProjectPage = () => {
     [dispatch]
   );
 
+  const handleProgressChange = useCallback(
+    (progress: ProjectProgressType[]) => {
+      setSelectedProgress(progress);
+      dispatch(setProgress(progress));
+    },
+    [dispatch]
+  );
+
   const handleSearchChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const query = e.target.value;
@@ -69,11 +86,13 @@ const useProjectPage = () => {
     selectedCategories,
     selectedStatuses,
     searchQuery,
+    selectedProgress,
     addNewProjectHandler,
     handleSave,
     handleCategoryChange,
     handleStatusChange,
     handleSearchChange,
+    handleProgressChange,
   };
 };
 

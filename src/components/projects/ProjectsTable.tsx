@@ -4,7 +4,6 @@ import { Pencil, Trash2, CheckCircle, Star, Pause } from "lucide-react";
 import { ProjectModal } from "./ProjectModal";
 import ActionButton from "@/components/table/ActionButton";
 import { Badge } from "@/components/ui/badge";
-import { format } from "date-fns";
 import Image from "next/image";
 
 import {
@@ -17,42 +16,12 @@ import {
 } from "@/components/ui/table";
 import { useProjectActions } from "./hooks/useProjectActions";
 import { useProjectModal } from "./hooks/useProjectModal";
+import { formatAmount, formatDuration } from "@/utils/formatValues";
+import { getStatusColor } from "@/utils/getCssValues";
 
 interface ProjectsTableProps {
   projects: Project[];
 }
-
-const getStatusColor = (status: string) => {
-  switch (status) {
-    case "Active":
-      return "bg-green-500 hover:bg-green-600";
-    case "Inactive":
-      return "bg-gray-500 hover:bg-gray-600";
-    case "Halted":
-      return "bg-orange-500 hover:bg-orange-600";
-    case "Unapproved":
-      return "bg-red-500 hover:bg-red-600";
-    default:
-      return "bg-blue-500 hover:bg-blue-600";
-  }
-};
-
-const formatDuration = (startDate: string, endDate: string) => {
-  try {
-    const start = format(new Date(startDate), "MMM d, yyyy");
-    const end = format(new Date(endDate), "MMM d, yyyy");
-    return `${start} - ${end}`;
-  } catch {
-    return "Invalid dates";
-  }
-};
-
-const formatAmount = (raised: number, goal: number) => {
-  const percentage = (raised / goal) * 100;
-  return `${raised.toLocaleString()} / ${goal.toLocaleString()} (${percentage.toFixed(
-    1
-  )}%)`;
-};
 
 const ProjectsTable = ({ projects }: ProjectsTableProps) => {
   const {

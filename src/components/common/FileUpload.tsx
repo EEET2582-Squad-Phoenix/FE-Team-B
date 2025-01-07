@@ -39,11 +39,9 @@ const FileUpload: React.FC<FileUploadProps> = ({
         const newImageFiles = [...imageFiles, ...files] as FileWithPreview[];
         setImageFiles(newImageFiles);
 
-        // Create previews
         const newPreviews = files.map((file) => URL.createObjectURL(file));
         setImagePreviews((prev) => [...prev, ...newPreviews]);
 
-        // Convert to base64 and send to parent
         Promise.all<string>(
           files.map(
             (file) =>
@@ -68,11 +66,9 @@ const FileUpload: React.FC<FileUploadProps> = ({
         const newVideoFiles = [...videoFiles, ...files] as FileWithPreview[];
         setVideoFiles(newVideoFiles);
 
-        // Create previews
         const newPreviews = files.map((file) => URL.createObjectURL(file));
         setVideoPreviews((prev) => [...prev, ...newPreviews]);
 
-        // Convert to base64 and send to parent
         Promise.all<string>(
           files.map(
             (file) =>
