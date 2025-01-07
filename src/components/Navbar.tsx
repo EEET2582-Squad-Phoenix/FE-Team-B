@@ -7,19 +7,27 @@ import { useRouter } from "next/navigation";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isLoggedin, setIsLoggedin] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [loading, setLoading] = useState(true);
   const router = useRouter();
 
   useEffect(() => {
     const token = localStorage.getItem("auth_token");
-    setIsLoggedin(!!token);
+    if (token) {
+      setIsLoggedIn(true);
+    } else {
+      setIsLoggedIn(false);
+    }
+    setLoading(false);
   } , []);
 
   const handleLogout = () => {
     localStorage.removeItem("auth_token");
-    setIsLoggedin(false);
+    setIsLoggedIn(false);
     router.push("/");
   }
+
+  if (loading) return null;
 
   return (
     <nav className="bg-blue-500 fixed h-16 top-0 w-full z-10">
@@ -44,7 +52,7 @@ const Navbar = () => {
             </div>
 
             <div className="flex items-center space-x-4">
-              {isLoggedin ? (
+              {isLoggedIn ? (
                 <button onClick={handleLogout} className="bg-red-500 text-white py-2 px-3 rounded-md">
                   Logout
                 </button>

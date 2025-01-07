@@ -23,9 +23,3 @@ export default function DashboardPage() {
   } , [router]);
   return <DashboardContent />;
 }
-
-// function DashboardPage() {
-//   return <DashboardContent />;
-// }
-
-// export default withAuth(DashboardPage);
