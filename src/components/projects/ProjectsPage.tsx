@@ -8,6 +8,7 @@ import { ProjectModal } from "./ProjectModal";
 import StatusFilter from "../table/StatusFilter";
 import CategoryFilter from "../table/CategoryFilter";
 import useProjectPage from "./hooks/useProjectPage";
+import ProgressFilter from "../table/ProgressFilter";
 
 const ProjectsPage = () => {
   const {
@@ -22,6 +23,8 @@ const ProjectsPage = () => {
     handleCategoryChange,
     handleStatusChange,
     handleSearchChange,
+    selectedProgress,
+    handleProgressChange,
   } = useProjectPage();
 
   return (
@@ -37,37 +40,10 @@ const ProjectsPage = () => {
           selectedCategories={selectedCategories}
         />
 
-        <div className="bg-white p-4 rounded-lg shadow">
-          <h3 className="font-medium mb-3">Country</h3>
-          <div className="space-y-2">
-            <label className="flex items-center space-x-2">
-              <input type="checkbox" defaultChecked />
-              <span>Country 1</span>
-            </label>
-            <label className="flex items-center space-x-2">
-              <input type="checkbox" />
-              <span>Country 2</span>
-            </label>
-            <label className="flex items-center space-x-2">
-              <input type="checkbox" />
-              <span>Country 3</span>
-            </label>
-          </div>
-        </div>
-
-        <div className="bg-white p-4 rounded-lg shadow">
-          <h3 className="font-medium mb-3">Donation progress</h3>
-          <div className="space-y-2">
-            <label className="flex items-center space-x-2">
-              <input type="checkbox" defaultChecked />
-              <span>Active</span>
-            </label>
-            <label className="flex items-center space-x-2">
-              <input type="checkbox" />
-              <span>Completed</span>
-            </label>
-          </div>
-        </div>
+        <ProgressFilter
+          onProgressChange={handleProgressChange}
+          selectedProgress={selectedProgress}
+        />
       </div>
 
       {/* Main Content */}

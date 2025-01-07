@@ -21,6 +21,10 @@ export const ProjectCategories = [
 
 export type ProjectCategory = (typeof ProjectCategories)[number];
 
+export const ProjectProgress = ["Ongoing", "Full"] as const;
+
+export type ProjectProgressType = (typeof ProjectProgress)[number];
+
 export interface Project {
   id: string;
   name: string;

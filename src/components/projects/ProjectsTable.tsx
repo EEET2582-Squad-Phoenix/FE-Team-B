@@ -4,6 +4,8 @@ import { Pencil, Trash2, CheckCircle, Star, Pause } from "lucide-react";
 import { ProjectModal } from "./ProjectModal";
 import { HaltProjectModal } from "./HaltProjectModal";
 import ActionButton from "@/components/table/ActionButton";
+import { Badge } from "@/components/ui/badge";
+import Image from "next/image";
 
 import {
   Table,
@@ -15,6 +17,8 @@ import {
 } from "@/components/ui/table";
 import { useProjectActions } from "./hooks/useProjectActions";
 import { useProjectModal } from "./hooks/useProjectModal";
+import { formatAmount, formatDuration } from "@/utils/formatValues";
+import { getStatusColor } from "@/utils/getCssValues";
 import { useHaltProjectModal } from "./hooks/useHaltProjectModal";
 
 interface ProjectsTableProps {
@@ -60,10 +64,13 @@ const ProjectsTable = ({ projects }: ProjectsTableProps) => {
         <TableHeader>
           <TableRow>
             <TableHead>ID</TableHead>
+            <TableHead>Thumbnail</TableHead>
             <TableHead>Name</TableHead>
             <TableHead>Country</TableHead>
             <TableHead>Category</TableHead>
-            <TableHead>goalAmount</TableHead>
+            <TableHead>Status</TableHead>
+            <TableHead>Amount</TableHead>
+            <TableHead>Duration</TableHead>
             <TableHead>Actions</TableHead>
           </TableRow>
         </TableHeader>
@@ -72,14 +79,40 @@ const ProjectsTable = ({ projects }: ProjectsTableProps) => {
             <TableRow
               key={project.id}
               className={
-                project.isHighlighted ? "bg-yellow-200 hover:bg-yellow-300" : ""
+                project.isHighlighted ? "bg-yellow-100 hover:bg-yellow-200" : ""
               }
             >
               <TableCell>{project.id}</TableCell>
+              <TableCell>
+                {project.imageURLs && project.imageURLs[0] ? (
+                  <div className="relative w-16 h-16">
+                    <Image
+                      src={project.imageURLs[0]}
+                      alt={project.name}
+                      className="rounded object-cover"
+                      fill
+                    />
+                  </div>
+                ) : (
+                  <div className="w-16 h-16 bg-gray-200 rounded flex items-center justify-center text-gray-400">
+                    No image
+                  </div>
+                )}
+              </TableCell>
               <TableCell>{project.name}</TableCell>
               <TableCell>{project.country}</TableCell>
               <TableCell>{project.category}</TableCell>
-              <TableCell>{project.goalAmount}</TableCell>
+              <TableCell>
+                <Badge className={getStatusColor(project.status)}>
+                  {project.status}
+                </Badge>
+              </TableCell>
+              <TableCell>
+                {formatAmount(project.raisedAmount, project.goalAmount)}
+              </TableCell>
+              <TableCell>
+                {formatDuration(project.startedAt || "", project.endedAt || "")}
+              </TableCell>
               <TableCell>
                 <div className="flex items-center space-x-1">
                   <ActionButton

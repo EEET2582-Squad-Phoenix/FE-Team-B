@@ -17,12 +17,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {
-  Project,
-  ProjectCategories,
-  ProjectCategory,
-  ProjectStatus,
-} from "@/types/Project";
+import { Project, ProjectCategories, ProjectCategory, ProjectStatus } from "@/types/Project";
 import { CalendarIcon, CheckCircle } from "lucide-react";
 import { CountryDropdown } from "react-country-region-selector";
 import { format } from "date-fns";
@@ -32,6 +27,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Calendar } from "../ui/calendar";
+import FileUpload from "../common/FileUpload";
 
 interface ProjectModalProps {
   project?: Project;
@@ -61,23 +57,13 @@ export function ProjectModal({
     isGlobal: project?.isGlobal || false,
     category: project?.category || "Food",
     status: project?.status || "Active",
-    haltedReason: Array.isArray(project?.haltedReason)
-      ? project.haltedReason
-      : [],
+    haltedReason: Array.isArray(project?.haltedReason) ? project.haltedReason : [],
     isHighlighted: project?.isHighlighted || false,
     isFullyFunded: project?.isFullyFunded || false,
-    createdAt: project?.createdAt
-      ? new Date(project.createdAt).toISOString()
-      : new Date().toISOString(),
-    updatedAt: project?.updatedAt
-      ? new Date(project.updatedAt).toISOString()
-      : new Date().toISOString(),
-    endedAt: project?.endedAt
-      ? new Date(project.endedAt).toISOString()
-      : new Date().toISOString(),
-    startedAt: project?.startedAt
-      ? new Date(project.startedAt).toISOString()
-      : new Date().toISOString(),
+    createdAt: project?.createdAt ? new Date(project.createdAt).toISOString() : new Date().toISOString(),
+    updatedAt: project?.updatedAt ? new Date(project.updatedAt).toISOString() : new Date().toISOString(),
+    endedAt: project?.endedAt ? new Date(project.endedAt).toISOString() : new Date().toISOString(),
+    startedAt: project?.startedAt ? new Date(project.startedAt).toISOString() : new Date().toISOString(),
   });
 
   useEffect(() => {
@@ -94,12 +80,7 @@ export function ProjectModal({
       ? ProjectCategory
       : K extends "status"
       ? ProjectStatus
-      : K extends
-          | "goalAmount"
-          | "raisedAmount"
-          | "isHighlighted"
-          | "isGlobal"
-          | "isFullyFunded"
+      : K extends "goalAmount" | "raisedAmount" | "isHighlighted" | "isGlobal" | "isFullyFunded"
       ? number | boolean
       : K extends "imageURLs" | "videoURLs"
       ? string[]
@@ -108,6 +89,14 @@ export function ProjectModal({
       : string
   ) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const handleImagesChange = (base64Files: string[]) => {
+    handleChange("imageURLs", base64Files);
+  };
+
+  const handleVideosChange = (base64Files: string[]) => {
+    handleChange("videoURLs", base64Files);
   };
 
   const handleSave = () => {
@@ -131,7 +120,6 @@ export function ProjectModal({
     if (formData.videoURLs && formData.videoURLs.length > 4) {
       errors.push("Maximum 4 videos allowed");
     }
-
     if (!formData.startedAt) {
       errors.push("Start date is required");
     }
@@ -146,13 +134,11 @@ export function ProjectModal({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent>
+      <DialogContent className="max-w-3xl max-h-[90vh] flex flex-col">
         <DialogHeader>
           <DialogTitle>{project ? "Edit Project" : "New Project"}</DialogTitle>
           <DialogDescription>
-            {project
-              ? "Update the project details."
-              : "Enter the details for your new project."}
+            {project ? "Update the project details." : "Enter the details for your new project."}
           </DialogDescription>
           {project?.status === "Unapproved" && (
             <div className="mt-2">
@@ -167,198 +153,179 @@ export function ProjectModal({
           )}
         </DialogHeader>
 
-        <div className="grid gap-4 py-4">
-          {project && (
+        <div className="flex-1 overflow-y-auto pr-6">
+          <div className="grid gap-4 py-4">
+            {project && (
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="id" className="text-right">
+                  ID
+                </Label>
+                <Input
+                  id="id"
+                  value={formData.id}
+                  className="col-span-3 bg-gray-100"
+                  disabled
+                />
+              </div>
+            )}
+
             <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="id" className="text-right">
-                ID
+              <Label htmlFor="name" className="text-right">
+                Name *
               </Label>
               <Input
-                id="id"
-                value={formData.id}
-                className="col-span-3 bg-gray-100"
-                disabled
+                id="name"
+                value={formData.name}
+                onChange={(e) => handleChange("name", e.target.value)}
+                className="col-span-3"
+                required
               />
             </div>
-          )}
 
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="name" className="text-right">
-              Name *
-            </Label>
-            <Input
-              id="name"
-              value={formData.name}
-              onChange={(e) => handleChange("name", e.target.value)}
-              className="col-span-3"
-              required
-            />
-          </div>
-
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="description" className="text-right">
-              Description
-            </Label>
-            <Input
-              id="description"
-              value={formData.description}
-              onChange={(e) => handleChange("description", e.target.value)}
-              className="col-span-3"
-            />
-          </div>
-
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="country" className="text-right">
-              Country *
-            </Label>
-            <div className="col-span-3">
-              <CountryDropdown
-                value={formData.country}
-                onChange={(val) => handleChange("country", val)}
-                className="w-full p-2 border rounded"
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="description" className="text-right">
+                Description
+              </Label>
+              <Input
+                id="description"
+                value={formData.description}
+                onChange={(e) => handleChange("description", e.target.value)}
+                className="col-span-3"
               />
             </div>
-          </div>
 
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="category" className="text-right">
-              Category *
-            </Label>
-            <Select
-              value={formData.category}
-              onValueChange={(value) =>
-                handleChange("category", value as ProjectCategory)
-              }
-            >
-              <SelectTrigger className="col-span-3">
-                <SelectValue placeholder="Select a category" />
-              </SelectTrigger>
-              <SelectContent>
-                {ProjectCategories.map((category) => (
-                  <SelectItem key={category} value={category}>
-                    {category}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="goalAmount" className="text-right">
-              Goal *
-            </Label>
-            <Input
-              id="goalAmount"
-              type="number"
-              value={formData.goalAmount}
-              onChange={(e) =>
-                handleChange("goalAmount", Number(e.target.value))
-              }
-              className="col-span-3"
-              min={0}
-            />
-          </div>
-
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label className="text-right">Start Date</Label>
-            <div className="col-span-3 flex flex-col gap-4">
-              <Popover>
-                <PopoverTrigger asChild>
-                  <Button
-                    variant="outline"
-                    className="w-full pl-3 text-left font-normal mt-2"
-                  >
-                    {formData.startedAt ? (
-                      format(new Date(formData.startedAt), "PPP")
-                    ) : (
-                      <span>Pick a start date</span>
-                    )}
-                    <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0" align="start">
-                  <Calendar
-                    mode="single"
-                    selected={
-                      formData.startedAt
-                        ? new Date(formData.startedAt)
-                        : undefined
-                    }
-                    onSelect={(date) =>
-                      handleChange("startedAt", date?.toISOString() || "")
-                    }
-                    initialFocus
-                  />
-                </PopoverContent>
-              </Popover>
+            <div className="grid grid-cols-4 items-start gap-4">
+              <Label className="text-right pt-2">Media</Label>
+              <div className="col-span-3">
+                <FileUpload
+                  onImagesChange={handleImagesChange}
+                  onVideosChange={handleVideosChange}
+                  maxImages={15}
+                  maxVideos={4}
+                />
+              </div>
             </div>
-          </div>
 
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label className="text-right">End Date</Label>
-            <div className="col-span-3 flex flex-col gap-4">
-              <Popover>
-                <PopoverTrigger asChild>
-                  <Button
-                    variant="outline"
-                    className="w-full pl-3 text-left font-normal mt-2"
-                  >
-                    {formData.endedAt ? (
-                      format(new Date(formData.endedAt), "PPP")
-                    ) : (
-                      <span>Pick an end date</span>
-                    )}
-                    <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0" align="start">
-                  <Calendar
-                    mode="single"
-                    selected={
-                      formData.endedAt ? new Date(formData.endedAt) : undefined
-                    }
-                    onSelect={(date) => handleChange("endedAt", date)}
-                    initialFocus
-                    fromDate={
-                      formData.startedAt
-                        ? new Date(formData.startedAt)
-                        : undefined
-                    }
-                  />
-                </PopoverContent>
-              </Popover>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="country" className="text-right">
+                Country *
+              </Label>
+              <div className="col-span-3">
+                <CountryDropdown
+                  value={formData.country}
+                  onChange={(val) => handleChange("country", val)}
+                  className="w-full p-2 border rounded"
+                />
+              </div>
             </div>
-          </div>
 
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="isHighlighted" className="text-right">
-              Highlighted
-            </Label>
-            <div className="col-span-3 flex items-center">
-              <input
-                id="isHighlighted"
-                type="checkbox"
-                checked={formData.isHighlighted}
-                onChange={(e) =>
-                  handleChange("isHighlighted", e.target.checked)
-                }
-                className="h-4 w-4 mr-2"
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="category" className="text-right">
+                Category *
+              </Label>
+              <Select
+                value={formData.category}
+                onValueChange={(value) => handleChange("category", value as ProjectCategory)}
+              >
+                <SelectTrigger className="col-span-3">
+                  <SelectValue placeholder="Select a category" />
+                </SelectTrigger>
+                <SelectContent>
+                  {ProjectCategories.map((category) => (
+                    <SelectItem key={category} value={category}>
+                      {category}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="goalAmount" className="text-right">
+                Goal *
+              </Label>
+              <Input
+                id="goalAmount"
+                type="number"
+                value={formData.goalAmount}
+                onChange={(e) => handleChange("goalAmount", Number(e.target.value))}
+                className="col-span-3"
+                min={0}
               />
             </div>
-          </div>
 
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="isGlobal" className="text-right">
-              Global
-            </Label>
-            <div className="col-span-3 flex items-center">
-              <input
-                id="isGlobal"
-                type="checkbox"
-                checked={formData.isGlobal}
-                onChange={(e) => handleChange("isGlobal", e.target.checked)}
-                className="h-4 w-4 mr-2"
-              />
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label className="text-right">Start Date</Label>
+              <div className="col-span-3 flex flex-col gap-4">
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant="outline"
+                      className="w-full pl-3 text-left font-normal"
+                    >
+                      {formData.startedAt ? (
+                        format(new Date(formData.startedAt), "PPP")
+                      ) : (
+                        <span>Pick a start date</span>
+                      )}
+                      <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar
+                      mode="single"
+                      selected={formData.startedAt ? new Date(formData.startedAt) : undefined}
+                      onSelect={(date) => handleChange("startedAt", date?.toISOString() || "")}
+                      initialFocus
+                    />
+                  </PopoverContent>
+                </Popover>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label className="text-right">End Date</Label>
+              <div className="col-span-3 flex flex-col gap-4">
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant="outline"
+                      className="w-full pl-3 text-left font-normal"
+                    >
+                      {formData.endedAt ? (
+                        format(new Date(formData.endedAt), "PPP")
+                      ) : (
+                        <span>Pick an end date</span>
+                      )}
+                      <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar
+                      mode="single"
+                      selected={formData.endedAt ? new Date(formData.endedAt) : undefined}
+                      onSelect={(date) => handleChange("endedAt", date || undefined)}
+                      initialFocus
+                      fromDate={formData.startedAt ? new Date(formData.startedAt) : undefined}
+                    />
+                  </PopoverContent>
+                </Popover>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="isGlobal" className="text-right">
+                Global
+              </Label>
+              <div className="col-span-3 flex items-center">
+                <input
+                  id="isGlobal"
+                  type="checkbox"
+                  checked={formData.isGlobal}
+                  onChange={(e) => handleChange("isGlobal", e.target.checked)}
+                  className="h-4 w-4 mr-2"
+                />
+              </div>
             </div>
           </div>
         </div>
