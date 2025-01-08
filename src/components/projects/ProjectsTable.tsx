@@ -17,8 +17,8 @@ import {
 } from "@/components/ui/table";
 import { useProjectActions } from "./hooks/useProjectActions";
 import { useProjectModal } from "./hooks/useProjectModal";
-import { formatAmount, formatDuration } from "@/utils/formatValues";
-import { getStatusColor } from "@/utils/getCssValues";
+import { formatAmount, formatDuration } from "@/utils/projects/formatValues";
+import { getStatusColor } from "@/utils/projects/getCssValues";
 import { useHaltProjectModal } from "./hooks/useHaltProjectModal";
 
 interface ProjectsTableProps {
@@ -45,8 +45,8 @@ const ProjectsTable = ({ projects }: ProjectsTableProps) => {
   const {
     isOpen: isHaltModalOpen,
     selectedProject,
-    reason,
-    setReason,
+    // reason,
+    // setReason,
     openModal: openHaltModal,
     closeModal: closeHaltModal,
   } = useHaltProjectModal();

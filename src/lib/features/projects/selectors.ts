@@ -1,4 +1,4 @@
-import { calculateProgress } from "@/utils/calculateProgress";
+import { calculateProgress } from "@/utils/projects/calculateProgress";
 import { RootState } from "../../store";
 
 export const projectListSelector = (state: RootState) => state.projects;

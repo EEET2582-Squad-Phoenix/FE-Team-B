@@ -1,34 +1,34 @@
 export const ProjectStatuses = [
-  "Unapproved",
-  "Active",
-  "Halted",
-  "Inactive",
-  "Completed",
+  "UNAPPROVED",
+  "ACTIVE",
+  "HALTED",
+  "INACTIVATED",
+  "HIDDEN",
+  "COMPLETED",
 ] as const;
 
 export type ProjectStatus = (typeof ProjectStatuses)[number];
 
 export const ProjectCategories = [
-  "Food",
-  "Health",
-  "Education",
-  "Environment",
-  "Religion",
-  "Humanitarian",
-  "Housing",
-  "Other",
+  "FOOD",
+  "EDUCATION",
+  "HEALTH",
+  "RELIGION",
+  "ENVIRONMENT",
+  "HOUSING",
+  "HUMANITARIAN",
+  "OTHER",
 ] as const;
 
 export type ProjectCategory = (typeof ProjectCategories)[number];
 
-export const ProjectProgress = ["Ongoing", "Full"] as const;
+export const ProjectProgress = ["ON-GOING", "FULL"] as const;
 
 export type ProjectProgressType = (typeof ProjectProgress)[number];
 
 export interface Project {
   id: string;
   name: string;
-  thumbnailURL?: string;
   imageURLs?: string[]; // 15
   videoURLs?: string[]; // 4
   description?: string;

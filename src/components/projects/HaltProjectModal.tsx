@@ -46,7 +46,7 @@ export function HaltProjectModal({
           <DialogHeader>
             <DialogTitle>Halt Project</DialogTitle>
             <DialogDescription>
-              Provide a reason for halting the project "{projectName}".
+              Provide a reason for halting the project {projectName}.
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">
