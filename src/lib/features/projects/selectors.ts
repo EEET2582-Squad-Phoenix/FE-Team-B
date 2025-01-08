@@ -1,7 +1,10 @@
 import { calculateProgress } from "@/utils/projects/calculateProgress";
 import { RootState } from "../../store";
 
-export const projectListSelector = (state: RootState) => state.projects;
+import { Project } from "@/types/Project";
+
+export const projectListSelector = (state: RootState): Project[] =>
+  state.projects.projects;
 
 export const filtersSelector = (state: RootState) => state.filters;
 
@@ -23,7 +26,7 @@ export const filteredProjectsSelector = (state: RootState) => {
 
     const hasProgress =
       progress.length === 0 ||
-      progress.includes(progressPercentage === 100 ? "Full" : "Ongoing");
+      progress.includes(progressPercentage === 100 ? "FULL" : "ON-GOING");
 
     return hasSearchText && hasCategory && hasStatus && hasProgress;
   });

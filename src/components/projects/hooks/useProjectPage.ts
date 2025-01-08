@@ -17,8 +17,8 @@ import { filteredProjectsSelector } from "@/lib/features/projects/selectors";
 import { v4 as uuidv4 } from "uuid";
 
 const useProjectPage = () => {
-  const projectList = useSelector(filteredProjectsSelector);
   const dispatch = useDispatch();
+  const projectList = useSelector(filteredProjectsSelector);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedCategories, setSelectedCategories] = useState<
@@ -26,9 +26,9 @@ const useProjectPage = () => {
   >([]);
   const [selectedStatuses, setSelectedStatuses] = useState<ProjectStatus[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedProgress, setSelectedProgress] = useState<ProjectProgressType[]>(
-    []
-  );
+  const [selectedProgress, setSelectedProgress] = useState<
+    ProjectProgressType[]
+  >([]);
 
   const addNewProjectHandler = useCallback(() => {
     setIsModalOpen(true);

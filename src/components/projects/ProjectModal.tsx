@@ -17,7 +17,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Project, ProjectCategories, ProjectCategory, ProjectStatus } from "@/types/Project";
+import {
+  Project,
+  ProjectCategories,
+  ProjectCategory,
+  ProjectRegion,
+  ProjectStatus,
+} from "@/types/Project";
 import { CalendarIcon, CheckCircle } from "lucide-react";
 import { CountryDropdown } from "react-country-region-selector";
 import { format } from "date-fns";
@@ -48,22 +54,31 @@ export function ProjectModal({
     id: project?.id || "",
     name: project?.name || "",
     description: project?.description || "",
-    thumbnailURL: project?.thumbnailURL || "",
     imageURLs: project?.imageURLs || [],
     videoURLs: project?.videoURLs || [],
     country: project?.country || "",
     goalAmount: project?.goalAmount || 0,
     raisedAmount: project?.raisedAmount || 0,
-    isGlobal: project?.isGlobal || false,
-    category: project?.category || "Food",
-    status: project?.status || "Active",
-    haltedReason: Array.isArray(project?.haltedReason) ? project.haltedReason : [],
+    region: project?.region || "GLOBAL",
+    category: project?.category || "FOOD",
+    status: project?.status || "ACTIVE",
+    haltedReason: Array.isArray(project?.haltedReason)
+      ? project.haltedReason
+      : [],
     isHighlighted: project?.isHighlighted || false,
-    isFullyFunded: project?.isFullyFunded || false,
-    createdAt: project?.createdAt ? new Date(project.createdAt).toISOString() : new Date().toISOString(),
-    updatedAt: project?.updatedAt ? new Date(project.updatedAt).toISOString() : new Date().toISOString(),
-    endedAt: project?.endedAt ? new Date(project.endedAt).toISOString() : new Date().toISOString(),
-    startedAt: project?.startedAt ? new Date(project.startedAt).toISOString() : new Date().toISOString(),
+    fundStatus: project?.fundStatus || "ON-GOING",
+    createdAt: project?.createdAt
+      ? new Date(project.createdAt).toISOString()
+      : new Date().toISOString(),
+    updatedAt: project?.updatedAt
+      ? new Date(project.updatedAt).toISOString()
+      : new Date().toISOString(),
+    endedAt: project?.endedAt
+      ? new Date(project.endedAt).toISOString()
+      : new Date().toISOString(),
+    startedAt: project?.startedAt
+      ? new Date(project.startedAt).toISOString()
+      : new Date().toISOString(),
   });
 
   useEffect(() => {
@@ -80,7 +95,7 @@ export function ProjectModal({
       ? ProjectCategory
       : K extends "status"
       ? ProjectStatus
-      : K extends "goalAmount" | "raisedAmount" | "isHighlighted" | "isGlobal" | "isFullyFunded"
+      : K extends "goalAmount" | "raisedAmount" | "isHighlighted" | "isGlobal"
       ? number | boolean
       : K extends "imageURLs" | "videoURLs"
       ? string[]
@@ -138,9 +153,11 @@ export function ProjectModal({
         <DialogHeader>
           <DialogTitle>{project ? "Edit Project" : "New Project"}</DialogTitle>
           <DialogDescription>
-            {project ? "Update the project details." : "Enter the details for your new project."}
+            {project
+              ? "Update the project details."
+              : "Enter the details for your new project."}
           </DialogDescription>
-          {project?.status === "Unapproved" && (
+          {project?.status === "UNAPPROVED" && (
             <div className="mt-2">
               <Button
                 onClick={() => onApprove(project.id)}
@@ -225,7 +242,9 @@ export function ProjectModal({
               </Label>
               <Select
                 value={formData.category}
-                onValueChange={(value) => handleChange("category", value as ProjectCategory)}
+                onValueChange={(value) =>
+                  handleChange("category", value as ProjectCategory)
+                }
               >
                 <SelectTrigger className="col-span-3">
                   <SelectValue placeholder="Select a category" />
@@ -248,7 +267,9 @@ export function ProjectModal({
                 id="goalAmount"
                 type="number"
                 value={formData.goalAmount}
-                onChange={(e) => handleChange("goalAmount", Number(e.target.value))}
+                onChange={(e) =>
+                  handleChange("goalAmount", Number(e.target.value))
+                }
                 className="col-span-3"
                 min={0}
               />
@@ -274,8 +295,14 @@ export function ProjectModal({
                   <PopoverContent className="w-auto p-0" align="start">
                     <Calendar
                       mode="single"
-                      selected={formData.startedAt ? new Date(formData.startedAt) : undefined}
-                      onSelect={(date) => handleChange("startedAt", date?.toISOString() || "")}
+                      selected={
+                        formData.startedAt
+                          ? new Date(formData.startedAt)
+                          : undefined
+                      }
+                      onSelect={(date) =>
+                        handleChange("startedAt", date?.toISOString() || "")
+                      }
                       initialFocus
                     />
                   </PopoverContent>
@@ -303,10 +330,20 @@ export function ProjectModal({
                   <PopoverContent className="w-auto p-0" align="start">
                     <Calendar
                       mode="single"
-                      selected={formData.endedAt ? new Date(formData.endedAt) : undefined}
-                      onSelect={(date) => handleChange("endedAt", date || undefined)}
+                      selected={
+                        formData.endedAt
+                          ? new Date(formData.endedAt)
+                          : undefined
+                      }
+                      onSelect={(date) =>
+                        handleChange("endedAt", date || undefined)
+                      }
                       initialFocus
-                      fromDate={formData.startedAt ? new Date(formData.startedAt) : undefined}
+                      fromDate={
+                        formData.startedAt
+                          ? new Date(formData.startedAt)
+                          : undefined
+                      }
                     />
                   </PopoverContent>
                 </Popover>
@@ -314,18 +351,24 @@ export function ProjectModal({
             </div>
 
             <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="isGlobal" className="text-right">
-                Global
+              <Label htmlFor="region" className="text-right">
+                Region
               </Label>
-              <div className="col-span-3 flex items-center">
-                <input
-                  id="isGlobal"
-                  type="checkbox"
-                  checked={formData.isGlobal}
-                  onChange={(e) => handleChange("isGlobal", e.target.checked)}
-                  className="h-4 w-4 mr-2"
-                />
-              </div>
+              <Select
+                value={formData.region}
+                onValueChange={(value) => handleChange("region", value)}
+              >
+                <SelectTrigger className="col-span-3">
+                  <SelectValue placeholder="Select a region" />
+                </SelectTrigger>
+                <SelectContent>
+                  {ProjectRegion.map((region) => (
+                    <SelectItem key={region} value={region}>
+                      {region}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
           </div>
         </div>

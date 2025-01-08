@@ -13,7 +13,7 @@ interface HttpRequestOptions {
     | ArrayBuffer
     | URLSearchParams
     | ReadableStream<Uint8Array>
-    | null; // Allow various body types (JSON, FormData, etc.)
+    | null;
   headers?: HeadersInit;
 }
 

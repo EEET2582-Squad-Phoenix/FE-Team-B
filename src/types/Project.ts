@@ -26,6 +26,10 @@ export const ProjectProgress = ["ON-GOING", "FULL"] as const;
 
 export type ProjectProgressType = (typeof ProjectProgress)[number];
 
+export const ProjectRegion = ["GLOBAL", "REGIONAL"] as const;
+
+export type ProjectRegionType = (typeof ProjectRegion)[number];
+
 export interface Project {
   id: string;
   name: string;
@@ -35,12 +39,12 @@ export interface Project {
   country: string;
   goalAmount: number;
   raisedAmount: number;
-  isGlobal: boolean;
+  region: ProjectRegionType;
   category: ProjectCategory;
   status: ProjectStatus;
   haltedReason?: string[];
   isHighlighted: boolean;
-  isFullyFunded: boolean;
+  fundStatus: ProjectProgressType;
   startedAt: string;
   createdAt: string;
   updatedAt: string;

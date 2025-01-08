@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import ProjectsTable from "./ProjectsTable";
@@ -9,8 +9,21 @@ import StatusFilter from "../table/StatusFilter";
 import CategoryFilter from "../table/CategoryFilter";
 import useProjectPage from "./hooks/useProjectPage";
 import ProgressFilter from "../table/ProgressFilter";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState, AppDispatch } from "@/lib/store";
+import { fetchProjects } from "@/lib/features/projects/projectsSlice";
 
 const ProjectsPage = () => {
+  const dispatch: AppDispatch = useDispatch();
+  const status = useSelector((state: RootState) => state.projects.status);
+  const error = useSelector((state: RootState) => state.projects.error);
+  
+  useEffect(() => {
+    if (status === 'idle') {
+      dispatch(fetchProjects());
+    }
+  }, [status, dispatch]);
+
   const {
     projectList,
     isModalOpen,
@@ -26,6 +39,14 @@ const ProjectsPage = () => {
     selectedProgress,
     handleProgressChange,
   } = useProjectPage();
+
+  if (status === 'loading') {
+    return <div>Loading...</div>;
+  }
+
+  if (status === 'failed') {
+    return <div>Error: {error}</div>;
+  }
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mt-6">
