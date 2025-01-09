@@ -13,6 +13,7 @@ import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
+  SelectGroup,
   SelectItem,
   SelectTrigger,
   SelectValue,
@@ -20,11 +21,11 @@ import {
 import {
   Project,
   ProjectCategories,
-  ProjectCategory,
-  ProjectRegion,
-  ProjectStatus,
+  ProjectCategoryType,
+  ProjectRegions,
+  ProjectStatusType,
 } from "@/types/Project";
-import { CalendarIcon, CheckCircle } from "lucide-react";
+import { CalendarIcon, CheckCircle, X } from "lucide-react";
 import { CountryDropdown } from "react-country-region-selector";
 import { format } from "date-fns";
 import {
@@ -60,8 +61,8 @@ export function ProjectModal({
     goalAmount: project?.goalAmount || 0,
     raisedAmount: project?.raisedAmount || 0,
     region: project?.region || "GLOBAL",
-    category: project?.category || "FOOD",
-    status: project?.status || "ACTIVE",
+    category: project?.category || [],
+    status: project?.status || "ACTIVE", // default status created by admin
     haltedReason: Array.isArray(project?.haltedReason)
       ? project.haltedReason
       : [],
@@ -92,14 +93,14 @@ export function ProjectModal({
   const handleChange = <K extends keyof Project>(
     field: K,
     value: K extends "category"
-      ? ProjectCategory
+      ? ProjectCategoryType
       : K extends "status"
-      ? ProjectStatus
-      : K extends "goalAmount" | "raisedAmount" | "isHighlighted" | "isGlobal"
+      ? ProjectStatusType
+      : K extends "goalAmount" | "raisedAmount"
       ? number | boolean
       : K extends "imageURLs" | "videoURLs"
       ? string[]
-      : K extends "createdAt" | "updatedAt" | "endedAt" | "duration"
+      : K extends "createdAt" | "updatedAt" | "endedAt"
       ? Date | undefined
       : string
   ) => {
@@ -145,6 +146,15 @@ export function ProjectModal({
     }
 
     onSave(formData);
+  };
+
+  const handleCategorySelect = (selectedCategory: ProjectCategoryType) => {
+    setFormData((prev) => ({
+      ...prev,
+      category: prev.category.includes(selectedCategory)
+        ? prev.category.filter((cat) => cat !== selectedCategory)
+        : [...prev.category, selectedCategory],
+    }));
   };
 
   return (
@@ -236,27 +246,50 @@ export function ProjectModal({
               </div>
             </div>
 
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="category" className="text-right">
-                Category *
+            <div className="grid grid-cols-4 items-start gap-4">
+              <Label htmlFor="categories" className="text-right pt-2">
+                Categories *
               </Label>
-              <Select
-                value={formData.category}
-                onValueChange={(value) =>
-                  handleChange("category", value as ProjectCategory)
-                }
-              >
-                <SelectTrigger className="col-span-3">
-                  <SelectValue placeholder="Select a category" />
-                </SelectTrigger>
-                <SelectContent>
-                  {ProjectCategories.map((category) => (
-                    <SelectItem key={category} value={category}>
-                      {category}
-                    </SelectItem>
+              <div className="col-span-3">
+                <div className="flex flex-wrap gap-2 mb-2">
+                  {formData.category.map((cat) => (
+                    <div
+                      key={cat}
+                      className="flex items-center bg-blue-100 text-blue-800 rounded-full px-3 py-1"
+                    >
+                      {cat}
+                      <button
+                        onClick={() => handleCategorySelect(cat)}
+                        className="ml-2 hover:text-blue-600"
+                      >
+                        <X className="h-4 w-4" />
+                      </button>
+                    </div>
                   ))}
-                </SelectContent>
-              </Select>
+                </div>
+                <Select
+                  onValueChange={(value) =>
+                    handleCategorySelect(value as ProjectCategoryType)
+                  }
+                >
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Select categories" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      {ProjectCategories.map((cat) => (
+                        <SelectItem
+                          key={cat}
+                          value={cat}
+                          disabled={formData.category.includes(cat)}
+                        >
+                          {cat}
+                        </SelectItem>
+                      ))}
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
 
             <div className="grid grid-cols-4 items-center gap-4">
@@ -362,7 +395,7 @@ export function ProjectModal({
                   <SelectValue placeholder="Select a region" />
                 </SelectTrigger>
                 <SelectContent>
-                  {ProjectRegion.map((region) => (
+                  {ProjectRegions.map((region) => (
                     <SelectItem key={region} value={region}>
                       {region}
                     </SelectItem>

@@ -1,9 +1,9 @@
 import React from "react";
-import { ProjectStatus, ProjectStatuses } from "@/types/Project";
+import { ProjectStatusType, ProjectStatuses } from "@/types/Project";
 
 interface StatusFilterProps {
-  onStatusChange: (status: ProjectStatus[]) => void;
-  selectedStatuses: ProjectStatus[];
+  onStatusChange: (status: ProjectStatusType[]) => void;
+  selectedStatuses: ProjectStatusType[];
 }
 
 const StatusFilter: React.FC<StatusFilterProps> = ({

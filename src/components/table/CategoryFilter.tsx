@@ -1,12 +1,15 @@
-import React from 'react';
-import { ProjectCategory, ProjectCategories } from '@/types/Project';
+import React from "react";
+import { ProjectCategoryType, ProjectCategories } from "@/types/Project";
 
 interface CategoryFilterProps {
-  onCategoryChange: (category: ProjectCategory[]) => void;
-  selectedCategories: ProjectCategory[]; 
+  onCategoryChange: (category: ProjectCategoryType[]) => void;
+  selectedCategories: ProjectCategoryType[];
 }
 
-const CategoryFilter: React.FC<CategoryFilterProps> = ({ onCategoryChange, selectedCategories }) => {
+const CategoryFilter: React.FC<CategoryFilterProps> = ({
+  onCategoryChange,
+  selectedCategories,
+}) => {
   return (
     <div className="bg-white p-4 rounded-lg shadow">
       <h3 className="font-medium mb-3">Category</h3>

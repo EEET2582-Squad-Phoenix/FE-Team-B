@@ -2,9 +2,9 @@ import { useState, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   Project,
-  ProjectCategory,
+  ProjectCategoryType,
   ProjectProgressType,
-  ProjectStatus,
+  ProjectStatusType,
 } from "@/types/Project";
 import { addProject } from "@/lib/features/projects/projectsSlice";
 import {
@@ -22,9 +22,11 @@ const useProjectPage = () => {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedCategories, setSelectedCategories] = useState<
-    ProjectCategory[]
+    ProjectCategoryType[]
   >([]);
-  const [selectedStatuses, setSelectedStatuses] = useState<ProjectStatus[]>([]);
+  const [selectedStatuses, setSelectedStatuses] = useState<ProjectStatusType[]>(
+    []
+  );
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedProgress, setSelectedProgress] = useState<
     ProjectProgressType[]
@@ -47,7 +49,7 @@ const useProjectPage = () => {
   );
 
   const handleCategoryChange = useCallback(
-    (categories: ProjectCategory[]) => {
+    (categories: ProjectCategoryType[]) => {
       setSelectedCategories(categories);
       dispatch(setCategory(categories));
     },
@@ -55,7 +57,7 @@ const useProjectPage = () => {
   );
 
   const handleStatusChange = useCallback(
-    (statuses: ProjectStatus[]) => {
+    (statuses: ProjectStatusType[]) => {
       setSelectedStatuses(statuses);
       dispatch(setStatus(statuses));
     },
