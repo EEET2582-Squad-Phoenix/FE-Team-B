@@ -67,3 +67,9 @@ export interface Project {
   updatedAt: string;
   endDate?: string;
 }
+
+export interface HaltProjectPayload {
+  projectId: string;
+  haltedReasonAdmin?: string;
+  haltedReasonCharity?: string;
+}

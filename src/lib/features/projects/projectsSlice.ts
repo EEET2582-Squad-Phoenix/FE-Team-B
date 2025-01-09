@@ -1,10 +1,10 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { Project } from "@/types/Project";
+import { HaltProjectPayload, Project } from "@/types/Project";
 import sendHttpRequest from "@/utils/http-call/HttpRequest";
 import {
   PROJECT_ALL_URL,
   PROJECT_CREATE_URL,
-  // PROJECT_HALT_URL,
+  PROJECT_HALT_URL,
 } from "@/constants/service-url/project-url-config";
 
 const initialState: Project[] = [];
@@ -21,7 +21,7 @@ export const fetchProjects = createAsyncThunk<Project[]>(
     try {
       const response = await sendHttpRequest<Project[]>(PROJECT_ALL_URL);
       if (response.status === 200) {
-        console.log(response.json);
+        console.log("Fetch projects called", response.json);
         return response.json as Project[];
       }
       throw new Error(`Failed to fetch projects: ${response.status}`);
@@ -39,10 +39,41 @@ export const createProject = createAsyncThunk<Project, Project>(
         method: "POST",
         body: JSON.stringify(newProject),
       });
+      console.log("createProject response", response);
       if (response.status === 201) {
         return response.json as Project;
       } else {
         throw new Error(`Failed to create project: ${response.status}`);
+      }
+    } catch (error) {
+      throw error;
+    }
+  }
+);
+
+export const haltProject = createAsyncThunk<Project, HaltProjectPayload>(
+  "projects/haltProject",
+  async ({
+    projectId,
+    haltedReasonAdmin,
+    haltedReasonCharity,
+  }: HaltProjectPayload) => {
+    try {
+      const response = await sendHttpRequest<Project>(PROJECT_HALT_URL, {
+        method: "POST",
+        body: JSON.stringify({
+          projectId,
+          haltedReasonAdmin,
+          haltedReasonCharity,
+        }),
+      });
+
+      console.log("haltProject response", response);
+
+      if (response.status === 200) {
+        return response.json as Project;
+      } else {
+        throw new Error(`Failed to halt project: ${response.status}`);
       }
     } catch (error) {
       throw error;
@@ -90,14 +121,14 @@ export const projectsSlice = createSlice({
         project.status = "ACTIVE";
       }
     },
-    // haltProject: (state, action: PayloadAction<string>) => {
-    //   const project = state.projects.find(
-    //     (project) => project.id === action.payload
-    //   );
-    //   if (project) {
-    //     project.status = "HALTED";
-    //   }
-    // },
+    haltProject: (state, action: PayloadAction<string>) => {
+      const project = state.projects.find(
+        (project) => project.id === action.payload
+      );
+      if (project) {
+        project.status = "HALTED";
+      }
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -124,6 +155,20 @@ export const projectsSlice = createSlice({
       .addCase(createProject.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message ?? "Failed to create project";
+      })
+      // HALT PROJECT
+      .addCase(haltProject.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        const index = state.projects.findIndex(
+          (project) => project.id === action.payload.id
+        );
+        if (index !== -1) {
+          state.projects[index] = action.payload;
+        }
+      })
+      .addCase(haltProject.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message ?? "Failed to halt project";
       });
   },
 });

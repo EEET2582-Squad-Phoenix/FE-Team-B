@@ -7,6 +7,7 @@ import {
   Star,
   PowerOff,
   Play,
+  Pause,
 } from "lucide-react";
 import { ProjectModal } from "./ProjectModal";
 import ActionButton from "@/components/table/ActionButton";
@@ -25,6 +26,8 @@ import { useProjectActions } from "./hooks/useProjectActions";
 import { useProjectModal } from "./hooks/useProjectModal";
 import { formatAmount, formatDuration } from "@/utils/projects/formatValues";
 import { getStatusColor } from "@/utils/projects/getCssValues";
+import { HaltProjectModal } from "./HaltProjectModal";
+import { useHaltProjectModal } from "./hooks/useHaltProjectModal";
 
 interface ProjectsTableProps {
   projects: Project[];
@@ -47,6 +50,15 @@ const ProjectsTable = ({ projects }: ProjectsTableProps) => {
     handleEditProject,
     handleModalSave,
   } = useProjectModal(handleUpdateProject);
+
+  const {
+    isHaltModalOpen,
+    setIsHaltModalOpen,
+    selectedProject,
+    openHaltModal,
+    handleHaltProject,
+    // handleResumeProject,
+  } = useHaltProjectModal();
 
   return (
     <>
@@ -139,12 +151,18 @@ const ProjectsTable = ({ projects }: ProjectsTableProps) => {
                         onClick={() => handleHighlightProject(project.id)}
                         className="text-yellow-600"
                       />
-                      {/* <ActionButton
-                        icon={Pause}
-                        disabled={project.status !== "ACTIVE"}
-                        onClick={() => openHaltModal(project.id)}
-                        className="text-orange-600"
-                      /> */}
+                      <ActionButton
+                        icon={project.status === "HALTED" ? Play : Pause}
+                        disabled={
+                          !["ACTIVE", "HALTED"].includes(project.status)
+                        }
+                        onClick={() => openHaltModal(project)}
+                        className={
+                          project.status === "HALTED"
+                            ? "text-green-600"
+                            : "text-orange-600"
+                        }
+                      />
                       <ActionButton
                         icon={PowerOff}
                         // disabled={project.status !== "INACTIVATED"}
@@ -167,6 +185,14 @@ const ProjectsTable = ({ projects }: ProjectsTableProps) => {
         onOpenChange={setIsModalOpen}
         onSave={handleModalSave}
         onApprove={handleApproveProject}
+      />
+
+      <HaltProjectModal
+        project={selectedProject}
+        open={isHaltModalOpen}
+        onOpenChange={setIsHaltModalOpen}
+        onHalt={handleHaltProject}
+        // onResume={handleResumeProject}
       />
     </>
   );
