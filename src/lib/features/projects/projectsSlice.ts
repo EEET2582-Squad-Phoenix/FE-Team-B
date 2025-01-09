@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { HaltProjectPayload, Project } from "@/types/Project";
 import sendHttpRequest from "@/utils/http-call/HttpRequest";
 import {
+  PROJECT_ADMIN_DELETE_URL,
   PROJECT_ALL_URL,
   PROJECT_CREATE_URL,
   PROJECT_HALT_URL,
@@ -35,6 +36,7 @@ export const createProject = createAsyncThunk<Project, Project>(
   "projects/createProject",
   async (newProject: Project) => {
     try {
+      console.log("createProject called");
       const response = await sendHttpRequest<Project>(PROJECT_CREATE_URL, {
         method: "POST",
         body: JSON.stringify(newProject),
@@ -59,6 +61,7 @@ export const haltProject = createAsyncThunk<Project, HaltProjectPayload>(
     haltedReasonCharity,
   }: HaltProjectPayload) => {
     try {
+      console.log("haltProject called");
       const response = await sendHttpRequest<Project>(PROJECT_HALT_URL, {
         method: "POST",
         body: JSON.stringify({
@@ -81,6 +84,31 @@ export const haltProject = createAsyncThunk<Project, HaltProjectPayload>(
   }
 );
 
+export const deleteProject = createAsyncThunk(
+  "projects/deleteProject",
+  async (projectId: string) => {
+    try {
+      console.log("deleteProject called");
+
+      const response = await sendHttpRequest<Project>(
+        PROJECT_ADMIN_DELETE_URL,
+        {
+          method: "POST",
+          body: JSON.stringify({ projectId }),
+        }
+      );
+      console.log("deleteProject response", response);
+      if (response.status === 200) {
+        return projectId;
+      } else {
+        throw new Error(`Failed to delete project: ${response.status}`);
+      }
+    } catch (error) {
+      throw error;
+    }
+  }
+);
+
 export const projectsSlice = createSlice({
   name: "projectList",
   initialState: {
@@ -92,11 +120,11 @@ export const projectsSlice = createSlice({
     addProject: (state, action: PayloadAction<Project>) => {
       state.projects.push(action.payload);
     },
-    deleteProject: (state, action: PayloadAction<string>) => {
-      state.projects = state.projects.filter(
-        (project) => project.id !== action.payload
-      );
-    },
+    // deleteProject: (state, action: PayloadAction<string>) => {
+    //   state.projects = state.projects.filter(
+    //     (project) => project.id !== action.payload
+    //   );
+    // },
     updateProject: (state, action: PayloadAction<Project>) => {
       const index = state.projects.findIndex(
         (project) => project.id === action.payload.id
@@ -169,13 +197,22 @@ export const projectsSlice = createSlice({
       .addCase(haltProject.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message ?? "Failed to halt project";
+      })
+      // DELETE PROJECT
+      .addCase(deleteProject.fulfilled, (state, action) => {
+        state.projects = state.projects.filter(
+          (project) => project.id !== action.payload
+        );
+      })
+      .addCase(deleteProject.rejected, (state, action) => {
+        state.error = action.payload as string;
       });
   },
 });
 
 export const {
   addProject,
-  deleteProject,
+  // deleteProject,
   updateProject,
   highlightProject,
   approveProject,

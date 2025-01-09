@@ -2,6 +2,7 @@ interface HttpResponse<T> {
   json: T;
   status: number;
   responseHeaders: Headers;
+  error?: string;
 }
 
 interface HttpRequestOptions {
@@ -37,30 +38,45 @@ async function sendHttpRequest<T>(
       headers: mergedOptions.headers,
     });
 
-    if (!response.ok) {
-      const errorData = await response
-        .json()
-        .catch(() => ({ message: "Error parsing response" }));
-      throw new Error(
-        `HTTP error! status: ${response.status}, message: ${
-          errorData.message || response.statusText
-        }`
-      );
+    let jsonData: T | object;
+
+    try {
+      // Attempt to parse JSON response
+      jsonData = await response.json();
+    } catch {
+      // If JSON parsing fails, return a structured error response
+      return {
+        json: {} as T,
+        status: response.status,
+        responseHeaders: response.headers,
+        error: `Failed to parse response: ${response.statusText}`,
+      };
     }
 
-    const jsonData = (await response.json()) as T;
+    if (!response.ok) {
+      // Return structured error response for non-200 status codes
+      return {
+        json: jsonData,
+        status: response.status,
+        responseHeaders: response.headers,
+        error:
+          (jsonData as { message?: string })?.message || response.statusText,
+      };
+    }
 
+    // Success case
     return {
-      json: jsonData,
+      json: jsonData as T,
       status: response.status,
       responseHeaders: response.headers,
     };
   } catch (error) {
-    console.error("Error during HTTP request:", error);
+    // Network or other errors
     return {
       json: {} as T,
       status: 500,
       responseHeaders: new Headers(),
+      error: error instanceof Error ? error.message : "Unknown error occurred",
     };
   }
 }
