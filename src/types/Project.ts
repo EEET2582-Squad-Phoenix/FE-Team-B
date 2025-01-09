@@ -43,8 +43,8 @@ export const ProjectRegions = ["GLOBAL", "REGIONAL"] as const;
 export type ProjectRegionType = "GLOBAL" | "REGIONAL";
 
 export interface HaltReason {
-  adminReason: string;
-  charityReason: string;
+  haltedReasonCharity?: string;
+  haltedReasonAdmin?: string;
 }
 
 export interface Project {

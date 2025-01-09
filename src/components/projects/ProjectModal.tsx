@@ -63,10 +63,7 @@ export function ProjectModal({
     region: project?.region || "GLOBAL",
     category: project?.category || [],
     status: project?.status || "ACTIVE", // default status created by admin
-    haltedReason: project?.haltedReason || {
-      adminReason: "",
-      charityReason: "",
-    },
+    haltedReason: project?.haltedReason || undefined,
     isHighlighted: project?.isHighlighted || false,
     fundStatus: project?.fundStatus || "ON-GOING",
     createdAt: project?.createdAt

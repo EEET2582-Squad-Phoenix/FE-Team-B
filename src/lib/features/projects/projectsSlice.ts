@@ -4,7 +4,7 @@ import sendHttpRequest from "@/utils/http-call/HttpRequest";
 import {
   PROJECT_ALL_URL,
   PROJECT_CREATE_URL,
-  PROJECT_HALT_URL,
+  // PROJECT_HALT_URL,
 } from "@/constants/service-url/project-url-config";
 
 const initialState: Project[] = [];
@@ -43,29 +43,6 @@ export const createProject = createAsyncThunk<Project, Project>(
         return response.json as Project;
       } else {
         throw new Error(`Failed to create project: ${response.status}`);
-      }
-    } catch (error) {
-      throw error;
-    }
-  }
-);
-
-export const haltProject = createAsyncThunk<
-  Project,
-  { projectId: string; adminReason: string; charityReason: string }
->(
-  "projects/haltProject",
-  async ({ projectId, adminReason, charityReason }): Promise<Project> => {
-    try {
-      const response = await sendHttpRequest<Project>(PROJECT_HALT_URL, {
-        method: "POST",
-        body: JSON.stringify({ projectId, adminReason, charityReason }),
-      });
-
-      if (response.status === 200) {
-        return response.json as Project;
-      } else {
-        throw new Error(`Failed to halt project: ${response.status}`);
       }
     } catch (error) {
       throw error;
@@ -147,21 +124,6 @@ export const projectsSlice = createSlice({
       .addCase(createProject.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message ?? "Failed to create project";
-      })
-      // HALT PROJECT
-      .addCase(haltProject.fulfilled, (state, action) => {
-        state.status = "succeeded";
-        // Update the project in the state
-        const index = state.projects.findIndex(
-          (project) => project.id === action.payload.id
-        );
-        if (index !== -1) {
-          state.projects[index] = action.payload;
-        }
-      })
-      .addCase(haltProject.rejected, (state, action) => {
-        state.status = "failed";
-        state.error = action.error.message ?? "Failed to halt project";
       });
   },
 });

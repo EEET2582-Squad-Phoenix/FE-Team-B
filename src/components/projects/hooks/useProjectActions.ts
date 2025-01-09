@@ -4,10 +4,8 @@ import {
   updateProject,
   highlightProject,
   approveProject,
-  haltProject,
 } from "@/lib/features/projects/projectsSlice";
 import { Project } from "@/types/Project";
-import { useCallback } from "react";
 import { AppDispatch } from "@/lib/store";
 
 export const useProjectActions = () => {
@@ -30,25 +28,10 @@ export const useProjectActions = () => {
     dispatch(highlightProject(id));
   };
 
-  const handleHaltProject = useCallback(
-    async (projectId: string, adminReason: string, charityReason: string) => {
-      try {
-        await dispatch(
-          haltProject({ projectId, adminReason, charityReason })
-        );
-      } catch (error) {
-        console.error("Error halting project:", error);
-        alert(`Error halting project: ${error}`);
-      }
-    },
-    [dispatch]
-  );
-
   return {
     handleDeleteProject,
     handleUpdateProject,
     handleApproveProject,
     handleHighlightProject,
-    handleHaltProject,
   };
 };
