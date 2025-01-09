@@ -2,7 +2,7 @@
 
 import React from "react";
 import { Checkbox } from "@/components/ui/checkbox"
-import { useSignupDonor } from "@/components/common/auth/useSignupDonor";
+import { useSignupDonor } from "@/components/auth/hooks/useSignupDonor";
 
 export default function SignupDonor() {
     const {

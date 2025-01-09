@@ -3,7 +3,7 @@
 import React from "react";
 import { FcGoogle } from "react-icons/fc";
 import { FaFacebook } from "react-icons/fa";
-import { useSignup } from "@/components/common/auth/useSignup";
+import { useSignup } from "@/components/auth/hooks/useSignup";
 
 export default function Signup() {
     const {

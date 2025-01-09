@@ -3,7 +3,7 @@
 import React , { useState } from "react";
 import { FcGoogle } from "react-icons/fc";
 import { FaFacebook } from "react-icons/fa";
-import { useSignin } from "@/components/common/auth/useSignin";
+import { useSignin } from "@/components/auth/hooks/useSignin";
 
 export default function Signin() {    
     const {

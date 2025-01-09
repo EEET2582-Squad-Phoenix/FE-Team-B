@@ -2,7 +2,7 @@
 
 import React from "react";
 import { Checkbox } from "@/components/ui/checkbox"
-import { useSignupCharity } from "@/components/common/auth/useSignupCharity";
+import { useSignupCharity } from "@/components/auth/hooks/useSignupCharity";
 
 export default function SignupCharity() {
     const {
