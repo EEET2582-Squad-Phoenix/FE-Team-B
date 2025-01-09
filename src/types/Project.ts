@@ -57,8 +57,8 @@ export interface Project {
   haltedReason?: string[];
   isHighlighted: boolean;
   fundStatus: ProjectProgressType;
-  startedAt: string;
+  startDate: string;
   createdAt: string;
   updatedAt: string;
-  endedAt?: string;
+  endDate?: string;
 }

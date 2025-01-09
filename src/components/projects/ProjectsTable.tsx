@@ -121,7 +121,7 @@ const ProjectsTable = ({ projects }: ProjectsTableProps) => {
                 {formatAmount(project.raisedAmount, project.goalAmount)}
               </TableCell>
               <TableCell>
-                {formatDuration(project.startedAt || "", project.endedAt || "")}
+                {formatDuration(project.startDate || "", project.endDate || "")}
               </TableCell>
               <TableCell>
                 <div className="flex items-center space-x-1">

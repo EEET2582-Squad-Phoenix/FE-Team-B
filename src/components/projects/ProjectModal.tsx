@@ -74,11 +74,11 @@ export function ProjectModal({
     updatedAt: project?.updatedAt
       ? new Date(project.updatedAt).toISOString()
       : new Date().toISOString(),
-    endedAt: project?.endedAt
-      ? new Date(project.endedAt).toISOString()
+    endDate: project?.endDate
+      ? new Date(project.endDate).toISOString()
       : new Date().toISOString(),
-    startedAt: project?.startedAt
-      ? new Date(project.startedAt).toISOString()
+    startDate: project?.startDate
+      ? new Date(project.startDate).toISOString()
       : new Date().toISOString(),
   });
 
@@ -100,8 +100,8 @@ export function ProjectModal({
       ? number | boolean
       : K extends "imageURLs" | "videoURLs"
       ? string[]
-      : K extends "createdAt" | "updatedAt" | "endedAt"
-      ? Date | undefined
+      : K extends "createdAt" | "updatedAt" | "startDate" | "endDate"
+      ? string | undefined
       : string
   ) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
@@ -136,7 +136,7 @@ export function ProjectModal({
     if (formData.videoURLs && formData.videoURLs.length > 4) {
       errors.push("Maximum 4 videos allowed");
     }
-    if (!formData.startedAt) {
+    if (!formData.startDate) {
       errors.push("Start date is required");
     }
 
@@ -317,8 +317,8 @@ export function ProjectModal({
                       variant="outline"
                       className="w-full pl-3 text-left font-normal"
                     >
-                      {formData.startedAt ? (
-                        format(new Date(formData.startedAt), "PPP")
+                      {formData.startDate ? (
+                        format(new Date(formData.startDate), "PPP")
                       ) : (
                         <span>Pick a start date</span>
                       )}
@@ -329,12 +329,12 @@ export function ProjectModal({
                     <Calendar
                       mode="single"
                       selected={
-                        formData.startedAt
-                          ? new Date(formData.startedAt)
+                        formData.startDate
+                          ? new Date(formData.startDate)
                           : undefined
                       }
                       onSelect={(date) =>
-                        handleChange("startedAt", date?.toISOString() || "")
+                        handleChange("startDate", date?.toISOString() || "")
                       }
                       initialFocus
                     />
@@ -352,8 +352,8 @@ export function ProjectModal({
                       variant="outline"
                       className="w-full pl-3 text-left font-normal"
                     >
-                      {formData.endedAt ? (
-                        format(new Date(formData.endedAt), "PPP")
+                      {formData.endDate ? (
+                        format(new Date(formData.endDate), "PPP")
                       ) : (
                         <span>Pick an end date</span>
                       )}
@@ -364,17 +364,17 @@ export function ProjectModal({
                     <Calendar
                       mode="single"
                       selected={
-                        formData.endedAt
-                          ? new Date(formData.endedAt)
+                        formData.endDate
+                          ? new Date(formData.endDate)
                           : undefined
                       }
                       onSelect={(date) =>
-                        handleChange("endedAt", date || undefined)
+                        handleChange("endDate", date?.toISOString() || "")
                       }
                       initialFocus
                       fromDate={
-                        formData.startedAt
-                          ? new Date(formData.startedAt)
+                        formData.startDate
+                          ? new Date(formData.startDate)
                           : undefined
                       }
                     />
