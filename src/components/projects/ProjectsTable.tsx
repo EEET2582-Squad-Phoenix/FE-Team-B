@@ -1,6 +1,14 @@
 import React from "react";
 import { Project } from "@/types/Project";
-import { Pencil, Trash2, CheckCircle, Star, Pause } from "lucide-react";
+import {
+  Pencil,
+  Trash2,
+  CheckCircle,
+  Star,
+  Pause,
+  PowerOff,
+  Play,
+} from "lucide-react";
 import { ProjectModal } from "./ProjectModal";
 import { HaltProjectModal } from "./HaltProjectModal";
 import ActionButton from "@/components/table/ActionButton";
@@ -32,6 +40,8 @@ const ProjectsTable = ({ projects }: ProjectsTableProps) => {
     handleApproveProject,
     handleHighlightProject,
     handleHaltProject,
+    // handleDeactivateProject,
+    // handleResumeProject,
   } = useProjectActions();
 
   const {
@@ -115,41 +125,55 @@ const ProjectsTable = ({ projects }: ProjectsTableProps) => {
               </TableCell>
               <TableCell>
                 <div className="flex items-center space-x-1">
-                  <ActionButton
-                    icon={Pencil}
-                    disabled={project.status === "INACTIVATED"}
-                    onClick={() => handleEditProject(project)}
-                    className="text-blue-600"
-                  />
-                  <ActionButton
-                    icon={Trash2}
-                    disabled={project.status === "INACTIVATED"}
-                    onClick={() => handleDeleteProject(project.id)}
-                    className="text-red-600"
-                  />
-                  <ActionButton
-                    icon={CheckCircle}
-                    disabled={project.status === "ACTIVE"}
-                    onClick={() => handleApproveProject(project.id)}
-                    className="text-green-600"
-                  />
-                  <ActionButton
-                    icon={Star}
-                    disabled={
-                      project.isHighlighted || project.status === "INACTIVATED"
-                    }
-                    onClick={() => handleHighlightProject(project.id)}
-                    className="text-yellow-600"
-                  />
-                  <ActionButton
-                    icon={Pause}
-                    disabled={
-                      project.status === "HALTED" ||
-                      project.status === "INACTIVATED"
-                    }
-                    onClick={() => openHaltModal(project.id)}
-                    className="text-orange-600"
-                  />
+                  {project.status === "INACTIVATED" ? (
+                    <ActionButton
+                      icon={Play}
+                      // onClick={() => handleResumeProject(project.id)}
+                      onClick={() => handleEditProject(project)}
+                      className="text-green-600"
+                    />
+                  ) : (
+                    <>
+                      <ActionButton
+                        icon={Pencil}
+                        // disabled={project.status === "INACTIVATED"}
+                        onClick={() => handleEditProject(project)}
+                        className="text-blue-600"
+                      />
+                      <ActionButton
+                        icon={Trash2}
+                        onClick={() => handleDeleteProject(project.id)}
+                        className="text-red-600"
+                      />
+                      <ActionButton
+                        icon={CheckCircle}
+                        disabled={project.status !== "UNAPPROVED"}
+                        onClick={() => handleApproveProject(project.id)}
+                        className="text-green-600"
+                      />
+                      <ActionButton
+                        icon={Star}
+                        disabled={
+                          project.isHighlighted || project.status !== "ACTIVE"
+                        }
+                        onClick={() => handleHighlightProject(project.id)}
+                        className="text-yellow-600"
+                      />
+                      <ActionButton
+                        icon={Pause}
+                        disabled={project.status !== "ACTIVE"}
+                        onClick={() => openHaltModal(project.id)}
+                        className="text-orange-600"
+                      />
+                      <ActionButton
+                        icon={PowerOff}
+                        // disabled={project.status !== "INACTIVATED"}
+                        onClick={() => handleEditProject(project)}
+                        // onClick={() => handleDeactivateProject(project.id)}
+                        className="text-gray-600"
+                      />
+                    </>
+                  )}
                 </div>
               </TableCell>
             </TableRow>
