@@ -42,6 +42,11 @@ export const ProjectRegions = ["GLOBAL", "REGIONAL"] as const;
 
 export type ProjectRegionType = "GLOBAL" | "REGIONAL";
 
+export interface HaltReason {
+  adminReason: string;
+  charityReason: string;
+}
+
 export interface Project {
   id: string;
   name: string;
@@ -54,7 +59,7 @@ export interface Project {
   region: ProjectRegionType;
   category: ProjectCategoryType[];
   status: ProjectStatusType;
-  haltedReason?: string[];
+  haltedReason?: HaltReason;
   isHighlighted: boolean;
   fundStatus: ProjectProgressType;
   startDate: string;

@@ -54,16 +54,17 @@ const ProjectsTable = ({ projects }: ProjectsTableProps) => {
 
   const {
     isOpen: isHaltModalOpen,
-    selectedProject,
-    // reason,
-    // setReason,
+    selectedProjectId,
     openModal: openHaltModal,
     closeModal: closeHaltModal,
   } = useHaltProjectModal();
 
-  const handleHaltProjectSubmit = () => {
-    if (selectedProject) {
-      handleHaltProject(selectedProject);
+  const handleHaltProjectSubmit = (
+    adminReason: string,
+    charityReason: string
+  ) => {
+    if (selectedProjectId) {
+      handleHaltProject(selectedProjectId, adminReason, charityReason);
       closeHaltModal();
     }
   };
@@ -111,9 +112,7 @@ const ProjectsTable = ({ projects }: ProjectsTableProps) => {
               </TableCell>
               <TableCell>{project.name}</TableCell>
               <TableCell>{project.country}</TableCell>
-                <TableCell>
-                {project.category.join(", ")}
-                </TableCell>
+              <TableCell>{project.category.join(", ")}</TableCell>
               <TableCell>
                 <Badge className={getStatusColor(project.status)}>
                   {project.status}
@@ -192,7 +191,7 @@ const ProjectsTable = ({ projects }: ProjectsTableProps) => {
       />
 
       <HaltProjectModal
-        projectName={selectedProject || ""}
+        projectId={selectedProjectId || ""}
         open={isHaltModalOpen}
         onOpenChange={closeHaltModal}
         onSubmit={handleHaltProjectSubmit}

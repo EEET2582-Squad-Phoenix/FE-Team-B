@@ -2,25 +2,29 @@ import { useState } from "react";
 
 export function useHaltProjectModal() {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedProject, setSelectedProject] = useState<string | null>(null);
-  const [reason, setReason] = useState("");
+  const [selectedProjectId, setSelectedProjectId] = useState<string | null>(null);
+  const [donorReason, setDonorReason] = useState("");
+  const [charityReason, setCharityReason] = useState("");
 
-  const openModal = (projectName: string) => {
-    setSelectedProject(projectName);
+  const openModal = (projectId: string) => {
+    setSelectedProjectId(projectId);
     setIsOpen(true);
   };
 
   const closeModal = () => {
     setIsOpen(false);
-    setSelectedProject(null);
-    setReason("");
+    setSelectedProjectId(null);
+    setDonorReason("");
+    setCharityReason("");
   };
 
   return {
     isOpen,
-    selectedProject,
-    reason,
-    setReason,
+    selectedProjectId,
+    donorReason,
+    charityReason,
+    setDonorReason,
+    setCharityReason,
     openModal,
     closeModal,
   };
