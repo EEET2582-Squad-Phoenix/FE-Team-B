@@ -4,12 +4,13 @@ import {
   updateProject,
   highlightProject,
   approveProject,
-  haltProject,
 } from "@/lib/features/projects/projectsSlice";
 import { Project } from "@/types/Project";
+import { AppDispatch } from "@/lib/store";
 
 export const useProjectActions = () => {
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
 
   const handleDeleteProject = (id: string) => {
     dispatch(deleteProject(id));
@@ -27,15 +28,10 @@ export const useProjectActions = () => {
     dispatch(highlightProject(id));
   };
 
-  const handleHaltProject = (id: string) => {
-    dispatch(haltProject(id));
-  };
-
   return {
     handleDeleteProject,
     handleUpdateProject,
     handleApproveProject,
     handleHighlightProject,
-    handleHaltProject,
   };
 };

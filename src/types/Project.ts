@@ -3,11 +3,15 @@ export const ProjectStatuses = [
   "ACTIVE",
   "HALTED",
   "INACTIVATED",
-  "HIDDEN",
   "COMPLETED",
 ] as const;
 
-export type ProjectStatus = (typeof ProjectStatuses)[number];
+export type ProjectStatusType =
+  | "UNAPPROVED"
+  | "ACTIVE"
+  | "HALTED"
+  | "COMPLETED"
+  | "INACTIVATED";
 
 export const ProjectCategories = [
   "FOOD",
@@ -20,15 +24,28 @@ export const ProjectCategories = [
   "OTHER",
 ] as const;
 
-export type ProjectCategory = (typeof ProjectCategories)[number];
+export type ProjectCategoryType =
+  | "FOOD"
+  | "EDUCATION"
+  | "HEALTH"
+  | "RELIGION"
+  | "ENVIRONMENT"
+  | "HOUSING"
+  | "HUMANITARIAN"
+  | "OTHER";
 
 export const ProjectProgress = ["ON-GOING", "FULL"] as const;
 
-export type ProjectProgressType = (typeof ProjectProgress)[number];
+export type ProjectProgressType = "ON-GOING" | "FULL";
 
-export const ProjectRegion = ["GLOBAL", "REGIONAL"] as const;
+export const ProjectRegions = ["GLOBAL", "REGIONAL"] as const;
 
-export type ProjectRegionType = (typeof ProjectRegion)[number];
+export type ProjectRegionType = "GLOBAL" | "REGIONAL";
+
+export interface HaltReason {
+  haltedReasonCharity?: string;
+  haltedReasonAdmin?: string;
+}
 
 export interface Project {
   id: string;
@@ -40,13 +57,19 @@ export interface Project {
   goalAmount: number;
   raisedAmount: number;
   region: ProjectRegionType;
-  category: ProjectCategory;
-  status: ProjectStatus;
-  haltedReason?: string[];
+  category: ProjectCategoryType[];
+  status: ProjectStatusType;
+  haltedReason?: HaltReason;
   isHighlighted: boolean;
   fundStatus: ProjectProgressType;
-  startedAt: string;
+  startDate: string;
   createdAt: string;
   updatedAt: string;
-  endedAt?: string;
+  endDate?: string;
+}
+
+export interface HaltProjectPayload {
+  projectId: string;
+  haltedReasonAdmin?: string;
+  haltedReasonCharity?: string;
 }

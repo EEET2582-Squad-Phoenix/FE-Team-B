@@ -1,90 +1,13 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { Project } from "@/types/Project";
+import { HaltProjectPayload, Project } from "@/types/Project";
 import sendHttpRequest from "@/utils/http-call/HttpRequest";
-import { PROJECT_ALL_URL } from "@/constants/service-url/project-url-config";
+import {
+  PROJECT_ALL_URL,
+  PROJECT_CREATE_URL,
+  PROJECT_HALT_URL,
+} from "@/constants/service-url/project-url-config";
 
-const initialState: Project[] = [
-  {
-    id: "PRJ01",
-    name: "Project 1",
-    country: "Country 1",
-    category: "FOOD",
-    goalAmount: 10000,
-    status: "UNAPPROVED",
-    isHighlighted: false,
-    raisedAmount: 0,
-    region: "GLOBAL",
-    fundStatus: "ON-GOING",
-    createdAt: new Date().toISOString(),
-    startedAt: new Date().toISOString(),
-    endedAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-  },
-  {
-    id: "PRJ02",
-    name: "Project 2",
-    country: "Country 2",
-    category: "FOOD",
-    goalAmount: 25000,
-    status: "ACTIVE",
-    isHighlighted: true,
-    raisedAmount: 25000,
-    region: "REGIONAL",
-    fundStatus: "ON-GOING",
-    startedAt: new Date().toISOString(),
-    createdAt: new Date().toISOString(),
-    endedAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-  },
-  {
-    id: "PRJ03",
-    name: "Project 3",
-    country: "Country 3",
-    category: "EDUCATION",
-    goalAmount: 15000,
-    status: "HALTED",
-    isHighlighted: false,
-    raisedAmount: 15000,
-    region: "GLOBAL",
-    fundStatus: "ON-GOING",
-    createdAt: new Date().toISOString(),
-    startedAt: new Date().toISOString(),
-    endedAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-  },
-  {
-    id: "PRJ04",
-    name: "Project 4",
-    country: "Country 4",
-    category: "HEALTH",
-    goalAmount: 30000,
-    status: "UNAPPROVED",
-    isHighlighted: false,
-    raisedAmount: 0,
-    region: "REGIONAL",
-    fundStatus: "ON-GOING",
-    createdAt: new Date().toISOString(),
-    startedAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-    endedAt: new Date().toISOString(),
-  },
-  {
-    id: "PRJ05",
-    name: "Project 5",
-    country: "Country 5",
-    category: "EDUCATION",
-    goalAmount: 20000,
-    status: "INACTIVATED",
-    isHighlighted: false,
-    raisedAmount: 0,
-    region: "GLOBAL",
-    fundStatus: "ON-GOING",
-    createdAt: new Date().toISOString(),
-    startedAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-    endedAt: new Date().toISOString(),
-  },
-];
+const initialState: Project[] = [];
 
 interface ProjectListState {
   status: "idle" | "loading" | "succeeded" | "failed";
@@ -98,10 +21,60 @@ export const fetchProjects = createAsyncThunk<Project[]>(
     try {
       const response = await sendHttpRequest<Project[]>(PROJECT_ALL_URL);
       if (response.status === 200) {
-        console.log(response.json);
+        console.log("Fetch projects called", response.json);
         return response.json as Project[];
       }
       throw new Error(`Failed to fetch projects: ${response.status}`);
+    } catch (error) {
+      throw error;
+    }
+  }
+);
+
+export const createProject = createAsyncThunk<Project, Project>(
+  "projects/createProject",
+  async (newProject: Project) => {
+    try {
+      const response = await sendHttpRequest<Project>(PROJECT_CREATE_URL, {
+        method: "POST",
+        body: JSON.stringify(newProject),
+      });
+      console.log("createProject response", response);
+      if (response.status === 201) {
+        return response.json as Project;
+      } else {
+        throw new Error(`Failed to create project: ${response.status}`);
+      }
+    } catch (error) {
+      throw error;
+    }
+  }
+);
+
+export const haltProject = createAsyncThunk<Project, HaltProjectPayload>(
+  "projects/haltProject",
+  async ({
+    projectId,
+    haltedReasonAdmin,
+    haltedReasonCharity,
+  }: HaltProjectPayload) => {
+    try {
+      const response = await sendHttpRequest<Project>(PROJECT_HALT_URL, {
+        method: "POST",
+        body: JSON.stringify({
+          projectId,
+          haltedReasonAdmin,
+          haltedReasonCharity,
+        }),
+      });
+
+      console.log("haltProject response", response);
+
+      if (response.status === 200) {
+        return response.json as Project;
+      } else {
+        throw new Error(`Failed to halt project: ${response.status}`);
+      }
     } catch (error) {
       throw error;
     }
@@ -159,6 +132,7 @@ export const projectsSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      // FETCH PROJECTS
       .addCase(fetchProjects.pending, (state) => {
         state.status = "loading";
       })
@@ -172,6 +146,29 @@ export const projectsSlice = createSlice({
       .addCase(fetchProjects.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message ?? "Failed to fetch projects";
+      })
+      // CREATE PROJECT
+      .addCase(createProject.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.projects.push(action.payload);
+      })
+      .addCase(createProject.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message ?? "Failed to create project";
+      })
+      // HALT PROJECT
+      .addCase(haltProject.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        const index = state.projects.findIndex(
+          (project) => project.id === action.payload.id
+        );
+        if (index !== -1) {
+          state.projects[index] = action.payload;
+        }
+      })
+      .addCase(haltProject.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message ?? "Failed to halt project";
       });
   },
 });
@@ -182,7 +179,6 @@ export const {
   updateProject,
   highlightProject,
   approveProject,
-  haltProject,
 } = projectsSlice.actions;
 
 export default projectsSlice.reducer;

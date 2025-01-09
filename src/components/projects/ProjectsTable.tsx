@@ -1,8 +1,16 @@
 import React from "react";
 import { Project } from "@/types/Project";
-import { Pencil, Trash2, CheckCircle, Star, Pause } from "lucide-react";
+import {
+  Pencil,
+  Trash2,
+  CheckCircle,
+  Star,
+  Play,
+  Pause,
+  ArchiveRestore,
+  Archive,
+} from "lucide-react";
 import { ProjectModal } from "./ProjectModal";
-import { HaltProjectModal } from "./HaltProjectModal";
 import ActionButton from "@/components/table/ActionButton";
 import { Badge } from "@/components/ui/badge";
 import Image from "next/image";
@@ -17,8 +25,13 @@ import {
 } from "@/components/ui/table";
 import { useProjectActions } from "./hooks/useProjectActions";
 import { useProjectModal } from "./hooks/useProjectModal";
-import { formatAmount, formatDuration } from "@/utils/projects/formatValues";
-import { getStatusColor } from "@/utils/projects/getCssValues";
+import {
+  formatAmount,
+  formatDisplayText,
+  formatDuration,
+  getStatusColor,
+} from "@/utils/projects/formatValues";
+import { HaltProjectModal } from "./HaltProjectModal";
 import { useHaltProjectModal } from "./hooks/useHaltProjectModal";
 
 interface ProjectsTableProps {
@@ -31,7 +44,8 @@ const ProjectsTable = ({ projects }: ProjectsTableProps) => {
     handleUpdateProject,
     handleApproveProject,
     handleHighlightProject,
-    handleHaltProject,
+    // handleDeactivateProject,
+    // handleResumeProject,
   } = useProjectActions();
 
   const {
@@ -43,20 +57,13 @@ const ProjectsTable = ({ projects }: ProjectsTableProps) => {
   } = useProjectModal(handleUpdateProject);
 
   const {
-    isOpen: isHaltModalOpen,
+    isHaltModalOpen,
+    setIsHaltModalOpen,
     selectedProject,
-    // reason,
-    // setReason,
-    openModal: openHaltModal,
-    closeModal: closeHaltModal,
+    openHaltModal,
+    handleHaltProject,
+    // handleResumeProject,
   } = useHaltProjectModal();
-
-  const handleHaltProjectSubmit = () => {
-    if (selectedProject) {
-      handleHaltProject(selectedProject);
-      closeHaltModal();
-    }
-  };
 
   return (
     <>
@@ -67,6 +74,7 @@ const ProjectsTable = ({ projects }: ProjectsTableProps) => {
             <TableHead>Thumbnail</TableHead>
             <TableHead>Name</TableHead>
             <TableHead>Country</TableHead>
+            <TableHead>Scope</TableHead>
             <TableHead>Category</TableHead>
             <TableHead>Status</TableHead>
             <TableHead>Amount</TableHead>
@@ -99,9 +107,12 @@ const ProjectsTable = ({ projects }: ProjectsTableProps) => {
                   </div>
                 )}
               </TableCell>
-              <TableCell>{project.name}</TableCell>
-              <TableCell>{project.country}</TableCell>
-              <TableCell>{project.category}</TableCell>
+              <TableCell>{formatDisplayText(project.name)}</TableCell>
+              <TableCell>{formatDisplayText(project.country)}</TableCell>
+              <TableCell>{formatDisplayText(project.region)}</TableCell>
+              <TableCell>
+                {project.category.map(formatDisplayText).join(", ")}
+              </TableCell>
               <TableCell>
                 <Badge className={getStatusColor(project.status)}>
                   {project.status}
@@ -111,45 +122,65 @@ const ProjectsTable = ({ projects }: ProjectsTableProps) => {
                 {formatAmount(project.raisedAmount, project.goalAmount)}
               </TableCell>
               <TableCell>
-                {formatDuration(project.startedAt || "", project.endedAt || "")}
+                {formatDuration(project.startDate || "", project.endDate || "")}
               </TableCell>
               <TableCell>
                 <div className="flex items-center space-x-1">
-                  <ActionButton
-                    icon={Pencil}
-                    disabled={project.status === "INACTIVATED"}
-                    onClick={() => handleEditProject(project)}
-                    className="text-blue-600"
-                  />
-                  <ActionButton
-                    icon={Trash2}
-                    disabled={project.status === "INACTIVATED"}
-                    onClick={() => handleDeleteProject(project.id)}
-                    className="text-red-600"
-                  />
-                  <ActionButton
-                    icon={CheckCircle}
-                    disabled={project.status === "ACTIVE"}
-                    onClick={() => handleApproveProject(project.id)}
-                    className="text-green-600"
-                  />
-                  <ActionButton
-                    icon={Star}
-                    disabled={
-                      project.isHighlighted || project.status === "INACTIVATED"
-                    }
-                    onClick={() => handleHighlightProject(project.id)}
-                    className="text-yellow-600"
-                  />
-                  <ActionButton
-                    icon={Pause}
-                    disabled={
-                      project.status === "HALTED" ||
-                      project.status === "INACTIVATED"
-                    }
-                    onClick={() => openHaltModal(project.id)}
-                    className="text-orange-600"
-                  />
+                  {project.status === "INACTIVATED" ? (
+                    <ActionButton
+                      icon={ArchiveRestore}
+                      // onClick={() => handleRestoreProject(project.id)}
+                      onClick={() => handleEditProject(project)}
+                      className="text-green-600"
+                    />
+                  ) : (
+                    <>
+                      <ActionButton
+                        icon={Pencil}
+                        // disabled={project.status === "INACTIVATED"}
+                        onClick={() => handleEditProject(project)}
+                        className="text-blue-600"
+                      />
+                      <ActionButton
+                        icon={CheckCircle}
+                        disabled={project.status !== "UNAPPROVED"}
+                        onClick={() => handleApproveProject(project.id)}
+                        className="text-green-600"
+                      />
+                      <ActionButton
+                        icon={Star}
+                        disabled={
+                          project.isHighlighted || project.status !== "ACTIVE"
+                        }
+                        onClick={() => handleHighlightProject(project.id)}
+                        className="text-yellow-600"
+                      />
+                      <ActionButton
+                        icon={project.status === "HALTED" ? Play : Pause}
+                        disabled={
+                          !["ACTIVE", "HALTED"].includes(project.status)
+                        }
+                        onClick={() => openHaltModal(project)}
+                        className={
+                          project.status === "HALTED"
+                            ? "text-green-600"
+                            : "text-orange-600"
+                        }
+                      />
+                      <ActionButton
+                        icon={Archive}
+                        // disabled={project.status !== "INACTIVATED"}
+                        onClick={() => handleEditProject(project)}
+                        // onClick={() => handleDeactivateProject(project.id)}
+                        className="text-gray-600"
+                      />
+                      <ActionButton
+                        icon={Trash2}
+                        onClick={() => handleDeleteProject(project.id)}
+                        className="text-red-600"
+                      />
+                    </>
+                  )}
                 </div>
               </TableCell>
             </TableRow>
@@ -166,10 +197,11 @@ const ProjectsTable = ({ projects }: ProjectsTableProps) => {
       />
 
       <HaltProjectModal
-        projectName={selectedProject || ""}
+        project={selectedProject}
         open={isHaltModalOpen}
-        onOpenChange={closeHaltModal}
-        onSubmit={handleHaltProjectSubmit}
+        onOpenChange={setIsHaltModalOpen}
+        onHalt={handleHaltProject}
+        // onResume={handleResumeProject}
       />
     </>
   );

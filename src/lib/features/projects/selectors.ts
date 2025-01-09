@@ -15,8 +15,13 @@ export const filteredProjectsSelector = (state: RootState) => {
     const hasSearchText = project.name
       .toLowerCase()
       .includes(search.toLowerCase());
+
     const hasCategory =
-      category.length === 0 || category.includes(project.category);
+      category.length === 0 ||
+      project.category.some((projectCategory) =>
+        category.includes(projectCategory)
+      );
+
     const hasStatus = status.length === 0 || status.includes(project.status);
 
     const progressPercentage = calculateProgress(
