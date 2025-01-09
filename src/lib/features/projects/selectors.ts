@@ -1,7 +1,7 @@
 import { calculateProgress } from "@/utils/projects/calculateProgress";
 import { RootState } from "../../store";
 
-import { Project, ProjectCategoryType } from "@/types/Project";
+import { Project } from "@/types/Project";
 
 export const projectListSelector = (state: RootState): Project[] =>
   state.projects.projects;
@@ -15,9 +15,13 @@ export const filteredProjectsSelector = (state: RootState) => {
     const hasSearchText = project.name
       .toLowerCase()
       .includes(search.toLowerCase());
+
     const hasCategory =
       category.length === 0 ||
-      category.includes(project.category as unknown as ProjectCategoryType);
+      project.category.some((projectCategory) =>
+        category.includes(projectCategory)
+      );
+
     const hasStatus = status.length === 0 || status.includes(project.status);
 
     const progressPercentage = calculateProgress(

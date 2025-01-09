@@ -7,9 +7,15 @@ export const formatAmount = (raised: number, goal: number) => {
   )}%)`;
 };
 
-export const formatDuration = (startDate: string, endDate: string) => {
+export const formatDuration = (startDate: string, endDate?: string) => {
   try {
+    if (!startDate) {
+      return "No start date selected";
+    }
     const start = format(new Date(startDate), "MMM d, yyyy");
+    if (!endDate) {
+      return start;
+    }
     const end = format(new Date(endDate), "MMM d, yyyy");
     return `${start} - ${end}`;
   } catch {

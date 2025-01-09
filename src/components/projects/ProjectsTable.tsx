@@ -111,7 +111,9 @@ const ProjectsTable = ({ projects }: ProjectsTableProps) => {
               </TableCell>
               <TableCell>{project.name}</TableCell>
               <TableCell>{project.country}</TableCell>
-              <TableCell>{project.category}</TableCell>
+                <TableCell>
+                {project.category.join(", ")}
+                </TableCell>
               <TableCell>
                 <Badge className={getStatusColor(project.status)}>
                   {project.status}
