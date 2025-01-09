@@ -1,53 +1,23 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { User } from "@/types/User";
+import {
+  DONOR_ALL_URL,
+  DONOR_CREATE_URL,
+  DONOR_UPDATE_URL,
+  DONOR_DELETE_URL,
+  CHARITY_ALL_URL,
+  CHARITY_CREATE_URL,
+  CHARITY_UPDATE_URL,
+  CHARITY_DELETE_URL,
+} from "@/constants/service-url/user-url-config";
 
-const initialState: User[] = [
-  // {
-  //   id: "PRJ01",
-  //   email: "User 1",
-  //   country: "Country 1",
-  //   category: "Food",
-  //   goal: 10000,
-  //   status: "Pending",
-  //   isHighlighted: false,
-  // },
-  // {
-  //   id: "PRJ02",
-  //   name: "User 2",
-  //   country: "Country 2",
-  //   category: "Food",
-  //   goal: 25000,
-  //   status: "Approved",
-  //   isHighlighted: true,
-  // },
-  // {
-  //   id: "PRJ03",
-  //   name: "User 3",
-  //   country: "Country 3",
-  //   category: "Education",
-  //   goal: 15000,
-  //   status: "Halted",
-  //   isHighlighted: false,
-  // },
-  // {
-  //   id: "PRJ04",
-  //   name: "User 4",
-  //   country: "Country 4",
-  //   category: "Health",
-  //   goal: 30000,
-  //   status: "Pending",
-  //   isHighlighted: false,
-  // },
-  // {
-  //   id: "PRJ05",
-  //   name: "User 5",
-  //   country: "Country 5",
-  //   category: "Education",
-  //   goal: 20000,
-  //   status: "Deleted",
-  //   isHighlighted: false,
-  // },
-];
+const initialState: User[] = [];
+
+interface UsersState {
+  status: "idle" | "loading" | "succeeded" | "failed";
+  error: string | null;
+  users: User[];
+}
 
 export const usersSlice = createSlice({
   name: "userList",
