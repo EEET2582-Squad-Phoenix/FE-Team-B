@@ -1,5 +1,6 @@
 import React from "react";
 import { ProjectCategoryType, ProjectCategories } from "@/types/Project";
+import { formatDisplayText } from "@/utils/projects/formatValues";
 
 interface CategoryFilterProps {
   onCategoryChange: (category: ProjectCategoryType[]) => void;
@@ -26,7 +27,7 @@ const CategoryFilter: React.FC<CategoryFilterProps> = ({
                 onCategoryChange(updatedCategories);
               }}
             />
-            <span>{category}</span>
+            <span>{formatDisplayText(category)}</span>
           </label>
         ))}
       </div>

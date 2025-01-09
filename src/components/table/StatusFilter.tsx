@@ -1,5 +1,6 @@
 import React from "react";
 import { ProjectStatusType, ProjectStatuses } from "@/types/Project";
+import { formatDisplayText } from "@/utils/projects/formatValues";
 
 interface StatusFilterProps {
   onStatusChange: (status: ProjectStatusType[]) => void;
@@ -26,7 +27,7 @@ const StatusFilter: React.FC<StatusFilterProps> = ({
                 onStatusChange(updatedStatuses);
               }}
             />
-            <span>{status}</span>
+            <span>{formatDisplayText(status)}</span>
           </label>
         ))}
       </div>

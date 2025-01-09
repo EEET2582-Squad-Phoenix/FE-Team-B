@@ -5,9 +5,10 @@ import {
   Trash2,
   CheckCircle,
   Star,
-  PowerOff,
   Play,
   Pause,
+  ArchiveRestore,
+  Archive,
 } from "lucide-react";
 import { ProjectModal } from "./ProjectModal";
 import ActionButton from "@/components/table/ActionButton";
@@ -24,8 +25,12 @@ import {
 } from "@/components/ui/table";
 import { useProjectActions } from "./hooks/useProjectActions";
 import { useProjectModal } from "./hooks/useProjectModal";
-import { formatAmount, formatDuration } from "@/utils/projects/formatValues";
-import { getStatusColor } from "@/utils/projects/getCssValues";
+import {
+  formatAmount,
+  formatDisplayText,
+  formatDuration,
+  getStatusColor,
+} from "@/utils/projects/formatValues";
 import { HaltProjectModal } from "./HaltProjectModal";
 import { useHaltProjectModal } from "./hooks/useHaltProjectModal";
 
@@ -69,6 +74,7 @@ const ProjectsTable = ({ projects }: ProjectsTableProps) => {
             <TableHead>Thumbnail</TableHead>
             <TableHead>Name</TableHead>
             <TableHead>Country</TableHead>
+            <TableHead>Scope</TableHead>
             <TableHead>Category</TableHead>
             <TableHead>Status</TableHead>
             <TableHead>Amount</TableHead>
@@ -101,9 +107,12 @@ const ProjectsTable = ({ projects }: ProjectsTableProps) => {
                   </div>
                 )}
               </TableCell>
-              <TableCell>{project.name}</TableCell>
-              <TableCell>{project.country}</TableCell>
-              <TableCell>{project.category.join(", ")}</TableCell>
+              <TableCell>{formatDisplayText(project.name)}</TableCell>
+              <TableCell>{formatDisplayText(project.country)}</TableCell>
+              <TableCell>{formatDisplayText(project.region)}</TableCell>
+              <TableCell>
+                {project.category.map(formatDisplayText).join(", ")}
+              </TableCell>
               <TableCell>
                 <Badge className={getStatusColor(project.status)}>
                   {project.status}
@@ -119,8 +128,8 @@ const ProjectsTable = ({ projects }: ProjectsTableProps) => {
                 <div className="flex items-center space-x-1">
                   {project.status === "INACTIVATED" ? (
                     <ActionButton
-                      icon={Play}
-                      // onClick={() => handleResumeProject(project.id)}
+                      icon={ArchiveRestore}
+                      // onClick={() => handleRestoreProject(project.id)}
                       onClick={() => handleEditProject(project)}
                       className="text-green-600"
                     />
@@ -131,11 +140,6 @@ const ProjectsTable = ({ projects }: ProjectsTableProps) => {
                         // disabled={project.status === "INACTIVATED"}
                         onClick={() => handleEditProject(project)}
                         className="text-blue-600"
-                      />
-                      <ActionButton
-                        icon={Trash2}
-                        onClick={() => handleDeleteProject(project.id)}
-                        className="text-red-600"
                       />
                       <ActionButton
                         icon={CheckCircle}
@@ -164,11 +168,16 @@ const ProjectsTable = ({ projects }: ProjectsTableProps) => {
                         }
                       />
                       <ActionButton
-                        icon={PowerOff}
+                        icon={Archive}
                         // disabled={project.status !== "INACTIVATED"}
                         onClick={() => handleEditProject(project)}
                         // onClick={() => handleDeactivateProject(project.id)}
                         className="text-gray-600"
+                      />
+                      <ActionButton
+                        icon={Trash2}
+                        onClick={() => handleDeleteProject(project.id)}
+                        className="text-red-600"
                       />
                     </>
                   )}
