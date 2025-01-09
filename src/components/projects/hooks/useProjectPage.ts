@@ -1,12 +1,13 @@
 import { useState, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import type { AppDispatch } from "@/lib/store";
 import {
   Project,
   ProjectCategoryType,
   ProjectProgressType,
   ProjectStatusType,
 } from "@/types/Project";
-import { addProject } from "@/lib/features/projects/projectsSlice";
+import { createProject } from "@/lib/features/projects/projectsSlice";
 import {
   setCategory,
   setProgress,
@@ -14,10 +15,10 @@ import {
   setStatus,
 } from "@/lib/features/projects/filtersSlice";
 import { filteredProjectsSelector } from "@/lib/features/projects/selectors";
-import { v4 as uuidv4 } from "uuid";
 
 const useProjectPage = () => {
-  const dispatch = useDispatch();
+  const dispatch: AppDispatch = useDispatch();
+  // const dispatch = useDispatch();
   const projectList = useSelector(filteredProjectsSelector);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -37,13 +38,18 @@ const useProjectPage = () => {
   }, []);
 
   const handleSave = useCallback(
-    (newProject: Project) => {
-      const projectToSave = {
-        ...newProject,
-        id: newProject.id || uuidv4(),
-      };
-      dispatch(addProject(projectToSave));
-      setIsModalOpen(false);
+    async (newProject: Project) => {
+      try {
+        await dispatch(createProject(newProject));
+        setIsModalOpen(false);
+      } catch (error) {
+        console.error("Error creating project:", error);
+        if (error instanceof Error) {
+          alert(`Error creating project: ${error.message}`);
+        } else {
+          alert("Error creating project");
+        }
+      }
     },
     [dispatch]
   );

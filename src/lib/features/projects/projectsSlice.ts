@@ -1,7 +1,10 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Project } from "@/types/Project";
 import sendHttpRequest from "@/utils/http-call/HttpRequest";
-import { PROJECT_ALL_URL } from "@/constants/service-url/project-url-config";
+import {
+  PROJECT_ALL_URL,
+  PROJECT_CREATE_URL,
+} from "@/constants/service-url/project-url-config";
 
 const initialState: Project[] = [];
 
@@ -21,6 +24,25 @@ export const fetchProjects = createAsyncThunk<Project[]>(
         return response.json as Project[];
       }
       throw new Error(`Failed to fetch projects: ${response.status}`);
+    } catch (error) {
+      throw error;
+    }
+  }
+);
+
+export const createProject = createAsyncThunk<Project, Project>(
+  "projects/createProject",
+  async (newProject: Project) => {
+    try {
+      const response = await sendHttpRequest<Project>(PROJECT_CREATE_URL, {
+        method: "POST",
+        body: JSON.stringify(newProject),
+      });
+      if (response.status === 201) {
+        return response.json as Project;
+      } else {
+        throw new Error(`Failed to create project: ${response.status}`);
+      }
     } catch (error) {
       throw error;
     }
@@ -78,6 +100,7 @@ export const projectsSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      // FETCH PROJECTS
       .addCase(fetchProjects.pending, (state) => {
         state.status = "loading";
       })
@@ -91,6 +114,15 @@ export const projectsSlice = createSlice({
       .addCase(fetchProjects.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message ?? "Failed to fetch projects";
+      })
+      // CREATE PROJECT
+      .addCase(createProject.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.projects.push(action.payload);
+      })
+      .addCase(createProject.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message ?? "Failed to create project";
       });
   },
 });
