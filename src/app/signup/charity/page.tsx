@@ -1,83 +1,27 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import { Checkbox } from "@/components/ui/checkbox"
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSignupCharity } from "@/components/common/auth/useSignupCharity";
 
 export default function SignupCharity() {
-    const [name, setName] = useState("");
-    const [address, setAddress] = useState("");
-    const [taxCode, setTaxCode] = useState("");
-    const [type, setType] = useState("");
-    const [avatar, setAvatar] = useState<File | null>(null);
-    const [video, setVideo] = useState<File | null>(null);
-    const [error, setError] = useState("");
-    const [loading, setLoading] = useState(false);
-    
-    const searchParams = useSearchParams();
-    const email = searchParams.get("email");
-    const password = searchParams.get("password");
-    const role = searchParams.get("role");
-
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        setError("");
-        setLoading(true);
-
-        if (!name.trim() || !address.trim() || !taxCode.trim()|| !type.trim()) {
-            setError("You need to fill in all the mandatory fields");
-            setLoading(false);
-            return;
-        }
-
-        const payload = {
-            email,
-            password,
-            role,
-            name,
-            address,
-            taxCode,
-            type,
-            avatar: avatar ? avatar.name : null,
-            video: video ? video.name : null,
-        };
-
-        try {
-            const response = await fetch("http://localhost:8080/auth/register", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(payload),
-            });
-
-            const data = await response.text();
-
-            if (response.ok) {
-                console.log("Registration successful:" , data);
-                window.location.href = "/signin";
-            } else {
-                console.error("Error signing up:", data);
-            }
-        } catch (err) {
-            console.error("Unexpected error:", err);
-            setError("Something went wrong. Please try again later.");
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (e.target.files && e.target.files[0]) {
-            setAvatar(e.target.files[0]);
-        }
-    };
-
-    const handleVideoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (e.target.files && e.target.files[0]) {
-            setVideo(e.target.files[0]);
-        }
-    };
+    const {
+        name,
+        setName,
+        address,
+        setAddress,
+        taxCode,
+        setTaxCode,
+        type,
+        setType,
+        avatar,
+        video,
+        error,
+        loading,
+        handleSubmit,
+        handleAvatarChange,
+        handleVideoChange,
+    } = useSignupCharity();
 
     return (
         <div className="flex h-screen bg-white">
@@ -169,6 +113,7 @@ export default function SignupCharity() {
                                 onChange={(e) => setType(e.target.value)}
                                 className="w-full border-2 border-gray-500 rounded-md h-12 px-4 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
                                 required
+                                defaultValue={"individual"}
                             >
                                 <option value="individual">Individual</option>
                                 <option value="corporation">Corporation</option>

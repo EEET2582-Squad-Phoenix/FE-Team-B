@@ -1,83 +1,27 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import { Checkbox } from "@/components/ui/checkbox"
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSignupDonor } from "@/components/common/auth/useSignupDonor";
 
 export default function SignupDonor() {
-    const [firstName, setFirstName] = useState("");
-    const [lastName, setLastName] = useState("");
-    const [address, setAddress] = useState("");
-    const [language, setLanguage] = useState("");
-    const [avatar, setAvatar] = useState<File | null>(null);
-    const [video, setVideo] = useState<File | null>(null);
-    const [error, setError] = useState("");
-    const [loading, setLoading] = useState(false);
-
-    const searchParams = useSearchParams();
-    const email = searchParams.get("email");
-    const password = searchParams.get("password");
-    const role = searchParams.get("role");
-    
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        setError("");
-        setLoading(true);
-
-        if (!firstName.trim() || !lastName.trim()) {
-            setError("First name and last name are required.");
-            setLoading(false);
-            return;
-        }
-
-        const payload = {
-            email,
-            password,
-            role,
-            firstName,
-            lastName,
-            address: address || null,
-            language: language || null,
-            avatar: avatar ? avatar.name : null,
-            video: video ? video.name : null,
-        };
-
-        try {
-            const response = await fetch("http://localhost:8080/auth/register", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(payload),
-            });
-
-            const data = await response.text();
-
-            if (response.ok) {
-                console.log("Registration successful:" , data);
-                window.location.href = "/signin";
-            } else {
-                console.error("Error signing up:", data);
-            }
-        } catch (err) {
-            console.error("Unexpected error:", err);
-            setError("Something went wrong. Please try again later.");
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (e.target.files && e.target.files[0]) {
-            setAvatar(e.target.files[0]);
-        }
-    };
-
-    const handleVideoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (e.target.files && e.target.files[0]) {
-            setVideo(e.target.files[0]);
-        }
-    };
+    const {
+        firstName,
+        setFirstName,
+        lastName,
+        setLastName,
+        address,
+        setAddress,
+        language,
+        setLanguage,
+        avatar,
+        video,
+        error,
+        loading,
+        handleSubmit,
+        handleAvatarChange,
+        handleVideoChange,
+    } = useSignupDonor();
 
     return (
         <div className="flex h-screen bg-white">
@@ -168,8 +112,9 @@ export default function SignupDonor() {
                             value={language}
                             onChange={(e) => setLanguage(e.target.value)}
                             className="w-full border-2 border-gray-500 rounded-md h-12 px-4 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
+                            defaultValue={"Vietnamese"}
                         >
-                            {["English", "Vietnamese", "Spanish", "French", "Chinese", "Japanese", "Korean", "Russian", "Arabic", "German", "Hindi", "Portuguese"]
+                            {["Vietnamese", "English", "Spanish", "French", "Chinese", "Japanese", "Korean", "Russian", "Arabic", "German", "Hindi", "Portuguese"]
                             .map((lang) => (
                                 <option key={lang.toLowerCase()} value={lang.toLowerCase()}>
                                     {lang}
