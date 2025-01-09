@@ -17,9 +17,9 @@ const ProjectsPage = () => {
   const dispatch: AppDispatch = useDispatch();
   const status = useSelector((state: RootState) => state.projects.status);
   const error = useSelector((state: RootState) => state.projects.error);
-  
+
   useEffect(() => {
-    if (status === 'idle') {
+    if (status === "idle") {
       dispatch(fetchProjects());
     }
   }, [status, dispatch]);
@@ -40,18 +40,18 @@ const ProjectsPage = () => {
     handleProgressChange,
   } = useProjectPage();
 
-  if (status === 'loading') {
+  if (status === "loading") {
     return <div>Loading...</div>;
   }
 
-  if (status === 'failed') {
+  if (status === "failed") {
     return <div>Error: {error}</div>;
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mt-6">
+    <div className="flex gap-6 mt-6">
       {/* Left Sidebar */}
-      <div className="space-y-6">
+      <div className="w-64 space-y-6 shrink-0">
         <StatusFilter
           onStatusChange={handleStatusChange}
           selectedStatuses={selectedStatuses}
@@ -68,7 +68,7 @@ const ProjectsPage = () => {
       </div>
 
       {/* Main Content */}
-      <div className="md:col-span-3">
+      <div className="flex-grow">
         <div className="flex justify-between items-center mb-4">
           <Input
             type="search"
