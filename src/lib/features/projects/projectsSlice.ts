@@ -109,6 +109,30 @@ export const deleteProject = createAsyncThunk(
   }
 );
 
+export const approveProject = createAsyncThunk(
+  "projects/approveProject",
+  async (projectId: string) => {
+    try {
+      console.log("approveProject called");
+
+      const response = await sendHttpRequest<Project>(
+        PROJECT_ADMIN_DELETE_URL,
+        {
+          method: "POST",
+          body: JSON.stringify({ projectId }),
+        }
+      );
+      console.log("approveProject response", response);
+      if (response.status === 200) {
+        return projectId;
+      } else {
+        throw new Error(`Failed to delete project: ${response.status}`);
+      }
+    } catch (error) {
+      throw error;
+    }
+  }
+);
 export const projectsSlice = createSlice({
   name: "projectList",
   initialState: {
@@ -141,14 +165,14 @@ export const projectsSlice = createSlice({
         project.isHighlighted = !project.isHighlighted;
       }
     },
-    approveProject: (state, action: PayloadAction<string>) => {
-      const project = state.projects.find(
-        (project) => project.id === action.payload
-      );
-      if (project) {
-        project.status = "ACTIVE";
-      }
-    },
+    // approveProject: (state, action: PayloadAction<string>) => {
+    //   const project = state.projects.find(
+    //     (project) => project.id === action.payload
+    //   );
+    //   if (project) {
+    //     project.status = "ACTIVE";
+    //   }
+    // },
     haltProject: (state, action: PayloadAction<string>) => {
       const project = state.projects.find(
         (project) => project.id === action.payload
@@ -215,7 +239,7 @@ export const {
   // deleteProject,
   updateProject,
   highlightProject,
-  approveProject,
+  // approveProject,
 } = projectsSlice.actions;
 
 export default projectsSlice.reducer;
