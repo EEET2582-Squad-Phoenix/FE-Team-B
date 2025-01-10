@@ -22,7 +22,6 @@ import {
   Project,
   ProjectCategories,
   ProjectCategoryType,
-  ProjectRegions,
   ProjectStatusType,
 } from "@/types/Project";
 import { CalendarIcon, CheckCircle, X } from "lucide-react";
@@ -60,8 +59,8 @@ export function ProjectModal({
     country: project?.country || "",
     goalAmount: project?.goalAmount || 0,
     raisedAmount: project?.raisedAmount || 0,
-    region: project?.region || "GLOBAL",
     category: project?.category || [],
+    isGlobal: project?.isGlobal || false,
     status: project?.status || "ACTIVE", // default status created by admin
     haltedReason: project?.haltedReason || undefined,
     isHighlighted: project?.isHighlighted || false,
@@ -94,7 +93,7 @@ export function ProjectModal({
       ? ProjectCategoryType
       : K extends "status"
       ? ProjectStatusType
-      : K extends "goalAmount" | "raisedAmount"
+      : K extends "goalAmount" | "raisedAmount" | "isGlobal"
       ? number | boolean
       : K extends "imageURLs" | "videoURLs"
       ? string[]
@@ -382,24 +381,13 @@ export function ProjectModal({
             </div>
 
             <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="region" className="text-right">
-                Region
-              </Label>
-              <Select
-                value={formData.region}
-                onValueChange={(value) => handleChange("region", value)}
-              >
-                <SelectTrigger className="col-span-3">
-                  <SelectValue placeholder="Select a region" />
-                </SelectTrigger>
-                <SelectContent>
-                  {ProjectRegions.map((region) => (
-                    <SelectItem key={region} value={region}>
-                      {region}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <Label className="text-right">Global</Label>
+              <input
+                type="checkbox"
+                checked={formData.isGlobal}
+                onChange={(e) => handleChange("isGlobal", e.target.checked)}
+                className="col-span-3"
+              />
             </div>
           </div>
         </div>

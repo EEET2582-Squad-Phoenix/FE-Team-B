@@ -9,6 +9,8 @@ import {
   Pause,
   ArchiveRestore,
   Archive,
+  Globe,
+  MapPin,
 } from "lucide-react";
 import { ProjectModal } from "./ProjectModal";
 import ActionButton from "@/components/table/ActionButton";
@@ -67,7 +69,7 @@ const ProjectsTable = ({ projects }: ProjectsTableProps) => {
 
   return (
     <>
-      <Table>
+      <Table className="max-w-full">
         <TableHeader>
           <TableRow>
             <TableHead>ID</TableHead>
@@ -110,7 +112,7 @@ const ProjectsTable = ({ projects }: ProjectsTableProps) => {
               </TableCell>
               <TableCell>{formatDisplayText(project.name)}</TableCell>
               <TableCell>{formatDisplayText(project.country)}</TableCell>
-              <TableCell>{formatDisplayText(project.region)}</TableCell>
+              <TableCell>{project.isGlobal ? <Globe /> : <MapPin />}</TableCell>
               <TableCell>
                 {project.category.map(formatDisplayText).join(", ")}
               </TableCell>
