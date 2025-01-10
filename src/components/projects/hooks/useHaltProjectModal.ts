@@ -1,12 +1,19 @@
+// "@/pages/projects/hooks/useHaltProjectModal.ts"
 import { useState } from "react";
-import { HaltProjectPayload, Project } from "@/types/Project";
+import { Project } from "@/types/Project";
 import { useAppDispatch } from "@/lib/hooks";
-import { haltProject } from "@/lib/features/projects/projectsSlice";
+import {
+  haltProject,
+  resumeProject,
+  fetchProjects,
+} from "@/lib/features/projects/projectsSlice";
 
 export const useHaltProjectModal = () => {
   const dispatch = useAppDispatch();
   const [isHaltModalOpen, setIsHaltModalOpen] = useState(false);
-  const [selectedHaltProject, setSelectedProject] = useState<Project | null>(null);
+  const [selectedHaltProject, setSelectedProject] = useState<Project | null>(
+    null
+  );
 
   const openHaltModal = (project: Project) => {
     setSelectedProject(project);
@@ -15,16 +22,15 @@ export const useHaltProjectModal = () => {
 
   const handleHaltProject = async (
     projectId: string,
-    donorMessage?: string,
-    charityMessage?: string
+    donorMessage: string,
+    charityMessage: string
   ) => {
     try {
-      const payload: HaltProjectPayload = {
-        projectId,
-        donorMessage,
-        charityMessage,
-      };
-      await dispatch(haltProject(payload)).unwrap();
+      await dispatch(
+        haltProject({ projectId, donorMessage, charityMessage })
+      ).unwrap();
+      dispatch(fetchProjects());
+      setIsHaltModalOpen(false);
     } catch (error) {
       console.error("Failed to halt project:", error);
     }
@@ -32,16 +38,15 @@ export const useHaltProjectModal = () => {
 
   const handleResumeProject = async (
     projectId: string,
-    donorMessage?: string,
-    charityMessage?: string
+    donorMessage: string,
+    charityMessage: string
   ) => {
     try {
-      const payload: HaltProjectPayload = {
-        projectId,
-        donorMessage,
-        charityMessage,
-      };
-      await dispatch(haltProject(payload)).unwrap();
+      await dispatch(
+        resumeProject({ projectId, donorMessage, charityMessage })
+      ).unwrap();
+      dispatch(fetchProjects());
+      setIsHaltModalOpen(false);
     } catch (error) {
       console.error("Failed to resume project:", error);
     }

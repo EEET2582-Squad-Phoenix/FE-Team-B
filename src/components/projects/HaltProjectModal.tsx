@@ -1,3 +1,4 @@
+// "@/pages/projects/HaltProjectModal.tsx"
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
@@ -21,7 +22,11 @@ interface HaltProjectModalProps {
     donorMessage: string,
     charityMessage: string
   ) => void;
-  onResume?: (projectId: string) => void;
+  onResume: (
+    projectId: string,
+    donorMessage: string,
+    charityMessage: string
+  ) => void;
 }
 
 export function HaltProjectModal({
@@ -32,12 +37,10 @@ export function HaltProjectModal({
   onResume,
 }: HaltProjectModalProps) {
   const [donorMessage, setDonorMessage] = useState(
-    project?.haltedMessage?.donorMessage ||
-      "We are temporarily pausing this project. We will update you soon."
+    project?.haltedMessage?.donorMessage || ""
   );
   const [charityMessage, setCharityMessage] = useState(
-    project?.haltedMessage?.charityMessage ||
-      "This project is temporarily paused. Please check back for updates."
+    project?.haltedMessage?.charityMessage || ""
   );
 
   const isHalted = project?.status === "HALTED";
@@ -45,16 +48,10 @@ export function HaltProjectModal({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (project) {
-      onHalt(project.id, donorMessage, charityMessage);
+      const handler = isHalted ? onResume : onHalt;
+      handler(project.id, donorMessage, charityMessage);
       setDonorMessage("");
       setCharityMessage("");
-      onOpenChange(false);
-    }
-  };
-
-  const handleResume = () => {
-    if (project) {
-      onResume?.(project.id);
       onOpenChange(false);
     }
   };
@@ -75,61 +72,38 @@ export function HaltProjectModal({
           </DialogDescription>
         </DialogHeader>
 
-        {!isHalted ? (
-          <form onSubmit={handleSubmit}>
-            <div className="grid gap-4 py-4">
-              <div className="grid gap-2">
-                <Label htmlFor="donorMessage">Message to donors</Label>{" "}
-                <Input
-                  id="donorMessage"
-                  placeholder="Enter message to donors"
-                  value={donorMessage}
-                  onChange={(e) => setDonorMessage(e.target.value)}
-                  className="col-span-3"
-                />
-              </div>
-              <div className="grid gap-2">
-                <Label htmlFor="charityMessage">Message to charities</Label>{" "}
-                <Input
-                  id="charityMessage"
-                  placeholder="Enter message to charities"
-                  value={charityMessage}
-                  onChange={(e) => setCharityMessage(e.target.value)}
-                  className="col-span-3"
-                />
-              </div>
+        <form onSubmit={handleSubmit}>
+          <div className="grid gap-4 py-4">
+            <div className="grid gap-2">
+              <Label htmlFor="donorMessage">Message to donors</Label>
+              <Input
+                id="donorMessage"
+                placeholder="Enter message to donors"
+                value={donorMessage}
+                onChange={(e) => setDonorMessage(e.target.value)}
+                className="col-span-3"
+              />
             </div>
-            <DialogFooter>
-              <Button variant="outline" onClick={() => onOpenChange(false)}>
-                Cancel
-              </Button>
-              <Button type="submit" variant="destructive">
-                Halt Project
-              </Button>
-            </DialogFooter>
-          </form>
-        ) : (
-          <div className="py-4">
-            <div className="grid gap-2 mb-4">
-              <Label>Current message to donors</Label>
-              <div className="text-sm text-gray-500">
-                {project.haltedMessage?.donorMessage || "No reason provided"}
-              </div>
+            <div className="grid gap-2">
+              <Label htmlFor="charityMessage">Message to charities</Label>
+              <Input
+                id="charityMessage"
+                placeholder="Enter message to charities"
+                value={charityMessage}
+                onChange={(e) => setCharityMessage(e.target.value)}
+                className="col-span-3"
+              />
             </div>
-            <div className="grid gap-2 mb-4">
-              <Label>Current message to charities</Label>
-              <div className="text-sm text-gray-500">
-                {project.haltedMessage?.charityMessage || "No reason provided"}
-              </div>
-            </div>
-            <DialogFooter>
-              <Button variant="outline" onClick={() => onOpenChange(false)}>
-                Cancel
-              </Button>
-              <Button onClick={handleResume}>Resume Project</Button>
-            </DialogFooter>
           </div>
-        )}
+          <DialogFooter>
+            <Button variant="outline" onClick={() => onOpenChange(false)}>
+              Cancel
+            </Button>
+            <Button type="submit">
+              {isHalted ? "Resume Project" : "Halt Project"}
+            </Button>
+          </DialogFooter>
+        </form>
       </DialogContent>
     </Dialog>
   );

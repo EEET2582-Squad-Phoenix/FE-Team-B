@@ -11,6 +11,7 @@ import {
   PROJECT_UPDATE_URL,
   PROJECT_DEACTIVATE_URL,
   PROJECT_RESTORE_URL,
+  PROJECT_RESUME_URL,
 } from "@/constants/service-url/project-url-config";
 
 const initialState: Project[] = [];
@@ -111,7 +112,7 @@ export const resumeProject = createAsyncThunk<Project, HaltProjectPayload>(
   async ({ projectId, donorMessage, charityMessage }: HaltProjectPayload) => {
     try {
       console.log("resumeProject called");
-      const response = await sendHttpRequest<Project>(PROJECT_HALT_URL, {
+      const response = await sendHttpRequest<Project>(PROJECT_RESUME_URL, {
         method: "POST",
         body: JSON.stringify({
           projectId,
