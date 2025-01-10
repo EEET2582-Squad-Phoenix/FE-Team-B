@@ -45,6 +45,7 @@ export interface HaltReason {
 
 export interface Project {
   id: string;
+  charityId: string;
   name: string;
   imageURLs?: string[]; // 15
   videoURLs?: string[]; // 4
@@ -61,7 +62,7 @@ export interface Project {
   startDate: string;
   createdAt: string;
   updatedAt: string;
-  endDate?: string;
+  endDate: string;
 }
 
 export interface HaltProjectPayload {

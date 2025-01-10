@@ -74,6 +74,7 @@ export function ProjectModal({
     endDate: project?.endDate
       ? new Date(project.endDate).toISOString()
       : new Date().toISOString(),
+    charityId: project?.charityId || "043717fa", // Added charityId initialization
     startDate: project?.startDate
       ? new Date(project.startDate).toISOString()
       : new Date().toISOString(),
@@ -135,6 +136,12 @@ export function ProjectModal({
     }
     if (!formData.startDate) {
       errors.push("Start date is required");
+    }
+
+    if (!formData.endDate) {
+      errors.push("End date is required");
+    } else if (new Date(formData.endDate) <= new Date(formData.startDate)) {
+      errors.push("End date must be after the start date");
     }
 
     if (errors.length > 0) {
@@ -306,7 +313,7 @@ export function ProjectModal({
             </div>
 
             <div className="grid grid-cols-4 items-center gap-4">
-              <Label className="text-right">Start Date</Label>
+              <Label className="text-right">Start Date *</Label>
               <div className="col-span-3 flex flex-col gap-4">
                 <Popover>
                   <PopoverTrigger asChild>
@@ -341,7 +348,7 @@ export function ProjectModal({
             </div>
 
             <div className="grid grid-cols-4 items-center gap-4">
-              <Label className="text-right">End Date</Label>
+              <Label className="text-right">End Date *</Label> {/* Added * */}
               <div className="col-span-3 flex flex-col gap-4">
                 <Popover>
                   <PopoverTrigger asChild>
@@ -386,7 +393,7 @@ export function ProjectModal({
                 type="checkbox"
                 checked={formData.isGlobal}
                 onChange={(e) => handleChange("isGlobal", e.target.checked)}
-                className="col-span-3"
+                className="col-span-3 text-left"
               />
             </div>
           </div>
