@@ -10,7 +10,7 @@ import {
   ArchiveRestore,
   Archive,
   Globe,
-  MapPin,
+  MapPinned,
 } from "lucide-react";
 import { ProjectModal } from "./ProjectModal";
 import ActionButton from "@/components/table/ActionButton";
@@ -130,7 +130,9 @@ const ProjectsTable = ({ projects }: ProjectsTableProps) => {
               </TableCell>
               <TableCell>{formatDisplayText(project.name)}</TableCell>
               <TableCell>{formatDisplayText(project.country)}</TableCell>
-              <TableCell>{project.isGlobal ? <Globe /> : <MapPin />}</TableCell>
+              <TableCell>
+                {project.isGlobal ? <Globe /> : <MapPinned />}
+              </TableCell>
               <TableCell>
                 {project.category
                   ? project.category.map(formatDisplayText).join(", ")
