@@ -4,6 +4,7 @@ export const PROJECT_SERVICE_URL_A = `${HOST_URL_A}/api/charity-project`;
 
 export const PROJECT_CREATE_URL = `${PROJECT_SERVICE_URL_A}/createProject`; // used
 export const PROJECT_ALL_URL = `${PROJECT_SERVICE_URL_A}/all`; // used
+export const PROJECT_GET_URL = `${PROJECT_SERVICE_URL_A}/`; // used
 export const PROJECT_GET_HIGHLIGHTED_URL = `${PROJECT_SERVICE_URL_A}/highlighted`;
 
 export const PROJECT_RECOVER_URL = `${PROJECT_SERVICE_URL_A}/recoverProject`;

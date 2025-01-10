@@ -38,10 +38,6 @@ export const ProjectProgress = ["ON-GOING", "FULL"] as const;
 
 export type ProjectProgressType = "ON-GOING" | "FULL";
 
-export const ProjectRegions = ["GLOBAL", "REGIONAL"] as const;
-
-export type ProjectRegionType = "GLOBAL" | "REGIONAL";
-
 export interface HaltReason {
   haltedReasonCharity?: string;
   haltedReasonAdmin?: string;
@@ -56,7 +52,7 @@ export interface Project {
   country: string;
   goalAmount: number;
   raisedAmount: number;
-  region: ProjectRegionType;
+  isGlobal: boolean;
   category: ProjectCategoryType[];
   status: ProjectStatusType;
   haltedReason?: HaltReason;

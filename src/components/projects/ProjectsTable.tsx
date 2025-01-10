@@ -35,6 +35,15 @@ import {
 } from "@/utils/projects/formatValues";
 import { HaltProjectModal } from "./HaltProjectModal";
 import { useHaltProjectModal } from "./hooks/useHaltProjectModal";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination"
 
 interface ProjectsTableProps {
   projects: Project[];
@@ -190,6 +199,30 @@ const ProjectsTable = ({ projects }: ProjectsTableProps) => {
           ))}
         </TableBody>
       </Table>
+      <Pagination>
+      <PaginationContent>
+        <PaginationItem>
+          <PaginationPrevious href="#" />
+        </PaginationItem>
+        <PaginationItem>
+          <PaginationLink href="#">1</PaginationLink>
+        </PaginationItem>
+        <PaginationItem>
+          <PaginationLink href="#" isActive>
+            2
+          </PaginationLink>
+        </PaginationItem>
+        <PaginationItem>
+          <PaginationLink href="#">3</PaginationLink>
+        </PaginationItem>
+        <PaginationItem>
+          <PaginationEllipsis />
+        </PaginationItem>
+        <PaginationItem>
+          <PaginationNext href="#" />
+        </PaginationItem>
+      </PaginationContent>
+    </Pagination>
 
       <ProjectModal
         project={currentProject}

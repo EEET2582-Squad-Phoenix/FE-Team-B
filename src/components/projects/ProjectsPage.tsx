@@ -11,7 +11,7 @@ import useProjectPage from "./hooks/useProjectPage";
 import ProgressFilter from "../table/ProgressFilter";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState, AppDispatch } from "@/lib/store";
-import { fetchProjects } from "@/lib/features/projects/projectsSlice";
+import { fetchAllProjects } from "@/lib/features/projects/projectsSlice";
 
 const ProjectsPage = () => {
   const dispatch: AppDispatch = useDispatch();
@@ -20,7 +20,7 @@ const ProjectsPage = () => {
 
   useEffect(() => {
     if (status === "idle") {
-      dispatch(fetchProjects());
+      dispatch(fetchAllProjects());
     }
   }, [status, dispatch]);
 

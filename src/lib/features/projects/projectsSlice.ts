@@ -5,8 +5,10 @@ import {
   PROJECT_ADMIN_DELETE_URL,
   PROJECT_ALL_URL,
   PROJECT_CREATE_URL,
+  PROJECT_GET_URL,
   PROJECT_HALT_URL,
 } from "@/constants/service-url/project-url-config";
+import { Page } from "@/types/Page";
 
 const initialState: Project[] = [];
 
@@ -16,11 +18,27 @@ interface ProjectListState {
   projects: Project[];
 }
 
-export const fetchProjects = createAsyncThunk<Project[]>(
-  "projects/fetchProjects",
+export const fetchAllProjects = createAsyncThunk<Project[]>(
+  "projects/fetchAllProjects",
   async () => {
     try {
       const response = await sendHttpRequest<Project[]>(PROJECT_ALL_URL);
+      if (response.status === 200) {
+        console.log("Fetch projects called", response.json);
+        return response.json as Project[];
+      }
+      throw new Error(`Failed to fetch projects: ${response.status}`);
+    } catch (error) {
+      throw error;
+    }
+  }
+);
+
+export const fetchProjects = createAsyncThunk<Project[], Page>(
+  "projects/fetchProjects",
+  async (page: Page) => {
+    try {
+      const response = await sendHttpRequest<Project[]>(`${PROJECT_GET_URL}?page=${page.currentPage}`);
       if (response.status === 200) {
         console.log("Fetch projects called", response.json);
         return response.json as Project[];
@@ -161,17 +179,17 @@ export const projectsSlice = createSlice({
   extraReducers: (builder) => {
     builder
       // FETCH PROJECTS
-      .addCase(fetchProjects.pending, (state) => {
+      .addCase(fetchAllProjects.pending, (state) => {
         state.status = "loading";
       })
       .addCase(
-        fetchProjects.fulfilled,
+        fetchAllProjects.fulfilled,
         (state, action: PayloadAction<Project[]>) => {
           state.status = "succeeded";
           state.projects = action.payload;
         }
       )
-      .addCase(fetchProjects.rejected, (state, action) => {
+      .addCase(fetchAllProjects.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message ?? "Failed to fetch projects";
       })
