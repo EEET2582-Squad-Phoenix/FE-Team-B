@@ -2,13 +2,15 @@ import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { HaltProjectPayload, Project } from "@/types/Project";
 import sendHttpRequest from "@/utils/http-call/HttpRequest";
 import {
-  PROJECT_ADMIN_DELETE_URL,
+  PROJECT_DELETE_URL,
   PROJECT_ALL_URL,
   PROJECT_APPROVE_URL,
   PROJECT_CREATE_URL,
   PROJECT_HALT_URL,
   PROJECT_TOGGLE_HIGHLIGHTED_URL,
   PROJECT_UPDATE_URL,
+  PROJECT_DEACTIVATE_URL,
+  PROJECT_RESTORE_URL,
 } from "@/constants/service-url/project-url-config";
 
 const initialState: Project[] = [];
@@ -137,13 +139,10 @@ export const deleteProject = createAsyncThunk(
     try {
       console.log("deleteProject called");
 
-      const response = await sendHttpRequest<Project>(
-        PROJECT_ADMIN_DELETE_URL,
-        {
-          method: "DELETE",
-          body: JSON.stringify({ projectId }),
-        }
-      );
+      const response = await sendHttpRequest<Project>(PROJECT_DELETE_URL, {
+        method: "DELETE",
+        body: JSON.stringify({ projectId }),
+      });
       console.log("deleteProject response", response);
       if (response.status === 200) {
         return projectId;
@@ -205,6 +204,44 @@ export const toggleHighlightProject = createAsyncThunk(
   }
 );
 
+export const deactivateProject = createAsyncThunk<
+  Project,
+  { projectId: string; deletionReason: string }
+>("projects/deactivateProject", async ({ projectId, deletionReason }) => {
+  try {
+    const response = await sendHttpRequest<Project>(PROJECT_DEACTIVATE_URL, {
+      method: "POST",
+      body: JSON.stringify({ projectId, deletionReason }),
+    });
+    if (response.status === 200) {
+      return response.json as Project;
+    } else {
+      throw new Error(`Failed to deactivate project: ${response.status}`);
+    }
+  } catch (error) {
+    throw error;
+  }
+});
+
+export const restoreProject = createAsyncThunk<Project, { projectId: string }>(
+  "projects/restoreProject",
+  async ({ projectId }) => {
+    try {
+      const response = await sendHttpRequest<Project>(PROJECT_RESTORE_URL, {
+        method: "POST",
+        body: JSON.stringify({ projectId }),
+      });
+      if (response.status === 200) {
+        return response.json as Project;
+      } else {
+        throw new Error(`Failed to restore project: ${response.status}`);
+      }
+    } catch (error) {
+      throw error;
+    }
+  }
+);
+
 export const projectsSlice = createSlice({
   name: "projectList",
   initialState: {
@@ -229,14 +266,14 @@ export const projectsSlice = createSlice({
     //     state.projects[index] = action.payload;
     //   }
     // },
-    highlightProject: (state, action: PayloadAction<string>) => {
-      const project = state.projects.find(
-        (project) => project.id === action.payload
-      );
-      if (project) {
-        project.isHighlighted = !project.isHighlighted;
-      }
-    },
+    // highlightProject: (state, action: PayloadAction<string>) => {
+    //   const project = state.projects.find(
+    //     (project) => project.id === action.payload
+    //   );
+    //   if (project) {
+    //     project.isHighlighted = !project.isHighlighted;
+    //   }
+    // },
     // approveProject: (state, action: PayloadAction<string>) => {
     //   const project = state.projects.find(
     //     (project) => project.id === action.payload
@@ -302,6 +339,34 @@ export const projectsSlice = createSlice({
       })
       .addCase(deleteProject.rejected, (state, action) => {
         state.error = action.payload as string;
+      })
+      // DEACTIVATE PROJECT
+      .addCase(deactivateProject.fulfilled, (state, action) => {
+        const updatedProject = action.payload;
+        const index = state.projects.findIndex(
+          (project) => project.id === updatedProject.id
+        );
+        if (index !== -1) {
+          state.projects[index] = updatedProject;
+        }
+      })
+      .addCase(deactivateProject.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message ?? "Failed to deactivate project";
+      })
+      // RESTORE PROJECT
+      .addCase(restoreProject.fulfilled, (state, action) => {
+        const updatedProject = action.payload;
+        const index = state.projects.findIndex(
+          (project) => project.id === updatedProject.id
+        );
+        if (index !== -1) {
+          state.projects[index] = updatedProject;
+        }
+      })
+      .addCase(restoreProject.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message ?? "Failed to restore project";
       });
   },
 });
@@ -310,7 +375,7 @@ export const {
   addProject,
   // deleteProject,
   // updateProject,
-  highlightProject,
+  // highlightProject,
   // approveProject,
 } = projectsSlice.actions;
 

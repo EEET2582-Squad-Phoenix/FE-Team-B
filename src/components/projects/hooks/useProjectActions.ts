@@ -4,7 +4,8 @@ import {
   updateProject,
   approveProject,
   fetchProjects,
-  toggleHighlightProject, // Import fetchProjects
+  toggleHighlightProject,
+  restoreProject,
 } from "@/lib/features/projects/projectsSlice";
 import { Project } from "@/types/Project";
 import { AppDispatch } from "@/lib/store";
@@ -27,13 +28,19 @@ export const useProjectActions = () => {
   };
 
   const handleHighlightProject = (id: string) => {
-    dispatch(toggleHighlightProject(id));
+    dispatch(toggleHighlightProject(id)).then(() => dispatch(fetchProjects()));
   };
+
+  const handleRestoreProject = (projectId: string) =>
+    dispatch(restoreProject({ projectId })).then(() =>
+      dispatch(fetchProjects())
+    );
 
   return {
     handleDeleteProject,
     handleUpdateProject,
     handleApproveProject,
     handleHighlightProject,
+    handleRestoreProject,
   };
 };

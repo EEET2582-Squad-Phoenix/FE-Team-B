@@ -6,7 +6,7 @@ import { haltProject } from "@/lib/features/projects/projectsSlice";
 export const useHaltProjectModal = () => {
   const dispatch = useAppDispatch();
   const [isHaltModalOpen, setIsHaltModalOpen] = useState(false);
-  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+  const [selectedHaltProject, setSelectedProject] = useState<Project | null>(null);
 
   const openHaltModal = (project: Project) => {
     setSelectedProject(project);
@@ -50,7 +50,7 @@ export const useHaltProjectModal = () => {
   return {
     isHaltModalOpen,
     setIsHaltModalOpen,
-    selectedProject,
+    selectedHaltProject,
     openHaltModal,
     handleHaltProject,
     handleResumeProject,

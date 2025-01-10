@@ -63,6 +63,7 @@ export interface Project {
   createdAt: string;
   updatedAt: string;
   endDate: string;
+  deletionReason?: string;
 }
 
 export interface HaltProjectPayload {

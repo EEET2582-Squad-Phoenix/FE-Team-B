@@ -35,6 +35,8 @@ import {
 } from "@/utils/projects/formatValues";
 import { HaltProjectModal } from "./HaltProjectModal";
 import { useHaltProjectModal } from "./hooks/useHaltProjectModal";
+import { useDeactivateProjectModal } from "./hooks/useDeactivateProjectModal";
+import { DeactivateProjectModal } from "./DeactivateProjectModal";
 
 interface ProjectsTableProps {
   projects: Project[];
@@ -46,8 +48,7 @@ const ProjectsTable = ({ projects }: ProjectsTableProps) => {
     handleUpdateProject,
     handleApproveProject,
     handleHighlightProject,
-    // handleDeactivateProject,
-    //handleRestoreProject
+    handleRestoreProject,
   } = useProjectActions();
 
   const {
@@ -61,11 +62,19 @@ const ProjectsTable = ({ projects }: ProjectsTableProps) => {
   const {
     isHaltModalOpen,
     setIsHaltModalOpen,
-    selectedProject,
+    selectedHaltProject,
     openHaltModal,
     handleHaltProject,
     handleResumeProject,
   } = useHaltProjectModal();
+
+  const {
+    isDeactivateModalOpen,
+    setIsDeactivateModalOpen,
+    selectedDeactivatedProject,
+    openDeactivateModal,
+    handleDeactivateProject,
+  } = useDeactivateProjectModal();
 
   const [projectCount, setProjectCount] = useState(projects.length);
 
@@ -144,8 +153,7 @@ const ProjectsTable = ({ projects }: ProjectsTableProps) => {
                     <>
                       <ActionButton
                         icon={ArchiveRestore}
-                        // onClick={() => handleRestoreProject(project.id)}
-                        onClick={() => handleDeleteProject(project.id)}
+                        onClick={() => handleRestoreProject(project.id)}
                         className="text-green-600"
                       />
                       <ActionButton
@@ -174,11 +182,11 @@ const ProjectsTable = ({ projects }: ProjectsTableProps) => {
                         className={
                           project.isHighlighted
                             ? project.status !== "ACTIVE"
-                              ? "text-gray-400" 
-                              : "text-yellow-600" 
+                              ? "text-gray-400"
+                              : "text-yellow-600"
                             : project.status !== "ACTIVE"
-                            ? "text-gray-400" 
-                            : "text-gray-600" 
+                            ? "text-gray-400"
+                            : "text-gray-600"
                         }
                       />
                       <ActionButton
@@ -195,7 +203,7 @@ const ProjectsTable = ({ projects }: ProjectsTableProps) => {
                       />
                       <ActionButton
                         icon={Archive}
-                        onClick={() => handleEditProject(project)}
+                        onClick={() => openDeactivateModal(project)}
                         className="text-gray-600"
                       />
                       <ActionButton
@@ -219,11 +227,17 @@ const ProjectsTable = ({ projects }: ProjectsTableProps) => {
         onApprove={handleApproveProject}
       />
       <HaltProjectModal
-        project={selectedProject}
+        project={selectedHaltProject}
         open={isHaltModalOpen}
         onOpenChange={setIsHaltModalOpen}
         onHalt={handleHaltProject}
         onResume={handleResumeProject}
+      />
+      <DeactivateProjectModal
+        project={selectedDeactivatedProject}
+        open={isDeactivateModalOpen}
+        onOpenChange={setIsDeactivateModalOpen}
+        onDeactivate={handleDeactivateProject}
       />
     </>
   );
