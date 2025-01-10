@@ -72,22 +72,22 @@ const ProjectsTable = ({ projects }: ProjectsTableProps) => {
       <Table className="max-w-full">
         <TableHeader>
           <TableRow>
-            <TableHead>ID</TableHead>
-            <TableHead>Thumbnail</TableHead>
-            <TableHead>Name</TableHead>
-            <TableHead>Country</TableHead>
-            <TableHead>Scope</TableHead>
-            <TableHead>Category</TableHead>
-            <TableHead>Status</TableHead>
-            <TableHead>Amount</TableHead>
-            <TableHead>Duration</TableHead>
-            <TableHead>Actions</TableHead>
+            <TableHead id="id-column">ID</TableHead>
+            <TableHead id="thumbnail-column">Thumbnail</TableHead>
+            <TableHead id="name-column">Name</TableHead>
+            <TableHead id="country-column">Country</TableHead>
+            <TableHead id="scope-column">Scope</TableHead>
+            <TableHead id="category-column">Category</TableHead>
+            <TableHead id="status-column">Status</TableHead>
+            <TableHead id="amount-column">Amount</TableHead>
+            <TableHead id="duration-column">Duration</TableHead>
+            <TableHead id="actions-column">Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          {projects.map((project) => (
+          {projects.map((project, i) => (
             <TableRow
-              key={project.id}
+              key={i}
               className={
                 project.isHighlighted ? "bg-yellow-100 hover:bg-yellow-200" : ""
               }
@@ -114,7 +114,9 @@ const ProjectsTable = ({ projects }: ProjectsTableProps) => {
               <TableCell>{formatDisplayText(project.country)}</TableCell>
               <TableCell>{project.isGlobal ? <Globe /> : <MapPin />}</TableCell>
               <TableCell>
-                {project.category.map(formatDisplayText).join(", ")}
+                {project.category
+                  ? project.category.map(formatDisplayText).join(", ")
+                  : "N/A"}
               </TableCell>
               <TableCell>
                 <Badge className={getStatusColor(project.status)}>

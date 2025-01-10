@@ -122,9 +122,11 @@ export function ProjectModal({
     if (!formData.country.trim()) {
       errors.push("Country is required");
     }
-    if (!formData.category) {
-      errors.push("Category is required");
+
+    if (formData.category.length === 0) {
+      errors.push("At least one category must be selected");
     }
+
     if (formData.goalAmount <= 0) {
       errors.push("Goal amount must be greater than 0");
     }
@@ -149,7 +151,12 @@ export function ProjectModal({
       return;
     }
 
-    onSave(formData);
+    const updatedFormData = {
+      ...formData,
+      country: formData.country.toUpperCase(), // to match validation in BE
+    };
+
+    onSave(updatedFormData);
   };
 
   const handleCategorySelect = (selectedCategory: ProjectCategoryType) => {

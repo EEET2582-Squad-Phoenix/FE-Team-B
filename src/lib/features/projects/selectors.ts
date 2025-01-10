@@ -12,7 +12,7 @@ export const filteredProjectsSelector = (state: RootState) => {
   const { search, category, status, progress } = filtersSelector(state);
 
   return projectListSelector(state).filter((project) => {
-    const hasSearchText = project.name
+    const hasSearchText = (project.name ?? "")
       .toLowerCase()
       .includes(search.toLowerCase());
 

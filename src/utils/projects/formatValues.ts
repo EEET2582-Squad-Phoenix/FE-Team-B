@@ -1,10 +1,13 @@
 import { format } from "date-fns";
 
-export const formatAmount = (raised: number, goal: number) => {
-  const percentage = (raised / goal) * 100;
-  return `${raised.toLocaleString()} / ${goal.toLocaleString()} (${percentage.toFixed(
-    1
-  )}%)`;
+export const formatAmount = (
+  raised: number | undefined,
+  goal: number | undefined
+) => {
+  const percentage = ((raised ?? 0) / (goal ?? 1)) * 100;
+  return `${raised?.toLocaleString() ?? "0"} / ${
+    goal?.toLocaleString() ?? "1"
+  } (${percentage.toFixed(1)}%)`;
 };
 
 export const formatDuration = (startDate: string, endDate?: string) => {

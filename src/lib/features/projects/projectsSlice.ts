@@ -93,7 +93,7 @@ export const deleteProject = createAsyncThunk(
       const response = await sendHttpRequest<Project>(
         PROJECT_ADMIN_DELETE_URL,
         {
-          method: "POST",
+          method: "DELETE",
           body: JSON.stringify({ projectId }),
         }
       );
