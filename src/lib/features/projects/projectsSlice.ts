@@ -6,6 +6,7 @@ import {
   PROJECT_ALL_URL,
   PROJECT_CREATE_URL,
   PROJECT_HALT_URL,
+  PROJECT_UPDATE_URL,
 } from "@/constants/service-url/project-url-config";
 
 const initialState: Project[] = [];
@@ -46,6 +47,27 @@ export const createProject = createAsyncThunk<Project, Project>(
         return response.json as Project;
       } else {
         throw new Error(`Failed to create project: ${response.status}`);
+      }
+    } catch (error) {
+      throw error;
+    }
+  }
+);
+
+export const updateProject = createAsyncThunk<Project, Project>(
+  "projects/updateProject",
+  async (updatedProject: Project) => {
+    try {
+      console.log("updateProject called", updatedProject);
+      const response = await sendHttpRequest<Project>(PROJECT_UPDATE_URL, {
+        method: "PUT",
+        body: JSON.stringify(updatedProject),
+      });
+      console.log("updateProject response", response);
+      if (response.status === 200) {
+        return response.json as Project;
+      } else {
+        throw new Error(`Failed to update project: ${response.status}`);
       }
     } catch (error) {
       throw error;
@@ -149,14 +171,14 @@ export const projectsSlice = createSlice({
     //     (project) => project.id !== action.payload
     //   );
     // },
-    updateProject: (state, action: PayloadAction<Project>) => {
-      const index = state.projects.findIndex(
-        (project) => project.id === action.payload.id
-      );
-      if (index !== -1) {
-        state.projects[index] = action.payload;
-      }
-    },
+    // updateProject: (state, action: PayloadAction<Project>) => {
+    //   const index = state.projects.findIndex(
+    //     (project) => project.id === action.payload.id
+    //   );
+    //   if (index !== -1) {
+    //     state.projects[index] = action.payload;
+    //   }
+    // },
     highlightProject: (state, action: PayloadAction<string>) => {
       const project = state.projects.find(
         (project) => project.id === action.payload
@@ -237,7 +259,7 @@ export const projectsSlice = createSlice({
 export const {
   addProject,
   // deleteProject,
-  updateProject,
+  // updateProject,
   highlightProject,
   // approveProject,
 } = projectsSlice.actions;

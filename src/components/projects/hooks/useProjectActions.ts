@@ -4,24 +4,26 @@ import {
   updateProject,
   highlightProject,
   approveProject,
+  fetchProjects, // Import fetchProjects
 } from "@/lib/features/projects/projectsSlice";
 import { Project } from "@/types/Project";
 import { AppDispatch } from "@/lib/store";
 
 export const useProjectActions = () => {
-  // const dispatch = useDispatch();
   const dispatch = useDispatch<AppDispatch>();
 
   const handleDeleteProject = (id: string) => {
-    dispatch(deleteProject(id));
+    dispatch(deleteProject(id)).then(() => dispatch(fetchProjects()));
   };
 
   const handleUpdateProject = (updatedProject: Project) => {
-    dispatch(updateProject(updatedProject));
+    dispatch(updateProject(updatedProject)).then(() =>
+      dispatch(fetchProjects())
+    );
   };
 
   const handleApproveProject = (id: string) => {
-    dispatch(approveProject(id));
+    dispatch(approveProject(id)).then(() => dispatch(fetchProjects()));
   };
 
   const handleHighlightProject = (id: string) => {

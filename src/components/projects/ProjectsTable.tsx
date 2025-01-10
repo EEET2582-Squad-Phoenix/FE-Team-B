@@ -65,6 +65,7 @@ const ProjectsTable = ({ projects }: ProjectsTableProps) => {
     openHaltModal,
     handleHaltProject,
     // handleResumeProject,
+    //handleRestoreProject
   } = useHaltProjectModal();
 
   return (
@@ -132,17 +133,23 @@ const ProjectsTable = ({ projects }: ProjectsTableProps) => {
               <TableCell>
                 <div className="flex items-center space-x-1">
                   {project.status === "INACTIVATED" ? (
-                    <ActionButton
-                      icon={ArchiveRestore}
-                      // onClick={() => handleRestoreProject(project.id)}
-                      onClick={() => handleEditProject(project)}
-                      className="text-green-600"
-                    />
+                    <>
+                      <ActionButton
+                        icon={ArchiveRestore}
+                        // onClick={() => handleRestoreProject(project.id)}
+                        onClick={() => handleDeleteProject(project.id)}
+                        className="text-green-600"
+                      />
+                      <ActionButton
+                        icon={Trash2}
+                        onClick={() => handleDeleteProject(project.id)}
+                        className="text-red-600"
+                      />
+                    </>
                   ) : (
                     <>
                       <ActionButton
                         icon={Pencil}
-                        // disabled={project.status === "INACTIVATED"}
                         onClick={() => handleEditProject(project)}
                         className="text-blue-600"
                       />
@@ -174,9 +181,7 @@ const ProjectsTable = ({ projects }: ProjectsTableProps) => {
                       />
                       <ActionButton
                         icon={Archive}
-                        // disabled={project.status !== "INACTIVATED"}
-                        onClick={() => handleEditProject(project)}
-                        // onClick={() => handleDeactivateProject(project.id)}
+                        onClick={() => handleEditProject(project)} //Corrected onClick
                         className="text-gray-600"
                       />
                       <ActionButton
