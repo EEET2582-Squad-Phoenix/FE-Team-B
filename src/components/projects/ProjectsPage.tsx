@@ -12,6 +12,8 @@ import ProgressFilter from "../table/ProgressFilter";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState, AppDispatch } from "@/lib/store";
 import { fetchProjects } from "@/lib/features/projects/projectsSlice";
+import HighlightFilter from "../table/HighlightFilter";
+import IsGlobalFilter from "../table/IsGlobalFilter";
 
 const ProjectsPage = () => {
   const dispatch: AppDispatch = useDispatch();
@@ -38,6 +40,10 @@ const ProjectsPage = () => {
     handleSearchChange,
     selectedProgress,
     handleProgressChange,
+    handleHighlightChange,
+    handleGlobalChange,
+    selectedHighlights,
+    selectedGlobals,
   } = useProjectPage();
 
   if (status === "loading") {
@@ -59,6 +65,15 @@ const ProjectsPage = () => {
         <CategoryFilter
           onCategoryChange={handleCategoryChange}
           selectedCategories={selectedCategories}
+        />
+
+        <HighlightFilter
+          onHighlightChange={handleHighlightChange}
+          selectedHighlights={selectedHighlights}
+        />
+        <IsGlobalFilter
+          onGlobalChange={handleGlobalChange}
+          selectedGlobals={selectedGlobals}
         />
 
         <ProgressFilter

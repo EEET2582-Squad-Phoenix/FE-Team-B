@@ -10,6 +10,8 @@ import {
 import { createProject } from "@/lib/features/projects/projectsSlice";
 import {
   setCategory,
+  setHighlight,
+  setIsGlobal,
   setProgress,
   setSearch,
   setStatus,
@@ -32,6 +34,9 @@ const useProjectPage = () => {
   const [selectedProgress, setSelectedProgress] = useState<
     ProjectProgressType[]
   >([]);
+
+  const [selectedHighlights, setSelectedHighlights] = useState<boolean[]>([]);
+  const [selectedGlobals, setSelectedGlobals] = useState<boolean[]>([]);
 
   const addNewProjectHandler = useCallback(() => {
     setIsModalOpen(true);
@@ -87,6 +92,22 @@ const useProjectPage = () => {
     [dispatch]
   );
 
+  const handleHighlightChange = useCallback(
+    (highlights: boolean[]) => {
+      setSelectedHighlights(highlights);
+      dispatch(setHighlight(highlights));
+    },
+    [dispatch]
+  );
+
+  const handleGlobalChange = useCallback(
+    (globals: boolean[]) => {
+      setSelectedGlobals(globals);
+      dispatch(setIsGlobal(globals));
+    },
+    [dispatch]
+  );
+
   return {
     projectList,
     isModalOpen,
@@ -95,6 +116,10 @@ const useProjectPage = () => {
     selectedStatuses,
     searchQuery,
     selectedProgress,
+    selectedHighlights,
+    selectedGlobals,
+    handleHighlightChange,
+    handleGlobalChange,
     addNewProjectHandler,
     handleSave,
     handleCategoryChange,

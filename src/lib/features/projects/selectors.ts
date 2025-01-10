@@ -1,6 +1,5 @@
 import { calculateProgress } from "@/utils/projects/calculateProgress";
 import { RootState } from "../../store";
-
 import { Project } from "@/types/Project";
 
 export const projectListSelector = (state: RootState): Project[] =>
@@ -9,7 +8,8 @@ export const projectListSelector = (state: RootState): Project[] =>
 export const filtersSelector = (state: RootState) => state.filters;
 
 export const filteredProjectsSelector = (state: RootState) => {
-  const { search, category, status, progress } = filtersSelector(state);
+  const { search, category, status, progress, highlight, isGlobal } =
+    filtersSelector(state);
 
   return projectListSelector(state).filter((project) => {
     const hasSearchText = (project.name ?? "")
@@ -33,12 +33,18 @@ export const filteredProjectsSelector = (state: RootState) => {
       progress.length === 0 ||
       progress.includes(progressPercentage === 100 ? "FULL" : "ON-GOING");
 
-    return hasSearchText && hasCategory && hasStatus && hasProgress;
-  });
-};
+    const hasHighlight =
+      highlight.length === 0 || highlight.includes(project.isHighlighted);
+    const hasGlobal =
+      isGlobal.length === 0 || isGlobal.includes(project.isGlobal);
 
-export const highlightedProjectsSelector = (state: RootState) => {
-  return filteredProjectsSelector(state).filter(
-    (project) => project.isHighlighted
-  );
+    return (
+      hasSearchText &&
+      hasCategory &&
+      hasStatus &&
+      hasProgress &&
+      hasHighlight &&
+      hasGlobal
+    );
+  });
 };
