@@ -7,6 +7,7 @@ import {
   PROJECT_APPROVE_URL,
   PROJECT_CREATE_URL,
   PROJECT_HALT_URL,
+  PROJECT_TOGGLE_HIGHLIGHTED_URL,
   PROJECT_UPDATE_URL,
 } from "@/constants/service-url/project-url-config";
 
@@ -176,6 +177,34 @@ export const approveProject = createAsyncThunk(
     }
   }
 );
+
+export const toggleHighlightProject = createAsyncThunk(
+  "projects/toggleHighlightProject",
+  async (projectId: string) => {
+    try {
+      console.log("toggleHighlightProject called");
+
+      const response = await sendHttpRequest<Project>(
+        PROJECT_TOGGLE_HIGHLIGHTED_URL,
+        {
+          method: "POST",
+          body: JSON.stringify({ projectId }),
+        }
+      );
+      console.log("toggleHighlightProject response", response);
+      if (response.status === 200) {
+        return projectId;
+      } else {
+        throw new Error(
+          `Failed to toggle highlight project: ${response.status}`
+        );
+      }
+    } catch (error) {
+      throw error;
+    }
+  }
+);
+
 export const projectsSlice = createSlice({
   name: "projectList",
   initialState: {

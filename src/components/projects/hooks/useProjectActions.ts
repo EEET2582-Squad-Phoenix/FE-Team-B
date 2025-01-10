@@ -2,9 +2,9 @@ import { useDispatch } from "react-redux";
 import {
   deleteProject,
   updateProject,
-  highlightProject,
   approveProject,
-  fetchProjects, // Import fetchProjects
+  fetchProjects,
+  toggleHighlightProject, // Import fetchProjects
 } from "@/lib/features/projects/projectsSlice";
 import { Project } from "@/types/Project";
 import { AppDispatch } from "@/lib/store";
@@ -27,7 +27,7 @@ export const useProjectActions = () => {
   };
 
   const handleHighlightProject = (id: string) => {
-    dispatch(highlightProject(id));
+    dispatch(toggleHighlightProject(id));
   };
 
   return {

@@ -169,11 +169,17 @@ const ProjectsTable = ({ projects }: ProjectsTableProps) => {
                       />
                       <ActionButton
                         icon={Star}
-                        disabled={
-                          project.isHighlighted || project.status !== "ACTIVE"
-                        }
+                        disabled={project.status !== "ACTIVE"}
                         onClick={() => handleHighlightProject(project.id)}
-                        className="text-yellow-600"
+                        className={
+                          project.isHighlighted
+                            ? project.status !== "ACTIVE"
+                              ? "text-gray-400" 
+                              : "text-yellow-600" 
+                            : project.status !== "ACTIVE"
+                            ? "text-gray-400" 
+                            : "text-gray-600" 
+                        }
                       />
                       <ActionButton
                         icon={project.status === "HALTED" ? Play : Pause}
@@ -189,7 +195,7 @@ const ProjectsTable = ({ projects }: ProjectsTableProps) => {
                       />
                       <ActionButton
                         icon={Archive}
-                        onClick={() => handleEditProject(project)} //Corrected onClick
+                        onClick={() => handleEditProject(project)}
                         className="text-gray-600"
                       />
                       <ActionButton
