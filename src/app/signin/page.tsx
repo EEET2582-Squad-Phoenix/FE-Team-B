@@ -15,6 +15,39 @@ export default function Signin() {
         loading,
         handleSubmit,
     } = useSignin();
+    
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setError("");
+        setLoading(true);
+
+        try {
+            const response = await fetch("http://localhost:8080/auth/login", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ email, password }),
+                credentials: "include",
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                console.log("Signin successful:", data);
+                localStorage.setItem("auth_token", data.token);
+                window.location.href = "/dashboard";
+            } else {
+                console.error("Error signing in:", data);
+                setError(data); // Display error message from backend
+            }
+        } catch (err) {
+            console.error("Unexpected error:", err);
+            setError("Something went wrong. Please try again later.");
+        } finally {
+            setLoading(false);
+        }
+    };
 
     return (
         <div className="flex h-screen bg-white">
