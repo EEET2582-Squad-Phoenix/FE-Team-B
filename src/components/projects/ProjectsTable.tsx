@@ -98,7 +98,8 @@ const ProjectsTable = ({ projects }: ProjectsTableProps) => {
                       src={project.imageURLs[0]}
                       alt={project.name}
                       className="rounded object-cover"
-                      fill
+                      width={64}
+                      height={64}
                     />
                   </div>
                 ) : (
