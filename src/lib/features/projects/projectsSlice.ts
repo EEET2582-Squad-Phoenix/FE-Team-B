@@ -4,6 +4,7 @@ import sendHttpRequest from "@/utils/http-call/HttpRequest";
 import {
   PROJECT_ADMIN_DELETE_URL,
   PROJECT_ALL_URL,
+  PROJECT_APPROVE_URL,
   PROJECT_CREATE_URL,
   PROJECT_HALT_URL,
   PROJECT_UPDATE_URL,
@@ -133,13 +134,10 @@ export const approveProject = createAsyncThunk(
     try {
       console.log("approveProject called");
 
-      const response = await sendHttpRequest<Project>(
-        PROJECT_ADMIN_DELETE_URL,
-        {
-          method: "POST",
-          body: JSON.stringify({ projectId }),
-        }
-      );
+      const response = await sendHttpRequest<Project>(PROJECT_APPROVE_URL, {
+        method: "POST",
+        body: JSON.stringify({ projectId }),
+      });
       console.log("approveProject response", response);
       if (response.status === 200) {
         return projectId;

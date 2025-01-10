@@ -7,6 +7,7 @@ export const PROJECT_ALL_URL = `${PROJECT_SERVICE_URL_A}/all`; // used
 export const PROJECT_GET_HIGHLIGHTED_URL = `${PROJECT_SERVICE_URL_A}/highlighted`;
 
 export const PROJECT_UPDATE_URL = `${PROJECT_SERVICE_URL_A}/updateProject`; // used
+export const PROJECT_APPROVE_URL = `${PROJECT_SERVICE_URL_A}/approve`; // used
 export const PROJECT_RECOVER_URL = `${PROJECT_SERVICE_URL_A}/recoverProject`;
 export const PROJECT_HALT_URL = `${PROJECT_SERVICE_URL_A}/halt`; // used
 export const PROJECT_TOGGLE_HIGHLIGHTED_URL = `${PROJECT_SERVICE_URL_A}/toggleHighlighted`;
