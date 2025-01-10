@@ -12,7 +12,7 @@ export const PROJECT_HALT_URL = `${PROJECT_SERVICE_URL_A}/halt`;
 export const PROJECT_RESUME_URL = `${PROJECT_SERVICE_URL_A}/unhalt`;
 
 export const PROJECT_TOGGLE_HIGHLIGHTED_URL = `${PROJECT_SERVICE_URL_A}/toggleHighlighted`;
-export const PROJECT_DEACTIVATE_URL = `${PROJECT_SERVICE_URL_A}/charityDelete`;
+export const PROJECT_DEACTIVATE_URL = `${PROJECT_SERVICE_URL_A}/deactivate`;
 export const PROJECT_RESTORE_URL = `${PROJECT_SERVICE_URL_A}/restore`;
 
 // export const PROJECT_CHECK_HIGHLIGHTED_GLOBAL_URL = `${PROJECT_SERVICE_URL_A}/checkHighlightedGlobal`;
