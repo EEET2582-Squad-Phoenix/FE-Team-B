@@ -47,7 +47,7 @@ const ProjectsTable = ({ projects }: ProjectsTableProps) => {
     handleApproveProject,
     handleHighlightProject,
     // handleDeactivateProject,
-    // handleResumeProject,
+    //handleRestoreProject
   } = useProjectActions();
 
   const {
@@ -64,8 +64,7 @@ const ProjectsTable = ({ projects }: ProjectsTableProps) => {
     selectedProject,
     openHaltModal,
     handleHaltProject,
-    // handleResumeProject,
-    //handleRestoreProject
+    handleResumeProject,
   } = useHaltProjectModal();
 
   const [projectCount, setProjectCount] = useState(projects.length);
@@ -218,7 +217,7 @@ const ProjectsTable = ({ projects }: ProjectsTableProps) => {
         open={isHaltModalOpen}
         onOpenChange={setIsHaltModalOpen}
         onHalt={handleHaltProject}
-        // onResume={handleResumeProject}
+        onResume={handleResumeProject}
       />
     </>
   );

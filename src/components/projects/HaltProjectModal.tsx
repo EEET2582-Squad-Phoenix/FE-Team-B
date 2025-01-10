@@ -31,8 +31,14 @@ export function HaltProjectModal({
   onHalt,
   onResume,
 }: HaltProjectModalProps) {
-  const [donorMessage, setDonorMessage] = useState("");
-  const [charityMessage, setCharityMessage] = useState("");
+  const [donorMessage, setDonorMessage] = useState(
+    project?.haltedMessage?.donorMessage ||
+      "We are temporarily pausing this project. We will update you soon."
+  );
+  const [charityMessage, setCharityMessage] = useState(
+    project?.haltedMessage?.charityMessage ||
+      "This project is temporarily paused. Please check back for updates."
+  );
 
   const isHalted = project?.status === "HALTED";
 
@@ -105,13 +111,13 @@ export function HaltProjectModal({
         ) : (
           <div className="py-4">
             <div className="grid gap-2 mb-4">
-              <Label>Current Admin Reason</Label>
+              <Label>Current message to donors</Label>
               <div className="text-sm text-gray-500">
                 {project.haltedMessage?.donorMessage || "No reason provided"}
               </div>
             </div>
             <div className="grid gap-2 mb-4">
-              <Label>Current Charity Reason</Label>
+              <Label>Current message to charities</Label>
               <div className="text-sm text-gray-500">
                 {project.haltedMessage?.charityMessage || "No reason provided"}
               </div>

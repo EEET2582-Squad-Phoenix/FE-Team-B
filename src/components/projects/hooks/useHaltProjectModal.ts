@@ -30,11 +30,29 @@ export const useHaltProjectModal = () => {
     }
   };
 
+  const handleResumeProject = async (
+    projectId: string,
+    donorMessage?: string,
+    charityMessage?: string
+  ) => {
+    try {
+      const payload: HaltProjectPayload = {
+        projectId,
+        donorMessage,
+        charityMessage,
+      };
+      await dispatch(haltProject(payload)).unwrap();
+    } catch (error) {
+      console.error("Failed to resume project:", error);
+    }
+  };
+
   return {
     isHaltModalOpen,
     setIsHaltModalOpen,
     selectedProject,
     openHaltModal,
     handleHaltProject,
+    handleResumeProject,
   };
 };

@@ -103,6 +103,33 @@ export const haltProject = createAsyncThunk<Project, HaltProjectPayload>(
   }
 );
 
+export const resumeProject = createAsyncThunk<Project, HaltProjectPayload>(
+  "projects/resumeProject",
+  async ({ projectId, donorMessage, charityMessage }: HaltProjectPayload) => {
+    try {
+      console.log("resumeProject called");
+      const response = await sendHttpRequest<Project>(PROJECT_HALT_URL, {
+        method: "POST",
+        body: JSON.stringify({
+          projectId,
+          donorMessage,
+          charityMessage,
+        }),
+      });
+
+      console.log("resumeProject response", response);
+
+      if (response.status === 200) {
+        return response.json as Project;
+      } else {
+        throw new Error(`Failed to resume project: ${response.status}`);
+      }
+    } catch (error) {
+      throw error;
+    }
+  }
+);
+
 export const deleteProject = createAsyncThunk(
   "projects/deleteProject",
   async (projectId: string) => {
@@ -225,19 +252,19 @@ export const projectsSlice = createSlice({
         state.error = action.error.message ?? "Failed to create project";
       })
       // HALT PROJECT
-      .addCase(haltProject.fulfilled, (state, action) => {
-        state.status = "succeeded";
-        const index = state.projects.findIndex(
-          (project) => project.id === action.payload.id
-        );
-        if (index !== -1) {
-          state.projects[index] = action.payload;
-        }
-      })
-      .addCase(haltProject.rejected, (state, action) => {
-        state.status = "failed";
-        state.error = action.error.message ?? "Failed to halt project";
-      })
+      // .addCase(haltProject.fulfilled, (state, action) => {
+      //   state.status = "succeeded";
+      //   const index = state.projects.findIndex(
+      //     (project) => project.id === action.payload.id
+      //   );
+      //   if (index !== -1) {
+      //     state.projects[index] = action.payload;
+      //   }
+      // })
+      // .addCase(haltProject.rejected, (state, action) => {
+      //   state.status = "failed";
+      //   state.error = action.error.message ?? "Failed to halt project";
+      // })
       // DELETE PROJECT
       .addCase(deleteProject.fulfilled, (state, action) => {
         state.projects = state.projects.filter(
