@@ -32,7 +32,7 @@ export function useSignup() {
 
       if (response.ok) {
         const nextPage = role === "DONOR" ? "/signup/donor" : "/signup/charity";
-        const queryString = `?email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}&role=${encodeURIComponent(role)}`;
+        const queryString = `?email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`;
         router.push(nextPage + queryString);
       } else if (response.status === 409) {
         setError("Email already exists. Please use a different email.");

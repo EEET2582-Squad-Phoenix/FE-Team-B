@@ -1,21 +1,23 @@
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { AUTH_REGISTER_URL } from "@/constants/service-url/auth-url-config";
+import { Charity } from "@/types/Charity";
 
 export function useSignupCharity() {
-  const [name, setName] = useState("");
-  const [address, setAddress] = useState("");
-  const [taxCode, setTaxCode] = useState("");
-  const [type, setType] = useState("");
-  const [avatar, setAvatar] = useState<File | null>(null);
-  const [video, setVideo] = useState<File | null>(null);
+  const [charity, setCharity] = useState<Partial<Charity>>({
+    name: "",
+    address: "",
+    taxCode: "",
+    type: "individual",
+    avatar: null,
+    video: null,
+  });
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   
   const searchParams = useSearchParams();
   const email = searchParams.get("email");
   const password = searchParams.get("password");
-  const role = searchParams.get("role");
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -23,22 +25,17 @@ export function useSignupCharity() {
     setError(null);
     setLoading(true);
 
-    if (!name.trim() || !address.trim() || !taxCode.trim() || !type.trim()) {
+    if (!charity.name?.trim() || !charity.address?.trim() || !charity.taxCode?.trim() || !charity.type?.trim()) {
       setError("You need to fill in all the mandatory fields.");
       setLoading(false);
       return;
     }
 
-    const payload = {
-        email,
-        password,
-        role,
-        name,
-        address,
-        taxCode,
-        type,
-        avatar: avatar ? avatar.name : null,
-        video: video ? video.name : null,
+    const payload: Partial<Charity> = {
+      ...charity,
+      email: email || "",
+      password: password || "",
+      role: "CHARITY",
     };
 
     try {
@@ -67,32 +64,28 @@ export function useSignupCharity() {
     }
   };
 
+  const handleInputChange = (field: keyof Charity) => (e: React.ChangeEvent<HTMLInputElement>) => {
+    setCharity({ ...charity, [field]: e.target.value });
+  };
+
   const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
-      setAvatar(e.target.files[0]);
+      setCharity({ ...charity, avatar: e.target.files[0].name });
     }
   };
 
   const handleVideoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
-      setVideo(e.target.files[0]);
+      setCharity({ ...charity, video: e.target.files[0].name });
     }
   };
 
   return {
-    name,
-    setName,
-    address,
-    setAddress,
-    taxCode,
-    setTaxCode,
-    type,
-    setType,
-    avatar,
-    video,
+    charity,
     error,
     loading,
     handleSubmit,
+    handleInputChange,
     handleAvatarChange,
     handleVideoChange,
   };

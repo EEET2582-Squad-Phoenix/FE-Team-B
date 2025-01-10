@@ -6,19 +6,11 @@ import { useSignupDonor } from "@/components/auth/hooks/useSignupDonor";
 
 export default function SignupDonor() {
     const {
-        firstName,
-        setFirstName,
-        lastName,
-        setLastName,
-        address,
-        setAddress,
-        language,
-        setLanguage,
-        avatar,
-        video,
+        donor,
         error,
         loading,
         handleSubmit,
+        handleInputChange,
         handleAvatarChange,
         handleVideoChange,
     } = useSignupDonor();
@@ -54,8 +46,8 @@ export default function SignupDonor() {
                                 type="text"
                                 id="firstName"
                                 placeholder=" "
-                                value={firstName}
-                                onChange={(e) => setFirstName(e.target.value)}
+                                value={donor.firstName}
+                                onChange={handleInputChange("firstName")}
                                 className="w-full border-2 border-gray-500 rounded-md h-12 px-4 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
                                 required
                             />
@@ -73,8 +65,8 @@ export default function SignupDonor() {
                                 type="text"
                                 id="lastName"
                                 placeholder=" "
-                                value={lastName}
-                                onChange={(e) => setLastName(e.target.value)}
+                                value={donor.lastName}
+                                onChange={handleInputChange("lastName")}
                                 className="w-full border-2 border-gray-500 rounded-md h-12 px-4 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
                                 required
                             />
@@ -93,8 +85,8 @@ export default function SignupDonor() {
                             type="text"
                             id="address"
                             placeholder=" "
-                            value={address}
-                            onChange={(e) => setAddress(e.target.value)}
+                            value={donor.address}
+                            onChange={handleInputChange("address")}
                             className="w-full border-2 border-gray-500 rounded-md h-12 px-4 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
                         />
                     </div>
@@ -109,10 +101,9 @@ export default function SignupDonor() {
                         </label>
                         <select
                             id="language"
-                            value={language}
-                            onChange={(e) => setLanguage(e.target.value)}
+                            value={donor.language}
+                            onChange={(e) => handleInputChange("language")(e as React.ChangeEvent<HTMLInputElement> & React.ChangeEvent<HTMLSelectElement>)}
                             className="w-full border-2 border-gray-500 rounded-md h-12 px-4 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
-                            defaultValue={"Vietnamese"}
                         >
                             {["Vietnamese", "English", "Spanish", "French", "Chinese", "Japanese", "Korean", "Russian", "Arabic", "German", "Hindi", "Portuguese"]
                             .map((lang) => (
@@ -138,7 +129,7 @@ export default function SignupDonor() {
                                     htmlFor="avatar"
                                     className="text-gray-500 text-sm cursor-pointer flex-grow"
                                 >
-                                    {avatar ? avatar.name : "Choose file"}
+                                    {donor.avatar ? donor.avatar : "Choose file"}
                                 </label>
                                 <input
                                     type="file"
@@ -163,7 +154,7 @@ export default function SignupDonor() {
                                     htmlFor="video"
                                     className="text-gray-500 text-sm cursor-pointer flex-grow"
                                 >
-                                    {video ? video.name : "Choose file"}
+                                    {donor.video ? donor.video : "Choose file"}
                                 </label>
                                 <input
                                     type="file"

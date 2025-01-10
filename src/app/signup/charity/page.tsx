@@ -6,19 +6,11 @@ import { useSignupCharity } from "@/components/auth/hooks/useSignupCharity";
 
 export default function SignupCharity() {
     const {
-        name,
-        setName,
-        address,
-        setAddress,
-        taxCode,
-        setTaxCode,
-        type,
-        setType,
-        avatar,
-        video,
+        charity,
         error,
         loading,
         handleSubmit,
+        handleInputChange,
         handleAvatarChange,
         handleVideoChange,
     } = useSignupCharity();
@@ -52,8 +44,8 @@ export default function SignupCharity() {
                             type="text"
                             id="name"
                             placeholder=" "
-                            value={name}
-                            onChange={(e) => setName(e.target.value)}
+                            value={charity.name}
+                            onChange={handleInputChange("name")}
                             className="w-full border-2 border-gray-500 rounded-md h-12 px-4 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
                             required
                         />
@@ -71,8 +63,8 @@ export default function SignupCharity() {
                             type="text"
                             id="address"
                             placeholder=" "
-                            value={address}
-                            onChange={(e) => setAddress(e.target.value)}
+                            value={charity.address}
+                            onChange={handleInputChange("address")}
                             className="w-full border-2 border-gray-500 rounded-md h-12 px-4 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
                             required
                         />
@@ -92,8 +84,8 @@ export default function SignupCharity() {
                                 type="text"
                                 id="firstName"
                                 placeholder=" "
-                                value={taxCode}
-                                onChange={(e) => setTaxCode(e.target.value)}
+                                value={charity.taxCode}
+                                onChange={handleInputChange("taxCode")}    
                                 className="w-full border-2 border-gray-500 rounded-md h-12 px-4 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
                                 required
                             />
@@ -109,11 +101,10 @@ export default function SignupCharity() {
                             </label>
                             <select
                                 id="type"
-                                value={type}
-                                onChange={(e) => setType(e.target.value)}
+                                value={charity.type}
+                                onChange={(e) => handleInputChange("type")(e as React.ChangeEvent<HTMLInputElement> & React.ChangeEvent<HTMLSelectElement>)}
                                 className="w-full border-2 border-gray-500 rounded-md h-12 px-4 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
                                 required
-                                defaultValue={"individual"}
                             >
                                 <option value="individual">Individual</option>
                                 <option value="corporation">Corporation</option>
@@ -137,7 +128,7 @@ export default function SignupCharity() {
                                     htmlFor="avatar"
                                     className="text-gray-500 text-sm cursor-pointer flex-grow"
                                 >
-                                    {avatar ? avatar.name : "Choose file"}
+                                    {charity.avatar ? charity.avatar : "Choose file"}
                                 </label>
                                 <input
                                     type="file"
@@ -162,7 +153,7 @@ export default function SignupCharity() {
                                     htmlFor="video"
                                     className="text-gray-500 text-sm cursor-pointer flex-grow"
                                 >
-                                    {video ? video.name : "Choose file"}
+                                    {charity.video ? charity.video : "Choose file"}
                                 </label>
                                 <input
                                     type="file"

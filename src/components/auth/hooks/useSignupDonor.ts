@@ -1,21 +1,23 @@
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { AUTH_REGISTER_URL } from "@/constants/service-url/auth-url-config";
+import { Donor } from "@/types/Donor";
 
 export function useSignupDonor() {
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [address, setAddress] = useState("");
-  const [language, setLanguage] = useState("");
-  const [avatar, setAvatar] = useState<File | null>(null);
-  const [video, setVideo] = useState<File | null>(null);
+  const [donor, setDonor] = useState<Partial<Donor>>({
+    firstName: "",
+    lastName: "",
+    address: "",
+    language: "Vietnamese",
+    avatar: null,
+    video: null,
+  });
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   
   const searchParams = useSearchParams();
   const email = searchParams.get("email");
   const password = searchParams.get("password");
-  const role = searchParams.get("role");
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -23,22 +25,17 @@ export function useSignupDonor() {
     setError(null);
     setLoading(true);
 
-    if (!firstName.trim() || !lastName.trim()) {
+    if (!donor.firstName?.trim() || !donor.lastName?.trim()) {
       setError("First name and last name are required.");
       setLoading(false);
       return;
     }
 
-    const payload = {
-      email,
-      password,
-      role,
-      firstName,
-      lastName,
-      address,
-      language,
-      avatar: avatar ? avatar.name : null,
-      video: video ? video.name : null,
+    const payload: Partial<Donor> = {
+      ...donor,
+      email: email || "",
+      password: password || "",
+      role: "DONOR",
     };
 
     try {
@@ -50,7 +47,7 @@ export function useSignupDonor() {
         body: JSON.stringify(payload),
       });
 
-      const data = await response.text();
+      const data = await response.json();
 
       if (response.ok) {
         console.log("Registration successful:", data);
@@ -67,32 +64,28 @@ export function useSignupDonor() {
     }
   };
 
+  const handleInputChange = (field: keyof Donor) => (e: React.ChangeEvent<HTMLInputElement>) => {
+    setDonor({ ...donor, [field]: e.target.value });
+  };
+
   const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
-      setAvatar(e.target.files[0]);
+      setDonor({ ...donor, avatar: e.target.files[0].name });
     }
   };
 
   const handleVideoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
-      setVideo(e.target.files[0]);
+      setDonor({ ...donor, video: e.target.files[0].name });
     }
   };
 
   return {
-    firstName,
-    setFirstName,
-    lastName,
-    setLastName,
-    address,
-    setAddress,
-    language,
-    setLanguage,
-    avatar,
-    video,
+    donor,
     error,
     loading,
     handleSubmit,
+    handleInputChange,
     handleAvatarChange,
     handleVideoChange,
   };
