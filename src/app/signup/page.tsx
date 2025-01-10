@@ -1,56 +1,22 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import { FcGoogle } from "react-icons/fc";
 import { FaFacebook } from "react-icons/fa";
-import { useRouter } from "next/navigation";
+import { useSignup } from "@/components/auth/hooks/useSignup";
 
 export default function Signup() {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [role, setRole] = useState("DONOR");
-    const [error, setError] = useState("");
-    const [loading, setLoading] = useState(false);
-    const router = useRouter();
-    
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        setError("");
-        setLoading(true);
-
-        if (!email.trim() || !password.trim()) {
-            setError("Email and password are required.");
-            setLoading(false);
-            return;
-        }
-
-        try {
-            const response = await fetch("http://localhost:8080/auth/check-email", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    email
-                }),
-            });
-
-            if (response.ok) {
-                const nextPage = role === "DONOR" ? "/signup/donor" : "/signup/charity";
-                const queryString = `?email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}&role=${encodeURIComponent(role)}`;
-                router.push(nextPage + queryString);
-            } else if (response.status === 409) {
-                setError("Email already exists. Please use a different email.");
-            } else {
-                const errorText = await response.text();
-                setError(`Error: ${errorText}`);
-            }
-        } catch (err) {
-            setError("An error occurred while registering. Please try again.");
-        } finally {
-            setLoading(false);
-        }
-    };
+    const {
+        email,
+        setEmail,
+        password,
+        setPassword,
+        role,
+        setRole,
+        error,
+        loading,
+        handleCheckEmail,
+      } = useSignup();
 
     return (
         <div className="flex h-screen bg-white">
@@ -141,7 +107,7 @@ export default function Signup() {
                     <button 
                         type="submit" 
                         className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 my-4"
-                        onClick={handleSubmit}
+                        onClick={handleCheckEmail}
                         disabled={loading}
                     >
                         {loading ? "Checking email..." : "Continue"}

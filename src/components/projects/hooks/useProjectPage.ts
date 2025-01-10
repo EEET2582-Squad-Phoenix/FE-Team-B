@@ -1,53 +1,66 @@
 import { useState, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import type { AppDispatch } from "@/lib/store";
 import {
   Project,
-  ProjectCategory,
+  ProjectCategoryType,
   ProjectProgressType,
-  ProjectStatus,
+  ProjectStatusType,
 } from "@/types/Project";
-import { addProject } from "@/lib/features/projects/projectsSlice";
+import { createProject } from "@/lib/features/projects/projectsSlice";
 import {
   setCategory,
+  setHighlight,
+  setIsGlobal,
   setProgress,
   setSearch,
   setStatus,
 } from "@/lib/features/projects/filtersSlice";
 import { filteredProjectsSelector } from "@/lib/features/projects/selectors";
-import { v4 as uuidv4 } from "uuid";
 
 const useProjectPage = () => {
+  const dispatch: AppDispatch = useDispatch();
+  // const dispatch = useDispatch();
   const projectList = useSelector(filteredProjectsSelector);
-  const dispatch = useDispatch();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedCategories, setSelectedCategories] = useState<
-    ProjectCategory[]
+    ProjectCategoryType[]
   >([]);
-  const [selectedStatuses, setSelectedStatuses] = useState<ProjectStatus[]>([]);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [selectedProgress, setSelectedProgress] = useState<ProjectProgressType[]>(
+  const [selectedStatuses, setSelectedStatuses] = useState<ProjectStatusType[]>(
     []
   );
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedProgress, setSelectedProgress] = useState<
+    ProjectProgressType[]
+  >([]);
+
+  const [selectedHighlights, setSelectedHighlights] = useState<boolean[]>([]);
+  const [selectedGlobals, setSelectedGlobals] = useState<boolean[]>([]);
 
   const addNewProjectHandler = useCallback(() => {
     setIsModalOpen(true);
   }, []);
 
   const handleSave = useCallback(
-    (newProject: Project) => {
-      const projectToSave = {
-        ...newProject,
-        id: newProject.id || uuidv4(),
-      };
-      dispatch(addProject(projectToSave));
-      setIsModalOpen(false);
+    async (newProject: Project) => {
+      try {
+        await dispatch(createProject(newProject));
+        setIsModalOpen(false);
+      } catch (error) {
+        console.error("Error creating project:", error);
+        if (error instanceof Error) {
+          alert(`Error creating project: ${error.message}`);
+        } else {
+          alert("Error creating project");
+        }
+      }
     },
     [dispatch]
   );
 
   const handleCategoryChange = useCallback(
-    (categories: ProjectCategory[]) => {
+    (categories: ProjectCategoryType[]) => {
       setSelectedCategories(categories);
       dispatch(setCategory(categories));
     },
@@ -55,7 +68,7 @@ const useProjectPage = () => {
   );
 
   const handleStatusChange = useCallback(
-    (statuses: ProjectStatus[]) => {
+    (statuses: ProjectStatusType[]) => {
       setSelectedStatuses(statuses);
       dispatch(setStatus(statuses));
     },
@@ -79,6 +92,22 @@ const useProjectPage = () => {
     [dispatch]
   );
 
+  const handleHighlightChange = useCallback(
+    (highlights: boolean[]) => {
+      setSelectedHighlights(highlights);
+      dispatch(setHighlight(highlights));
+    },
+    [dispatch]
+  );
+
+  const handleGlobalChange = useCallback(
+    (globals: boolean[]) => {
+      setSelectedGlobals(globals);
+      dispatch(setIsGlobal(globals));
+    },
+    [dispatch]
+  );
+
   return {
     projectList,
     isModalOpen,
@@ -87,6 +116,10 @@ const useProjectPage = () => {
     selectedStatuses,
     searchQuery,
     selectedProgress,
+    selectedHighlights,
+    selectedGlobals,
+    handleHighlightChange,
+    handleGlobalChange,
     addNewProjectHandler,
     handleSave,
     handleCategoryChange,

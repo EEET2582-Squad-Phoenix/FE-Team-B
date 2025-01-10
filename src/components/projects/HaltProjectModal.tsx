@@ -1,76 +1,110 @@
-import React, { useState, useEffect } from "react";
-import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogHeader,
-    DialogFooter,
-    DialogTitle,
-} from "@/components/ui/dialog";
+// "@/pages/projects/HaltProjectModal.tsx"
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Project } from "@/types/Project";
 
 interface HaltProjectModalProps {
-    projectName: string;
-    open: boolean;
-    onOpenChange: (open: boolean) => void;
-    onSubmit: (reason: string) => void;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  project: Project | null;
+  onHalt: (
+    projectId: string,
+    donorMessage: string,
+    charityMessage: string
+  ) => void;
+  onResume: (
+    projectId: string,
+    donorMessage: string,
+    charityMessage: string
+  ) => void;
 }
 
 export function HaltProjectModal({
-    projectName,
-    open,
-    onOpenChange,
-    onSubmit,
-  }: HaltProjectModalProps) {
-    const [reason, setReason] = useState("");
-    
-    useEffect(() => {
-        if (!open) {
-          setReason("");
-        }
-      }, [open]);
+  open,
+  onOpenChange,
+  project,
+  onHalt,
+  onResume,
+}: HaltProjectModalProps) {
+  const [donorMessage, setDonorMessage] = useState(
+    project?.haltedMessage?.donorMessage || ""
+  );
+  const [charityMessage, setCharityMessage] = useState(
+    project?.haltedMessage?.charityMessage || ""
+  );
 
-    const handleSubmit = () => {
-      if (!reason.trim()) {
-        alert("Reason is required.");
-        return;
-      }
-      onSubmit(reason);
-    };
-  
-    return (
-      <Dialog open={open} onOpenChange={onOpenChange}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Halt Project</DialogTitle>
-            <DialogDescription>
-              Provide a reason for halting the project "{projectName}".
-            </DialogDescription>
-          </DialogHeader>
+  const isHalted = project?.status === "HALTED";
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (project) {
+      const handler = isHalted ? onResume : onHalt;
+      handler(project.id, donorMessage, charityMessage);
+      setDonorMessage("");
+      setCharityMessage("");
+      onOpenChange(false);
+    }
+  };
+
+  if (!project) return null;
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="sm:max-w-[425px]">
+        <DialogHeader>
+          <DialogTitle className="flex justify-between items-center">
+            {isHalted ? "Resume Project" : "Halt Project"}
+          </DialogTitle>
+          <DialogDescription>
+            Project: {project.name}
+            <br />
+            ID: {project.id}
+          </DialogDescription>
+        </DialogHeader>
+
+        <form onSubmit={handleSubmit}>
           <div className="grid gap-4 py-4">
-            <div className="grid grid-cols-4 items-start gap-4">
-              <Label htmlFor="reason" className="text-right">
-                Reason *
-              </Label>
-              <Textarea
-                id="reason"
-                value={reason}
-                onChange={(e) => setReason(e.target.value)}
+            <div className="grid gap-2">
+              <Label htmlFor="donorMessage">Message to donors</Label>
+              <Input
+                id="donorMessage"
+                placeholder="Enter message to donors"
+                value={donorMessage}
+                onChange={(e) => setDonorMessage(e.target.value)}
                 className="col-span-3"
-                placeholder="Enter reason"
-                required
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="charityMessage">Message to charities</Label>
+              <Input
+                id="charityMessage"
+                placeholder="Enter message to charities"
+                value={charityMessage}
+                onChange={(e) => setCharityMessage(e.target.value)}
+                className="col-span-3"
               />
             </div>
           </div>
           <DialogFooter>
-            <Button variant="secondary" onClick={() => onOpenChange(false)}>
+            <Button variant="outline" onClick={() => onOpenChange(false)}>
               Cancel
             </Button>
-            <Button onClick={handleSubmit}>Submit</Button>
+            <Button type="submit">
+              {isHalted ? "Resume Project" : "Halt Project"}
+            </Button>
           </DialogFooter>
-        </DialogContent>
-      </Dialog>
-    );
-  }
+        </form>
+      </DialogContent>
+    </Dialog>
+  );
+}

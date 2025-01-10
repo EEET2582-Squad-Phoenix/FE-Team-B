@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import ProjectsTable from "./ProjectsTable";
@@ -9,8 +9,23 @@ import StatusFilter from "../table/StatusFilter";
 import CategoryFilter from "../table/CategoryFilter";
 import useProjectPage from "./hooks/useProjectPage";
 import ProgressFilter from "../table/ProgressFilter";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState, AppDispatch } from "@/lib/store";
+import { fetchProjects } from "@/lib/features/projects/projectsSlice";
+import HighlightFilter from "../table/HighlightFilter";
+import IsGlobalFilter from "../table/IsGlobalFilter";
 
 const ProjectsPage = () => {
+  const dispatch: AppDispatch = useDispatch();
+  const status = useSelector((state: RootState) => state.projects.status);
+  const error = useSelector((state: RootState) => state.projects.error);
+
+  useEffect(() => {
+    if (status === "idle") {
+      dispatch(fetchProjects());
+    }
+  }, [status, dispatch]);
+
   const {
     projectList,
     isModalOpen,
@@ -25,12 +40,24 @@ const ProjectsPage = () => {
     handleSearchChange,
     selectedProgress,
     handleProgressChange,
+    handleHighlightChange,
+    handleGlobalChange,
+    selectedHighlights,
+    selectedGlobals,
   } = useProjectPage();
 
+  if (status === "loading") {
+    return <div>Loading...</div>;
+  }
+
+  if (status === "failed") {
+    return <div>Error: {error}</div>;
+  }
+
   return (
-    <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mt-6">
+    <div className="flex gap-6 mt-6">
       {/* Left Sidebar */}
-      <div className="space-y-6">
+      <div className="w-64 space-y-6 shrink-0">
         <StatusFilter
           onStatusChange={handleStatusChange}
           selectedStatuses={selectedStatuses}
@@ -40,6 +67,15 @@ const ProjectsPage = () => {
           selectedCategories={selectedCategories}
         />
 
+        <HighlightFilter
+          onHighlightChange={handleHighlightChange}
+          selectedHighlights={selectedHighlights}
+        />
+        <IsGlobalFilter
+          onGlobalChange={handleGlobalChange}
+          selectedGlobals={selectedGlobals}
+        />
+
         <ProgressFilter
           onProgressChange={handleProgressChange}
           selectedProgress={selectedProgress}
@@ -47,7 +83,7 @@ const ProjectsPage = () => {
       </div>
 
       {/* Main Content */}
-      <div className="md:col-span-3">
+      <div className="flex-grow">
         <div className="flex justify-between items-center mb-4">
           <Input
             type="search"

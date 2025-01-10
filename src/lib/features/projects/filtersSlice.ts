@@ -1,15 +1,18 @@
-import {
-  ProjectCategory,
-  ProjectProgressType,
-  ProjectStatus,
-} from "@/types/Project";
+// "@/lib/features/projects/filtersSlice.ts"
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import {
+  ProjectCategoryType,
+  ProjectProgressType,
+  ProjectStatusType,
+} from "@/types/Project";
 
 interface FiltersState {
   search: string;
-  category: ProjectCategory[];
-  status: ProjectStatus[];
+  category: ProjectCategoryType[];
+  status: ProjectStatusType[];
   progress: ProjectProgressType[];
+  highlight: boolean[];
+  isGlobal: boolean[];
 }
 
 const initialState: FiltersState = {
@@ -17,6 +20,8 @@ const initialState: FiltersState = {
   category: [],
   status: [],
   progress: [],
+  highlight: [],
+  isGlobal: [],
 };
 
 export const filtersSlice = createSlice({
@@ -26,18 +31,31 @@ export const filtersSlice = createSlice({
     setSearch: (state, action: PayloadAction<string>) => {
       state.search = action.payload;
     },
-    setCategory: (state, action: PayloadAction<ProjectCategory[]>) => {
+    setCategory: (state, action: PayloadAction<ProjectCategoryType[]>) => {
       state.category = action.payload;
     },
-    setStatus: (state, action: PayloadAction<ProjectStatus[]>) => {
+    setStatus: (state, action: PayloadAction<ProjectStatusType[]>) => {
       state.status = action.payload;
     },
     setProgress: (state, action: PayloadAction<ProjectProgressType[]>) => {
       state.progress = action.payload;
     },
+    setHighlight: (state, action: PayloadAction<boolean[]>) => {
+      state.highlight = action.payload;
+    },
+    setIsGlobal: (state, action: PayloadAction<boolean[]>) => {
+      state.isGlobal = action.payload;
+    },
   },
 });
 
-export const { setSearch, setCategory, setStatus, setProgress } =
-  filtersSlice.actions;
+export const {
+  setSearch,
+  setCategory,
+  setStatus,
+  setProgress,
+  setHighlight,
+  setIsGlobal,
+} = filtersSlice.actions;
+
 export default filtersSlice.reducer;

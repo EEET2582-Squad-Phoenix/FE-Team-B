@@ -1,27 +1,63 @@
+// "@/pages/projects/hooks/useHaltProjectModal.ts"
 import { useState } from "react";
+import { Project } from "@/types/Project";
+import { useAppDispatch } from "@/lib/hooks";
+import {
+  haltProject,
+  resumeProject,
+  fetchProjects,
+} from "@/lib/features/projects/projectsSlice";
 
-export function useHaltProjectModal() {
-  const [isOpen, setIsOpen] = useState(false);
-  const [selectedProject, setSelectedProject] = useState<string | null>(null);
-  const [reason, setReason] = useState("");
+export const useHaltProjectModal = () => {
+  const dispatch = useAppDispatch();
+  const [isHaltModalOpen, setIsHaltModalOpen] = useState(false);
+  const [selectedHaltProject, setSelectedProject] = useState<Project | null>(
+    null
+  );
 
-  const openModal = (projectName: string) => {
-    setSelectedProject(projectName);
-    setIsOpen(true);
+  const openHaltModal = (project: Project) => {
+    setSelectedProject(project);
+    setIsHaltModalOpen(true);
   };
 
-  const closeModal = () => {
-    setIsOpen(false);
-    setSelectedProject(null);
-    setReason("");
+  const handleHaltProject = async (
+    projectId: string,
+    donorMessage: string,
+    charityMessage: string
+  ) => {
+    try {
+      await dispatch(
+        haltProject({ projectId, donorMessage, charityMessage })
+      ).unwrap();
+      dispatch(fetchProjects());
+      setIsHaltModalOpen(false);
+    } catch (error) {
+      console.error("Failed to halt project:", error);
+    }
+  };
+
+  const handleResumeProject = async (
+    projectId: string,
+    donorMessage: string,
+    charityMessage: string
+  ) => {
+    try {
+      await dispatch(
+        resumeProject({ projectId, donorMessage, charityMessage })
+      ).unwrap();
+      dispatch(fetchProjects());
+      setIsHaltModalOpen(false);
+    } catch (error) {
+      console.error("Failed to resume project:", error);
+    }
   };
 
   return {
-    isOpen,
-    selectedProject,
-    reason,
-    setReason,
-    openModal,
-    closeModal,
+    isHaltModalOpen,
+    setIsHaltModalOpen,
+    selectedHaltProject,
+    openHaltModal,
+    handleHaltProject,
+    handleResumeProject,
   };
-}
+};

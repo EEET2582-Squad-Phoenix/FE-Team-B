@@ -1,8 +1,18 @@
-import React from "react";
+import React, { useState } from "react";
 import { Project } from "@/types/Project";
-import { Pencil, Trash2, CheckCircle, Star, Pause } from "lucide-react";
+import {
+  Pencil,
+  Trash2,
+  CheckCircle,
+  Star,
+  Play,
+  Pause,
+  ArchiveRestore,
+  Archive,
+  Globe,
+  MapPin,
+} from "lucide-react";
 import { ProjectModal } from "./ProjectModal";
-import { HaltProjectModal } from "./HaltProjectModal";
 import ActionButton from "@/components/table/ActionButton";
 import { Badge } from "@/components/ui/badge";
 import Image from "next/image";
@@ -17,9 +27,16 @@ import {
 } from "@/components/ui/table";
 import { useProjectActions } from "./hooks/useProjectActions";
 import { useProjectModal } from "./hooks/useProjectModal";
-import { formatAmount, formatDuration } from "@/utils/formatValues";
-import { getStatusColor } from "@/utils/getCssValues";
+import {
+  formatAmount,
+  formatDisplayText,
+  formatDuration,
+  getStatusColor,
+} from "@/utils/projects/formatValues";
+import { HaltProjectModal } from "./HaltProjectModal";
 import { useHaltProjectModal } from "./hooks/useHaltProjectModal";
+import { useDeactivateProjectModal } from "./hooks/useDeactivateProjectModal";
+import { DeactivateProjectModal } from "./DeactivateProjectModal";
 
 interface ProjectsTableProps {
   projects: Project[];
@@ -31,7 +48,7 @@ const ProjectsTable = ({ projects }: ProjectsTableProps) => {
     handleUpdateProject,
     handleApproveProject,
     handleHighlightProject,
-    handleHaltProject,
+    handleRestoreProject,
   } = useProjectActions();
 
   const {
@@ -43,41 +60,52 @@ const ProjectsTable = ({ projects }: ProjectsTableProps) => {
   } = useProjectModal(handleUpdateProject);
 
   const {
-    isOpen: isHaltModalOpen,
-    selectedProject,
-    reason,
-    setReason,
-    openModal: openHaltModal,
-    closeModal: closeHaltModal,
+    isHaltModalOpen,
+    setIsHaltModalOpen,
+    selectedHaltProject,
+    openHaltModal,
+    handleHaltProject,
+    handleResumeProject,
   } = useHaltProjectModal();
 
-  const handleHaltProjectSubmit = () => {
-    if (selectedProject) {
-      handleHaltProject(selectedProject);
-      closeHaltModal();
-    }
-  };
+  const {
+    isDeactivateModalOpen,
+    setIsDeactivateModalOpen,
+    selectedDeactivatedProject,
+    openDeactivateModal,
+    handleDeactivateProject,
+  } = useDeactivateProjectModal();
+
+  const [projectCount, setProjectCount] = useState(projects.length);
 
   return (
     <>
-      <Table>
+      <div className="text-xl font-bold mb-4">
+        Total Projects: {projectCount}
+      </div>
+      {/* // button to increase project count */}
+      <button onClick={() => setProjectCount(projectCount + 1)}>
+        Add Project
+      </button>
+      <Table className="max-w-full">
         <TableHeader>
           <TableRow>
-            <TableHead>ID</TableHead>
-            <TableHead>Thumbnail</TableHead>
-            <TableHead>Name</TableHead>
-            <TableHead>Country</TableHead>
-            <TableHead>Category</TableHead>
-            <TableHead>Status</TableHead>
-            <TableHead>Amount</TableHead>
-            <TableHead>Duration</TableHead>
-            <TableHead>Actions</TableHead>
+            <TableHead id="id-column">ID</TableHead>
+            <TableHead id="thumbnail-column">Thumbnail</TableHead>
+            <TableHead id="name-column">Name</TableHead>
+            <TableHead id="country-column">Country</TableHead>
+            <TableHead id="scope-column">Scope</TableHead>
+            <TableHead id="category-column">Category</TableHead>
+            <TableHead id="status-column">Status</TableHead>
+            <TableHead id="amount-column">Amount</TableHead>
+            <TableHead id="duration-column">Duration</TableHead>
+            <TableHead id="actions-column">Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          {projects.map((project) => (
+          {projects.map((project, i) => (
             <TableRow
-              key={project.id}
+              key={i}
               className={
                 project.isHighlighted ? "bg-yellow-100 hover:bg-yellow-200" : ""
               }
@@ -90,7 +118,8 @@ const ProjectsTable = ({ projects }: ProjectsTableProps) => {
                       src={project.imageURLs[0]}
                       alt={project.name}
                       className="rounded object-cover"
-                      fill
+                      width={64}
+                      height={64}
                     />
                   </div>
                 ) : (
@@ -99,9 +128,14 @@ const ProjectsTable = ({ projects }: ProjectsTableProps) => {
                   </div>
                 )}
               </TableCell>
-              <TableCell>{project.name}</TableCell>
-              <TableCell>{project.country}</TableCell>
-              <TableCell>{project.category}</TableCell>
+              <TableCell>{formatDisplayText(project.name)}</TableCell>
+              <TableCell>{formatDisplayText(project.country)}</TableCell>
+              <TableCell>{project.isGlobal ? <Globe /> : <MapPin />}</TableCell>
+              <TableCell>
+                {project.category
+                  ? project.category.map(formatDisplayText).join(", ")
+                  : "N/A"}
+              </TableCell>
               <TableCell>
                 <Badge className={getStatusColor(project.status)}>
                   {project.status}
@@ -111,55 +145,80 @@ const ProjectsTable = ({ projects }: ProjectsTableProps) => {
                 {formatAmount(project.raisedAmount, project.goalAmount)}
               </TableCell>
               <TableCell>
-                {formatDuration(project.startedAt || "", project.endedAt || "")}
+                {formatDuration(project.startDate || "", project.endDate || "")}
               </TableCell>
               <TableCell>
                 <div className="flex items-center space-x-1">
-                  <ActionButton
-                    icon={Pencil}
-                    disabled={project.status === "Inactive"}
-                    onClick={() => handleEditProject(project)}
-                    className="text-blue-600"
-                  />
-                  <ActionButton
-                    icon={Trash2}
-                    disabled={project.status === "Inactive"}
-                    onClick={() => handleDeleteProject(project.id)}
-                    className="text-red-600"
-                  />
-                  <ActionButton
-                    icon={CheckCircle}
-                    disabled={
-                      project.status === "Active" ||
-                      project.status === "Inactive"
-                    }
-                    onClick={() => handleApproveProject(project.id)}
-                    className="text-green-600"
-                  />
-                  <ActionButton
-                    icon={Star}
-                    disabled={
-                      project.isHighlighted || project.status === "Inactive"
-                    }
-                    onClick={() => handleHighlightProject(project.id)}
-                    className="text-yellow-600"
-                  />
-                  <ActionButton
-                    icon={Pause}
-                    disabled={
-                      project.status === "Halted" ||
-                      project.status === "Inactive"
-                    }
-                    onClick={() => openHaltModal(project.id)}
-                    className="text-orange-600"
-                  />
+                  {project.status === "INACTIVATED" ? (
+                    <>
+                      <ActionButton
+                        icon={ArchiveRestore}
+                        onClick={() => handleRestoreProject(project.id)}
+                        className="text-green-600"
+                      />
+                      <ActionButton
+                        icon={Trash2}
+                        onClick={() => handleDeleteProject(project.id)}
+                        className="text-red-600"
+                      />
+                    </>
+                  ) : (
+                    <>
+                      <ActionButton
+                        icon={Pencil}
+                        onClick={() => handleEditProject(project)}
+                        className="text-blue-600"
+                      />
+                      <ActionButton
+                        icon={CheckCircle}
+                        disabled={project.status !== "UNAPPROVED"}
+                        onClick={() => handleApproveProject(project.id)}
+                        className="text-green-600"
+                      />
+                      <ActionButton
+                        icon={Star}
+                        disabled={project.status !== "ACTIVE"}
+                        onClick={() => handleHighlightProject(project.id)}
+                        className={
+                          project.isHighlighted
+                            ? project.status !== "ACTIVE"
+                              ? "text-gray-400"
+                              : "text-yellow-600"
+                            : project.status !== "ACTIVE"
+                            ? "text-gray-400"
+                            : "text-gray-600"
+                        }
+                      />
+                      <ActionButton
+                        icon={project.status === "HALTED" ? Play : Pause}
+                        disabled={
+                          !["ACTIVE", "HALTED"].includes(project.status)
+                        }
+                        onClick={() => openHaltModal(project)}
+                        className={
+                          project.status === "HALTED"
+                            ? "text-green-600"
+                            : "text-orange-600"
+                        }
+                      />
+                      <ActionButton
+                        icon={Archive}
+                        onClick={() => openDeactivateModal(project)}
+                        className="text-gray-600"
+                      />
+                      <ActionButton
+                        icon={Trash2}
+                        onClick={() => handleDeleteProject(project.id)}
+                        className="text-red-600"
+                      />
+                    </>
+                  )}
                 </div>
               </TableCell>
             </TableRow>
           ))}
         </TableBody>
       </Table>
-
       <ProjectModal
         project={currentProject}
         open={isModalOpen}
@@ -167,12 +226,18 @@ const ProjectsTable = ({ projects }: ProjectsTableProps) => {
         onSave={handleModalSave}
         onApprove={handleApproveProject}
       />
-
       <HaltProjectModal
-        projectName={selectedProject || ""}
+        project={selectedHaltProject}
         open={isHaltModalOpen}
-        onOpenChange={closeHaltModal}
-        onSubmit={handleHaltProjectSubmit}
+        onOpenChange={setIsHaltModalOpen}
+        onHalt={handleHaltProject}
+        onResume={handleResumeProject}
+      />
+      <DeactivateProjectModal
+        project={selectedDeactivatedProject}
+        open={isDeactivateModalOpen}
+        onOpenChange={setIsDeactivateModalOpen}
+        onDeactivate={handleDeactivateProject}
       />
     </>
   );

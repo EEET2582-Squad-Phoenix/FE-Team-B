@@ -2,40 +2,45 @@ import { useDispatch } from "react-redux";
 import {
   deleteProject,
   updateProject,
-  highlightProject,
   approveProject,
-  haltProject,
+  fetchProjects,
+  toggleHighlightProject,
+  restoreProject,
 } from "@/lib/features/projects/projectsSlice";
 import { Project } from "@/types/Project";
+import { AppDispatch } from "@/lib/store";
 
 export const useProjectActions = () => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
 
   const handleDeleteProject = (id: string) => {
-    dispatch(deleteProject(id));
+    dispatch(deleteProject(id)).then(() => dispatch(fetchProjects()));
   };
 
   const handleUpdateProject = (updatedProject: Project) => {
-    dispatch(updateProject(updatedProject));
+    dispatch(updateProject(updatedProject)).then(() =>
+      dispatch(fetchProjects())
+    );
   };
 
   const handleApproveProject = (id: string) => {
-    dispatch(approveProject(id));
+    dispatch(approveProject(id)).then(() => dispatch(fetchProjects()));
   };
 
   const handleHighlightProject = (id: string) => {
-    dispatch(highlightProject(id));
+    dispatch(toggleHighlightProject(id)).then(() => dispatch(fetchProjects()));
   };
 
-  const handleHaltProject = (id: string) => {
-    dispatch(haltProject(id));
-  };
+  const handleRestoreProject = (projectId: string) =>
+    dispatch(restoreProject({ projectId })).then(() =>
+      dispatch(fetchProjects())
+    );
 
   return {
     handleDeleteProject,
     handleUpdateProject,
     handleApproveProject,
     handleHighlightProject,
-    handleHaltProject,
+    handleRestoreProject,
   };
 };

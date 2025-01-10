@@ -1,4 +1,5 @@
 import { ProjectProgress, ProjectProgressType } from "@/types/Project";
+import { formatDisplayText } from "@/utils/projects/formatValues";
 import React from "react";
 
 interface ProgressFilterProps {
@@ -25,10 +26,14 @@ const ProgressFilter: React.FC<ProgressFilterProps> = ({
           <label key={progress} className="flex items-center space-x-2">
             <input
               type="checkbox"
-              checked={selectedProgress.includes(progress as ProjectProgressType)} 
-              onChange={() => handleCheckboxChange(progress as ProjectProgressType)} 
+              checked={selectedProgress.includes(
+                progress as ProjectProgressType
+              )}
+              onChange={() =>
+                handleCheckboxChange(progress as ProjectProgressType)
+              }
             />
-            <span>{progress}</span>
+            <span>{formatDisplayText(progress)}</span>
           </label>
         ))}
       </div>

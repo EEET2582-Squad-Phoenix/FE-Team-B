@@ -1,14 +1,20 @@
 "use client";
 
-import React , { useState } from "react";
+import React from "react";
 import { FcGoogle } from "react-icons/fc";
 import { FaFacebook } from "react-icons/fa";
+import { useSignin } from "@/components/auth/hooks/useSignin";
 
-export default function Signin() {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [error, setError] = useState("");
-    const [loading, setLoading] = useState(false);
+export default function Signin() {    
+    const {
+        email,
+        setEmail,
+        password,
+        setPassword,
+        error,
+        loading,
+        handleSubmit,
+    } = useSignin();
     
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();

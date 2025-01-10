@@ -1,34 +1,52 @@
 export const ProjectStatuses = [
-  "Unapproved",
-  "Active",
-  "Halted",
-  "Inactive",
-  "Completed",
+  "UNAPPROVED",
+  "ACTIVE",
+  "HALTED",
+  "INACTIVATED",
+  "COMPLETED",
 ] as const;
 
-export type ProjectStatus = (typeof ProjectStatuses)[number];
+export type ProjectStatusType =
+  | "UNAPPROVED"
+  | "ACTIVE"
+  | "HALTED"
+  | "COMPLETED"
+  | "INACTIVATED";
 
 export const ProjectCategories = [
-  "Food",
-  "Health",
-  "Education",
-  "Environment",
-  "Religion",
-  "Humanitarian",
-  "Housing",
-  "Other",
+  "FOOD",
+  "EDUCATION",
+  "HEALTH",
+  "RELIGION",
+  "ENVIRONMENT",
+  "HOUSING",
+  "HUMANITARIAN",
+  "OTHER",
 ] as const;
 
-export type ProjectCategory = (typeof ProjectCategories)[number];
+export type ProjectCategoryType =
+  | "FOOD"
+  | "EDUCATION"
+  | "HEALTH"
+  | "RELIGION"
+  | "ENVIRONMENT"
+  | "HOUSING"
+  | "HUMANITARIAN"
+  | "OTHER";
 
-export const ProjectProgress = ["Ongoing", "Full"] as const;
+export const ProjectProgress = ["ON-GOING", "FULL"] as const;
 
-export type ProjectProgressType = (typeof ProjectProgress)[number];
+export type ProjectProgressType = "ON-GOING" | "FULL";
+
+export interface HaltMessage {
+  charityMessage: string;
+  donorMessage: string;
+}
 
 export interface Project {
   id: string;
+  charityId: string;
   name: string;
-  thumbnailURL?: string;
   imageURLs?: string[]; // 15
   videoURLs?: string[]; // 4
   description?: string;
@@ -36,13 +54,20 @@ export interface Project {
   goalAmount: number;
   raisedAmount: number;
   isGlobal: boolean;
-  category: ProjectCategory;
-  status: ProjectStatus;
-  haltedReason?: string[];
+  category: ProjectCategoryType[];
+  status: ProjectStatusType;
+  haltedMessage?: HaltMessage;
   isHighlighted: boolean;
-  isFullyFunded: boolean;
-  startedAt: string;
+  fundStatus: ProjectProgressType;
+  startDate: string;
   createdAt: string;
   updatedAt: string;
-  endedAt?: string;
+  endDate: string;
+  deletionReason?: string;
+}
+
+export interface HaltProjectPayload {
+  projectId: string;
+  donorMessage?: string;
+  charityMessage?: string;
 }
