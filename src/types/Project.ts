@@ -38,9 +38,9 @@ export const ProjectProgress = ["ON-GOING", "FULL"] as const;
 
 export type ProjectProgressType = "ON-GOING" | "FULL";
 
-export interface HaltReason {
-  haltedReasonCharity?: string;
-  haltedReasonAdmin?: string;
+export interface HaltMessage {
+  charityMessage: string;
+  donorMessage: string;
 }
 
 export interface Project {
@@ -56,7 +56,7 @@ export interface Project {
   isGlobal: boolean;
   category: ProjectCategoryType[];
   status: ProjectStatusType;
-  haltedReason?: HaltReason;
+  haltedMessage?: HaltMessage;
   isHighlighted: boolean;
   fundStatus: ProjectProgressType;
   startDate: string;
@@ -67,6 +67,6 @@ export interface Project {
 
 export interface HaltProjectPayload {
   projectId: string;
-  haltedReasonAdmin?: string;
-  haltedReasonCharity?: string;
+  donorMessage?: string;
+  charityMessage?: string;
 }

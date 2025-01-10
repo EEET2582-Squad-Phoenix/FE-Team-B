@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Project } from "@/types/Project";
 import {
   Pencil,
@@ -68,8 +68,17 @@ const ProjectsTable = ({ projects }: ProjectsTableProps) => {
     //handleRestoreProject
   } = useHaltProjectModal();
 
+  const [projectCount, setProjectCount] = useState(projects.length);
+
   return (
     <>
+      <div className="text-xl font-bold mb-4">
+        Total Projects: {projectCount}
+      </div>
+      {/* // button to increase project count */}
+      <button onClick={() => setProjectCount(projectCount + 1)}>
+        Add Project
+      </button>
       <Table className="max-w-full">
         <TableHeader>
           <TableRow>
@@ -197,7 +206,6 @@ const ProjectsTable = ({ projects }: ProjectsTableProps) => {
           ))}
         </TableBody>
       </Table>
-
       <ProjectModal
         project={currentProject}
         open={isModalOpen}
@@ -205,7 +213,6 @@ const ProjectsTable = ({ projects }: ProjectsTableProps) => {
         onSave={handleModalSave}
         onApprove={handleApproveProject}
       />
-
       <HaltProjectModal
         project={selectedProject}
         open={isHaltModalOpen}

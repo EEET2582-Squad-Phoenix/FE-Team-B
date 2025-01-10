@@ -18,8 +18,8 @@ interface HaltProjectModalProps {
   project: Project | null;
   onHalt: (
     projectId: string,
-    adminReason?: string, // Made optional
-    charityReason?: string // Made optional
+    donorMessage: string,
+    charityMessage: string
   ) => void;
   onResume?: (projectId: string) => void;
 }
@@ -31,17 +31,17 @@ export function HaltProjectModal({
   onHalt,
   onResume,
 }: HaltProjectModalProps) {
-  const [adminReason, setAdminReason] = useState("");
-  const [charityReason, setCharityReason] = useState("");
+  const [donorMessage, setDonorMessage] = useState("");
+  const [charityMessage, setCharityMessage] = useState("");
 
   const isHalted = project?.status === "HALTED";
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (project) {
-      onHalt(project.id, adminReason, charityReason);
-      setAdminReason("");
-      setCharityReason("");
+      onHalt(project.id, donorMessage, charityMessage);
+      setDonorMessage("");
+      setCharityMessage("");
       onOpenChange(false);
     }
   };
@@ -73,24 +73,23 @@ export function HaltProjectModal({
           <form onSubmit={handleSubmit}>
             <div className="grid gap-4 py-4">
               <div className="grid gap-2">
-                <Label htmlFor="adminReason">Admin Reason (Optional)</Label>{" "}
-                {/* Added (Optional) */}
+                <Label htmlFor="donorMessage">Message to donors</Label>{" "}
                 <Input
-                  id="adminReason"
-                  placeholder="Enter admin reason for halting"
-                  value={adminReason}
-                  onChange={(e) => setAdminReason(e.target.value)}
-                  className="col-span-3" 
+                  id="donorMessage"
+                  placeholder="Enter message to donors"
+                  value={donorMessage}
+                  onChange={(e) => setDonorMessage(e.target.value)}
+                  className="col-span-3"
                 />
               </div>
               <div className="grid gap-2">
-                <Label htmlFor="charityReason">Charity Reason (Optional)</Label>{" "}
+                <Label htmlFor="charityMessage">Message to charities</Label>{" "}
                 <Input
-                  id="charityReason"
-                  placeholder="Enter charity reason for halting"
-                  value={charityReason}
-                  onChange={(e) => setCharityReason(e.target.value)}
-                  className="col-span-3" 
+                  id="charityMessage"
+                  placeholder="Enter message to charities"
+                  value={charityMessage}
+                  onChange={(e) => setCharityMessage(e.target.value)}
+                  className="col-span-3"
                 />
               </div>
             </div>
@@ -108,15 +107,13 @@ export function HaltProjectModal({
             <div className="grid gap-2 mb-4">
               <Label>Current Admin Reason</Label>
               <div className="text-sm text-gray-500">
-                {project.haltedReason?.haltedReasonAdmin ||
-                  "No reason provided"}
+                {project.haltedMessage?.donorMessage || "No reason provided"}
               </div>
             </div>
             <div className="grid gap-2 mb-4">
               <Label>Current Charity Reason</Label>
               <div className="text-sm text-gray-500">
-                {project.haltedReason?.haltedReasonCharity ||
-                  "No reason provided"}
+                {project.haltedMessage?.charityMessage || "No reason provided"}
               </div>
             </div>
             <DialogFooter>

@@ -15,14 +15,14 @@ export const useHaltProjectModal = () => {
 
   const handleHaltProject = async (
     projectId: string,
-    haltedReasonAdmin?: string,
-    haltedReasonCharity?: string
+    donorMessage?: string,
+    charityMessage?: string
   ) => {
     try {
       const payload: HaltProjectPayload = {
         projectId,
-        haltedReasonAdmin,
-        haltedReasonCharity,
+        donorMessage,
+        charityMessage,
       };
       await dispatch(haltProject(payload)).unwrap();
     } catch (error) {

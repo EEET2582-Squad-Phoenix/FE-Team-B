@@ -77,19 +77,15 @@ export const updateProject = createAsyncThunk<Project, Project>(
 
 export const haltProject = createAsyncThunk<Project, HaltProjectPayload>(
   "projects/haltProject",
-  async ({
-    projectId,
-    haltedReasonAdmin,
-    haltedReasonCharity,
-  }: HaltProjectPayload) => {
+  async ({ projectId, donorMessage, charityMessage }: HaltProjectPayload) => {
     try {
       console.log("haltProject called");
       const response = await sendHttpRequest<Project>(PROJECT_HALT_URL, {
         method: "POST",
         body: JSON.stringify({
           projectId,
-          haltedReasonAdmin,
-          haltedReasonCharity,
+          donorMessage,
+          charityMessage,
         }),
       });
 
