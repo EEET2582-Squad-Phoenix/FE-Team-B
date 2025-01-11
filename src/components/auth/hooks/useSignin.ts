@@ -1,6 +1,7 @@
 import { useState } from "react";
 import sendHttpRequest from "@/utils/http-call/HttpRequest";
-import { AUTH_SIGNIN_URL } from "@/constants/service-url/auth-url-config";
+import { AUTH_GET_ME_URL, AUTH_SIGNIN_URL } from "@/constants/service-url/auth-url-config";
+import router from "next/router";
 
 export function useSignin() {
   const [email, setEmail] = useState("");
@@ -26,8 +27,21 @@ export function useSignin() {
       const data = await response.json();
 
       if (response.ok && !data.error) {
-        localStorage.setItem("auth_token", data.token);
-        window.location.href = "/dashboard";
+        const userResponse = await fetch(AUTH_GET_ME_URL, { method: "GET" });
+        const userData = await userResponse.json();
+        console.log("User data:", userData);
+
+        switch (userData.role) {
+          case "DONOR":
+            // router.push("http://localhost:3001/donor");
+            break;
+          case "CHARITY":
+            // router.push("http://localhost:3001/organization");
+            break;
+          default:
+            // router.push("http://localhost:3000/dashboard");
+            break;
+        }
       } else {
         setError(data.error);
       }
