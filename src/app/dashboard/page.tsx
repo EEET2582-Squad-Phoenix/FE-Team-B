@@ -23,7 +23,7 @@ export default function DashboardPage() {
         const response = await fetch(AUTH_GET_ME_URL, {
           method: "GET",
           credentials: "include",
-        });
+        }); // Check if user is authorized
 
         const user = await response.json();
         if (user.role === "ADMIN") {

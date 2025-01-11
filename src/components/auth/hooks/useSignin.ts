@@ -25,7 +25,7 @@ export function useSignin() {
           "Content-Type": "application/json",
         },
         credentials: "include",
-      });
+      }); // Send login request
 
       const data = await response.json();
 
@@ -33,25 +33,22 @@ export function useSignin() {
         const userResponse = await fetch(AUTH_GET_ME_URL, {
           method: "GET",
           credentials: "include",
-        });
+        }); // Get user data after successful login
         const userData = await userResponse.json();
 
         switch (userData.role) {
-          case "DONOR":
-            router.push("http://localhost:3001/donor");
-            console.log("Donor");
-            break;
+          case "ADMIN":
+            router.push("http://localhost:3000/dashboard");
+            break; // Redirect to dashboard if user is an admin
           case "CHARITY":
             router.push("http://localhost:3001/organization");
-            console.log("Charity");
-            break;
+            break; // Redirect to organization page if user is a charity
           default:
-            router.push("http://localhost:3000/dashboard");
-            console.log("Admin");
-            break;
+            router.push("http://localhost:3001/donor");
+            break; // Redirect to donor page if user is a donor
         }
       } else {
-        setError(data.error);
+        setError(data.error); // Display error message if login fails
       }
     } catch (err) {
       console.error("Unexpected error:", err);
