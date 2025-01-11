@@ -1,6 +1,9 @@
 import { useState } from "react";
 import sendHttpRequest from "@/utils/http-call/HttpRequest";
-import { AUTH_GET_ME_URL, AUTH_SIGNIN_URL } from "@/constants/service-url/auth-url-config";
+import {
+  AUTH_GET_ME_URL,
+  AUTH_SIGNIN_URL,
+} from "@/constants/service-url/auth-url-config";
 import router from "next/router";
 
 export function useSignin() {
@@ -27,7 +30,10 @@ export function useSignin() {
       const data = await response.json();
 
       if (response.ok && !data.error) {
-        const userResponse = await fetch(AUTH_GET_ME_URL, { method: "GET" });
+        const userResponse = await fetch(AUTH_GET_ME_URL, {
+          method: "GET",
+          credentials: "include",
+        });
         const userData = await userResponse.json();
         console.log("User data:", userData);
 
