@@ -27,19 +27,21 @@ export function useSignin() {
       const data = await response.json();
 
       if (response.ok && !data.error) {
-        const userResponse = await fetch(AUTH_GET_ME_URL, { method: "GET" });
+        const userResponse = await fetch(AUTH_GET_ME_URL, { method: "GET", credentials: "include",});
         const userData = await userResponse.json();
-        console.log("User data:", userData);
 
         switch (userData.role) {
           case "DONOR":
-            // router.push("http://localhost:3001/donor");
+            router.push("http://localhost:3001/donor");
+            console.log("Donor");
             break;
           case "CHARITY":
-            // router.push("http://localhost:3001/organization");
+            router.push("http://localhost:3001/organization");
+            console.log("Charity");
             break;
           default:
-            // router.push("http://localhost:3000/dashboard");
+            window.location.href = "/dashboard";
+            console.log("Admin");
             break;
         }
       } else {
