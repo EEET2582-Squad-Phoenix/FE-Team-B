@@ -1,15 +1,16 @@
 import { useState } from "react";
-import sendHttpRequest from "@/utils/http-call/HttpRequest";
 import {
   AUTH_GET_ME_URL,
   AUTH_SIGNIN_URL,
 } from "@/constants/service-url/auth-url-config";
+import { useRouter } from "next/navigation";
 
 export function useSignin() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -38,15 +39,15 @@ export function useSignin() {
         if (typeof window !== "undefined") {
           switch (userData.role) {
             case "DONOR":
-              window.location.href = "http://localhost:3001/donor";
+              router.push("http://localhost:3001/donor");
               console.log("Donor");
               break;
             case "CHARITY":
-              window.location.href = "http://localhost:3001/organization";
+              router.push("http://localhost:3001/organization");
               console.log("Charity");
               break;
             default:
-              window.location.href = "http://localhost:3000/dashboard";
+              router.push("http://localhost:3000/dashboard");
               console.log("Admin");
               break;
           }
