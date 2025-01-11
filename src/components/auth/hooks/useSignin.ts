@@ -43,6 +43,9 @@ export function useSignin() {
           case "CHARITY":
             router.push("http://localhost:3001/organization");
             break; // Redirect to organization page if user is a charity
+          case "DONOR":
+            router.push("http://localhost:3001/donor");
+            break; // Redirect to donor page if user is a donor
           default:
             router.push("http://localhost:3001/donor");
             break; // Redirect to donor page if user is a donor

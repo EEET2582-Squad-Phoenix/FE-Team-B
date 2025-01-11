@@ -69,6 +69,9 @@ export default function Signup() {
                             className="w-full border-2 border-gray-500 rounded-md h-12 px-4 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
                             required
                         />
+                        <p className="mt-1 text-xs text-gray-500">
+                            Must be at least 8 characters long, include an uppercase letter, a number, and a special character.
+                        </p>
                     </div>
 
                     {/* Role Selection */}

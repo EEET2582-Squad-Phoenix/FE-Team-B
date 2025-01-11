@@ -21,6 +21,16 @@ export function useSignup() {
       return;
     } // Check if email and password are provided
 
+    // Password validation: Must contain at least one uppercase letter, one number, and one special character
+    const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
+    if (!passwordRegex.test(password)) {
+      setError(
+        "Password must include at least one uppercase letter, one number, and one special character, and be at least 8 characters long."
+      );
+      setLoading(false);
+      return;
+    }
+
     try {
       const response = await fetch(AUTH_CHECK_EMAIL_URL, {
         method: "POST",
