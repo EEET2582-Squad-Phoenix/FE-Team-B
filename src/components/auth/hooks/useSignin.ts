@@ -1,7 +1,7 @@
 import { useState } from "react";
 import {
   AUTH_GET_ME_URL,
-  AUTH_SIGNIN_URL,
+  AUTH_LOGIN_URL,
 } from "@/constants/service-url/auth-url-config";
 import { useRouter } from "next/navigation";
 
@@ -18,7 +18,7 @@ export function useSignin() {
     setLoading(true);
 
     try {
-      const response = await fetch(AUTH_SIGNIN_URL, {
+      const response = await fetch(AUTH_LOGIN_URL, {
         method: "POST",
         body: JSON.stringify({ email, password }),
         headers: {

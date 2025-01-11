@@ -25,10 +25,6 @@ export default function DashboardPage() {
           credentials: "include",
         });
 
-        if (!response.ok) {
-          throw new Error("Unauthorized");
-        }
-
         const user = await response.json();
         if (user.role === "ADMIN") {
           setIsAuthorized(true);
@@ -52,5 +48,6 @@ export default function DashboardPage() {
       </div>
     );
   }
+  
   return <DashboardContent />;
 }

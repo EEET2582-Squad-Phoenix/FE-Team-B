@@ -3,32 +3,53 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Menu, X } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { useRouter , usePathname} from "next/navigation";
+import { AUTH_GET_ME_URL , AUTH_LOGOUT_URL } from "@/constants/service-url/auth-url-config";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [loading, setLoading] = useState(true);
   const router = useRouter();
+  const pathname = usePathname();
 
   useEffect(() => {
-    const token = localStorage.getItem("auth_token");
-    if (token) {
-      setIsLoggedIn(true);
-    } else {
+    const checkLogin = async () => {
+      try {
+        const response = await fetch(AUTH_GET_ME_URL, {
+          method: "GET",
+          credentials: "include",
+        });
+
+        if (response.ok) {
+          setIsLoggedIn(true); // User is logged in
+        } else {
+          setIsLoggedIn(false); // Not logged in
+        }
+      } catch (error) {
+        console.error("Error checking login status:", error);
+        setIsLoggedIn(false);
+      }
+    };
+
+    checkLogin();
+  }, []);
+
+  // Handle logout
+  const handleLogout = async () => {
+    try {
+      await fetch(AUTH_LOGOUT_URL, {
+        method: "GET",
+        credentials: "include",
+      });
       setIsLoggedIn(false);
+      router.push("/signin");
+    } catch (error) {
+      console.error("Error during logout:", error);
     }
-    setLoading(false);
-  } , []);
+  };
 
-  const handleLogout = () => {
-    localStorage.removeItem("auth_token");
-    setIsLoggedIn(false);
-    router.push("/");
-  }
-
-  if (loading) return null;
-
+  const isDashboard = pathname.includes("/dashboard");
+  
   return (
     <nav className="bg-blue-500 fixed h-16 top-0 w-full z-10">
       <div className="lg:mx-8 mx-4 px-4 sm:px-6 lg:px-8">
@@ -52,7 +73,7 @@ const Navbar = () => {
             </div>
 
             <div className="flex items-center space-x-4">
-              {isLoggedIn ? (
+              {isLoggedIn && isDashboard ? (
                 <button onClick={handleLogout} className="bg-red-500 text-white py-2 px-3 rounded-md">
                   Logout
                 </button>
@@ -103,9 +124,20 @@ const Navbar = () => {
                 About
               </Link>
               <div className="flex flex-col space-y-2 pt-2">
-                <button className="bg-yellow-400 text-black py-2 px-3 rounded-md">
-                  Sign in
-                </button>
+                {isLoggedIn ? (
+                  <button
+                    onClick={handleLogout}
+                    className="bg-red-500 text-white py-2 px-3 rounded-md w-full"
+                  >
+                    Logout
+                  </button>
+                ) : (
+                  <Link href="/signin">
+                    <button className="bg-yellow-400 text-black py-2 px-3 rounded-md w-full">
+                      Sign in
+                    </button>
+                  </Link>
+                )}
                 <button className="bg-teal-400 text-black py-2 px-3 rounded-md">
                   Donate as guest
                 </button>
