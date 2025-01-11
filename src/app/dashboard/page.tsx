@@ -1,6 +1,6 @@
 "use client";
 
-import { AUTH_GET_ME_URL } from "@/constants/service-url/auth-url-config";
+import { AUTH_GET_ME_URL, AUTH_LOGOUT_URL } from "@/constants/service-url/auth-url-config";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -29,6 +29,10 @@ export default function DashboardPage() {
         if (user.role === "ADMIN") {
           setIsAuthorized(true);
         } else {
+          await fetch(AUTH_LOGOUT_URL, {
+            method: "GET",
+            credentials: "include",
+          }); // Logout if unauthorized and send user back to signin page
           router.push("/signin");
         }
       } catch (error) {
@@ -48,6 +52,6 @@ export default function DashboardPage() {
       </div>
     );
   }
-  
+
   return <DashboardContent />;
 }
