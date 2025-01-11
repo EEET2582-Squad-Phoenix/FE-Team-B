@@ -36,21 +36,19 @@ export function useSignin() {
         });
         const userData = await userResponse.json();
 
-        if (typeof window !== "undefined") {
-          switch (userData.role) {
-            case "DONOR":
-              router.push("http://localhost:3001/donor");
-              console.log("Donor");
-              break;
-            case "CHARITY":
-              router.push("http://localhost:3001/organization");
-              console.log("Charity");
-              break;
-            default:
-              router.push("http://localhost:3000/dashboard");
-              console.log("Admin");
-              break;
-          }
+        switch (userData.role) {
+          case "DONOR":
+            router.push("http://localhost:3001/donor");
+            console.log("Donor");
+            break;
+          case "CHARITY":
+            router.push("http://localhost:3001/organization");
+            console.log("Charity");
+            break;
+          default:
+            router.push("http://localhost:3000/dashboard");
+            console.log("Admin");
+            break;
         }
       } else {
         setError(data.error);
