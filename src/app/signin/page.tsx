@@ -1,8 +1,6 @@
 "use client";
 
 import React from "react";
-import { FcGoogle } from "react-icons/fc";
-import { FaFacebook } from "react-icons/fa";
 import { useSignin } from "@/components/auth/hooks/useSignin";
 
 export default function Signin() {    
@@ -97,26 +95,6 @@ export default function Signin() {
                             {loading ? "Signing in..." : "Sign in"}
                         </button>
                     </form>
-
-                    {/* Divider */}
-                    <div className="relative my-6">
-                        <div className="absolute inset-0 flex items-center">
-                            <div className="w-full border-t"></div>
-                        </div>
-                        <div className="relative flex justify-center text-sm">
-                            <span className="bg-white px-2 text-black">OR CONTINUE WITH</span>
-                        </div>
-                    </div>
-
-                    {/* Social Signin Buttons */}
-                    <div className="flex justify-center gap-4 my-6">
-                        <button className="flex w-full justify-center items-center gap-2 px-4 py-2 border rounded-lg hover:bg-gray-100">
-                            <FcGoogle size={30} />
-                        </button>
-                        <button className="flex w-full justify-center items-center gap-2 px-4 py-2 border rounded-lg hover:bg-gray-100">
-                            <FaFacebook size={30} />
-                        </button>
-                    </div>
                 </div>
             </div>
         </div>
