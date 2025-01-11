@@ -4,7 +4,6 @@ import {
   AUTH_GET_ME_URL,
   AUTH_SIGNIN_URL,
 } from "@/constants/service-url/auth-url-config";
-import router from "next/router";
 
 export function useSignin() {
   const [email, setEmail] = useState("");
@@ -36,19 +35,21 @@ export function useSignin() {
         });
         const userData = await userResponse.json();
 
-        switch (userData.role) {
-          case "DONOR":
-            router.push("http://localhost:3001/donor");
-            console.log("Donor");
-            break;
-          case "CHARITY":
-            router.push("http://localhost:3001/organization");
-            console.log("Charity");
-            break;
-          default:
-            window.location.href = "/dashboard";
-            console.log("Admin");
-            break;
+        if (typeof window !== "undefined") {
+          switch (userData.role) {
+            case "DONOR":
+              window.location.href = "http://localhost:3001/donor";
+              console.log("Donor");
+              break;
+            case "CHARITY":
+              window.location.href = "http://localhost:3001/organization";
+              console.log("Charity");
+              break;
+            default:
+              window.location.href = "http://localhost:3000/dashboard";
+              console.log("Admin");
+              break;
+          }
         }
       } else {
         setError(data.error);

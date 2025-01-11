@@ -16,6 +16,9 @@ interface ProjectListState {
   status: "idle" | "loading" | "succeeded" | "failed";
   error: string | null;
   projects: Project[];
+  totalPages?: number;
+  currentPage?: number;
+  totalCount?: number;
 }
 
 export const fetchAllProjects = createAsyncThunk<Project[]>(

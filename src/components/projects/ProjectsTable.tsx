@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Project } from "@/types/Project";
 import {
   Pencil,
@@ -38,15 +38,19 @@ import { useHaltProjectModal } from "./hooks/useHaltProjectModal";
 import {
   Pagination,
   PaginationContent,
-  PaginationEllipsis,
   PaginationItem,
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination"
+import { fetchProjects } from "@/lib/features/projects/projectsSlice";
+import { useDispatch } from "react-redux";
 
 interface ProjectsTableProps {
   projects: Project[];
+  // currentPage: number;
+  // totalPages: number;
+  // onPageChange: (page: number) => void;
 }
 
 const ProjectsTable = ({ projects }: ProjectsTableProps) => {
@@ -75,6 +79,23 @@ const ProjectsTable = ({ projects }: ProjectsTableProps) => {
     handleHaltProject,
     // handleResumeProject,
   } = useHaltProjectModal();
+
+  // useEffect(() => {
+  //   dispatch(fetchProjects({ currentPage, totalPages }) as any);
+  // }, [currentPage, dispatch]);
+
+  // // const handlePageChange = (page: number) => {
+  // //   setCurrentPage(page);
+  // // };
+
+  // // Generate page numbers for pagination
+  // const getPageNumbers = () => {
+  //   const pages = [];
+  //   for (let i = 1; i <= totalPages; i++) {
+  //     pages.push(i);
+  //   }
+  //   return pages;
+  // };
 
   return (
     <>
@@ -199,30 +220,36 @@ const ProjectsTable = ({ projects }: ProjectsTableProps) => {
           ))}
         </TableBody>
       </Table>
-      <Pagination>
-      <PaginationContent>
-        <PaginationItem>
-          <PaginationPrevious href="#" />
-        </PaginationItem>
-        <PaginationItem>
-          <PaginationLink href="#">1</PaginationLink>
-        </PaginationItem>
-        <PaginationItem>
-          <PaginationLink href="#" isActive>
-            2
-          </PaginationLink>
-        </PaginationItem>
-        <PaginationItem>
-          <PaginationLink href="#">3</PaginationLink>
-        </PaginationItem>
-        <PaginationItem>
-          <PaginationEllipsis />
-        </PaginationItem>
-        <PaginationItem>
-          <PaginationNext href="#" />
-        </PaginationItem>
-      </PaginationContent>
-    </Pagination>
+
+      {/* <Pagination className="mt-4">
+        <PaginationContent>
+          <PaginationItem>
+            <PaginationPrevious 
+              onClick={() => currentPage > 1 && onPageChange(currentPage - 1)}
+              className={currentPage <= 1 ? "pointer-events-none opacity-50" : "cursor-pointer"}
+            />
+          </PaginationItem>
+          
+          {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+            <PaginationItem key={page}>
+              <PaginationLink
+                onClick={() => onPageChange(page)}
+                isActive={currentPage === page}
+                className="cursor-pointer"
+              >
+                {page}
+              </PaginationLink>
+            </PaginationItem>
+          ))}
+
+          <PaginationItem>
+            <PaginationNext
+                onClick={() => currentPage < totalPages && onPageChange(currentPage + 1)}
+                className={currentPage >= totalPages ? "pointer-events-none opacity-50" : "cursor-pointer"}
+            />
+          </PaginationItem>
+        </PaginationContent>
+      </Pagination> */}
 
       <ProjectModal
         project={currentProject}

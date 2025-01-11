@@ -17,12 +17,22 @@ const ProjectsPage = () => {
   const dispatch: AppDispatch = useDispatch();
   const status = useSelector((state: RootState) => state.projects.status);
   const error = useSelector((state: RootState) => state.projects.error);
+  // const currentPage = useSelector((state: RootState) => state.projects.currentPage);
+  // const totalPages = useSelector((state: RootState) => state.projects.totalPages);
 
   useEffect(() => {
     if (status === "idle") {
       dispatch(fetchAllProjects());
     }
   }, [status, dispatch]);
+
+  // useEffect(() => {
+  //   dispatch(fetchProjects({ currentPage }));
+  // }, [dispatch, currentPage]);
+
+  // const handlePageChange = (page: number) => {
+  //   dispatch(fetchProjects({ currentPage: page }));
+  // };
 
   const {
     projectList,
