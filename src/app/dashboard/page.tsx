@@ -29,10 +29,10 @@ export default function DashboardPage() {
         if (user.role === "ADMIN") {
           setIsAuthorized(true);
         } else {
-          await fetch(AUTH_LOGOUT_URL, {
-            method: "GET",
-            credentials: "include",
-          }); // Logout if unauthorized and send user back to signin page
+          // await fetch(AUTH_LOGOUT_URL, {
+          //   method: "GET",
+          //   credentials: "include",
+          // }); // Logout if unauthorized and send user back to signin page
           router.push("/signin");
         }
       } catch (error) {
