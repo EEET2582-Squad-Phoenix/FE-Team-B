@@ -36,16 +36,27 @@ export function useSignin() {
         }); // Get user data after successful login
         const userData = await userResponse.json();
 
-        switch (userData.role) {
-          case "ADMIN":
-            router.push("http://localhost:3000/dashboard");
-            break; // Redirect to dashboard if user is an admin
-          case "CHARITY":
-            router.push("http://localhost:3001/organization");
-            break; // Redirect to organization page if user is a charity
-          default:
-            router.push("http://localhost:3001/donor");
-            break; // Redirect to donor page if user is a donor
+        if (userResponse.status === 200) {
+          switch (userData.role) {
+            case "DONOR":
+              console.log("Donor");
+              router.push("http://localhost:3001/donor");
+              break; // Redirect to dashboard if user is an admin
+            case "CHARITY":
+              console.log("Charity");
+              router.push("http://localhost:3001/organization");
+              break; // Redirect to organization page if user is a charity
+            case "ADMIN":
+              console.log("Admin");  
+              router.push("http://localhost:3000/dashboard");
+              break; // Redirect to admin page if user is an admin
+            default:
+              console.log("Role unknown");
+              router.push("/");
+              break; // Redirect to home page if user role is unknown
+          }
+        } else {
+          setError("Failed to get user data"); // Display error message if user data fetch fails
         }
       } else {
         setError(data.error); // Display error message if login fails
