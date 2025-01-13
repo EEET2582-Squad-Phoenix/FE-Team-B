@@ -64,7 +64,7 @@ export function ProjectModal({
     status: project?.status || "ACTIVE", // default status created by admin
     haltedMessage: project?.haltedMessage || undefined,
     isHighlighted: project?.isHighlighted || false,
-    fundStatus: project?.fundStatus || "ON-GOING",
+    fundStatus: project?.fundStatus || "ONGOING",
     createdAt: project?.createdAt
       ? new Date(project.createdAt).toISOString()
       : new Date().toISOString(),

@@ -34,9 +34,9 @@ export type ProjectCategoryType =
   | "HUMANITARIAN"
   | "OTHER";
 
-export const ProjectProgress = ["ON-GOING", "FULL"] as const;
+export const ProjectProgress = ["ONGOING", "FULL"] as const;
 
-export type ProjectProgressType = "ON-GOING" | "FULL";
+export type ProjectProgressType = "ONGOING" | "FULL";
 
 export interface HaltMessage {
   charityMessage: string;

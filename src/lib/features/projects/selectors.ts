@@ -31,7 +31,7 @@ export const filteredProjectsSelector = (state: RootState) => {
 
     const hasProgress =
       progress.length === 0 ||
-      progress.includes(progressPercentage === 100 ? "FULL" : "ON-GOING");
+      progress.includes(progressPercentage === 100 ? "FULL" : "ONGOING");
 
     const hasHighlight =
       highlight.length === 0 || highlight.includes(project.isHighlighted);
