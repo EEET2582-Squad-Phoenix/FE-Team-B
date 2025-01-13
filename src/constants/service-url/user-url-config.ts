@@ -15,3 +15,6 @@ export const CHARITY_URL = (id: string) => `${CHARITY_SERVICE_URL_B}/${id}`;
 export const CHARITY_CREATE_URL = `${CHARITY_SERVICE_URL_B}/`;
 export const CHARITY_UPDATE_URL = (id: string) => `${CHARITY_SERVICE_URL_B}/${id}`;
 export const CHARITY_DELETE_URL = (id: string) => `${CHARITY_SERVICE_URL_B}/${id}`;
+
+export const ACCOUNT_SERVICE_URL = `${HOST_URL_B}/account`;
+export const ACCOUNT_ALL_URL = `${ACCOUNT_SERVICE_URL}/all`;

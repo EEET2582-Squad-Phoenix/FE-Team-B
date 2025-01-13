@@ -1,45 +1,45 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { User } from "@/types/User";
 import {
-  DONOR_ALL_URL,
-  DONOR_CREATE_URL,
-  DONOR_UPDATE_URL,
-  DONOR_DELETE_URL,
-  CHARITY_ALL_URL,
-  CHARITY_CREATE_URL,
-  CHARITY_UPDATE_URL,
-  CHARITY_DELETE_URL,
+  ACCOUNT_ALL_URL
 } from "@/constants/service-url/user-url-config";
+import sendHttpRequest from "@/utils/http-call/HttpRequest";
 
 const initialState: User[] = [];
 
-interface UsersState {
+interface UserListState {
   status: "idle" | "loading" | "succeeded" | "failed";
   error: string | null;
   users: User[];
 }
 
+export const fetchUsers = createAsyncThunk<User[]>(
+  "users/fetchUsers",
+  async () => {
+    try {
+      const response = await sendHttpRequest<User[]>(ACCOUNT_ALL_URL);
+      if (response.status === 200) {
+        console.log("Fetch users called", response.json);
+        return response.json as User[];
+      }
+      throw new Error(`Failed to fetch users: ${response.status}`);
+    } catch (error) {
+      throw error;
+    }
+  }
+);
+
+
 export const usersSlice = createSlice({
   name: "userList",
-  initialState,
+  initialState: {
+    status: "idle",
+    error: null,
+    users: initialState,
+  } as UserListState,
   reducers: {
     addUser: (state, action: PayloadAction<User>) => {
-      state.push(action.payload);
-    },
-    deleteUser: (state, action: PayloadAction<string>) => {
-      return state.filter((user) => user.id !== action.payload);
-    },
-    updateUser: (state, action: PayloadAction<Omit<User, "updatedAt">>) => {
-      const index = state.findIndex(
-        (user) => user.id === action.payload.id
-      );
-      if (index !== -1) {
-        state[index] = {
-          ...state[index], // Preserve existing fields
-          ...action.payload, // Apply changes from the payload
-          updatedAt: new Date().toISOString(), // Set updatedAt to the current time
-        };
-      }
+          state.users.push(action.payload);
     },
     // highlightUser: (state, action: PayloadAction<string>) => {
     //   const user = state.find((user) => user.id === action.payload);
@@ -48,9 +48,32 @@ export const usersSlice = createSlice({
     //   }
     // },
   },
+  extraReducers: (builder) => {
+    builder
+      // FETCH PROJECTS
+      .addCase(fetchUsers.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(
+        fetchUsers.fulfilled,
+        (state, action: PayloadAction<User[]>) => {
+          state.status = "succeeded";
+          state.users = action.payload;
+        }
+      )
+      .addCase(fetchUsers.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message ?? "Failed to fetch users";
+      });
+  }
 });
 
-export const { addUser, deleteUser, updateUser } =
-  usersSlice.actions;
+export const {
+  // addUser,
+  // deleteProject,
+  // updateProject,
+  // highlightProject,
+  // approveProject,
+} = usersSlice.actions;
 
 export default usersSlice.reducer;
