@@ -1,7 +1,11 @@
 import { useState } from "react";
 import { Project } from "@/types/Project";
 import { useAppDispatch } from "@/lib/hooks";
-import { deactivateProject } from "@/lib/features/projects/projectsSlice"; // You'll need to create this action
+import {
+  deactivateProject,
+  fetchProjects,
+} from "@/lib/features/projects/projectsSlice"; // You'll need to create this action
+import { toast } from "react-toastify";
 
 export const useDeactivateProjectModal = () => {
   const dispatch = useAppDispatch();
@@ -18,12 +22,16 @@ export const useDeactivateProjectModal = () => {
     projectId: string,
     deletionReason: string
   ) => {
-    try {
-      await dispatch(deactivateProject({ projectId, deletionReason }));
-      setIsDeactivateModalOpen(false);
-    } catch (error) {
-      console.error("Failed to deactivate project:", error);
-    }
+    dispatch(deactivateProject({ projectId, deletionReason }))
+      .unwrap()
+      .then(() => {
+        dispatch(fetchProjects());
+        setIsDeactivateModalOpen(false);
+        toast.success("Project deactivated successfully!");
+      })
+      .catch((error) => {
+        toast.error(`Failed to deactivate project: ${error.message}`);
+      });
   };
 
   return {

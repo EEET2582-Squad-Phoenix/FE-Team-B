@@ -6,6 +6,7 @@ import {
   fetchProjects,
   toggleHaltProject,
 } from "@/lib/features/projects/projectsSlice";
+import { toast } from "react-toastify";
 
 export const useHaltProjectModal = () => {
   const dispatch = useAppDispatch();
@@ -24,15 +25,16 @@ export const useHaltProjectModal = () => {
     donorMessage: string,
     charityMessage: string
   ) => {
-    try {
-      await dispatch(
-        toggleHaltProject({ projectId, donorMessage, charityMessage })
-      ).unwrap();
-      dispatch(fetchProjects());
-      setIsHaltModalOpen(false);
-    } catch (error) {
-      console.error("Failed to halt project:", error);
-    }
+    dispatch(toggleHaltProject({ projectId, donorMessage, charityMessage }))
+      .unwrap()
+      .then(() => {
+        dispatch(fetchProjects());
+        setIsHaltModalOpen(false);
+        toast.success("Project halted successfully!");
+      })
+      .catch((error) => {
+        toast.error(`Failed to halt project: ${error.message}`);
+      });
   };
 
   const handleResumeProject = async (
@@ -40,15 +42,16 @@ export const useHaltProjectModal = () => {
     donorMessage: string,
     charityMessage: string
   ) => {
-    try {
-      await dispatch(
-        toggleHaltProject({ projectId, donorMessage, charityMessage })
-      ).unwrap();
-      dispatch(fetchProjects());
-      setIsHaltModalOpen(false);
-    } catch (error) {
-      console.error("Failed to resume project:", error);
-    }
+    dispatch(toggleHaltProject({ projectId, donorMessage, charityMessage }))
+      .unwrap()
+      .then(() => {
+        dispatch(fetchProjects());
+        setIsHaltModalOpen(false);
+        toast.success("Project resumed successfully!");
+      })
+      .catch((error) => {
+        toast.error(`Failed to resume project: ${error.message}`);
+      });
   };
 
   return {
