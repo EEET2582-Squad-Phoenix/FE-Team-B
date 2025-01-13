@@ -45,7 +45,16 @@ export const createProject = createAsyncThunk<Project, Project>(
       console.log("createProject called");
       const response = await sendHttpRequest<Project>(PROJECT_CREATE_URL, {
         method: "POST",
-        body: JSON.stringify(newProject),
+      body: JSON.stringify({
+        name: newProject.name,
+        description: newProject.description,
+        goalAmount: newProject.goalAmount,
+        isGlobal: newProject.isGlobal,
+        country: newProject.country,
+        category: newProject.category,
+        startDate: newProject.startDate,
+        endDate: newProject.endDate,
+      })
       });
       console.log("createProject response", response);
       if (response.status === 201) {
