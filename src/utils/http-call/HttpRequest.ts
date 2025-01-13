@@ -16,6 +16,7 @@ interface HttpRequestOptions {
     | ReadableStream<Uint8Array>
     | null;
   headers?: HeadersInit;
+  credentials?: "include";
 }
 
 async function sendHttpRequest<T>(
@@ -27,6 +28,7 @@ async function sendHttpRequest<T>(
     headers: {
       "Content-Type": "application/json",
     },
+    credentials: "include",
   };
 
   const mergedOptions = { ...defaultOptions, ...options };
@@ -36,6 +38,7 @@ async function sendHttpRequest<T>(
       method: mergedOptions.method,
       body: mergedOptions.body,
       headers: mergedOptions.headers,
+      credentials: mergedOptions.credentials,
     });
 
     let jsonData: T | object;
