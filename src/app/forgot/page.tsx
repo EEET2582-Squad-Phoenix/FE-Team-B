@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 
 export default function ForgotPassword() {
@@ -7,6 +8,7 @@ export default function ForgotPassword() {
     const [isCompleted, setIsCompleted] = useState(false);
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
+    const router = useRouter();
     
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -17,6 +19,9 @@ export default function ForgotPassword() {
             console.log("Resetting password for:", { email }); // Only animation not working yet
             await new Promise((resolve) => setTimeout(resolve, 1000));
             setIsCompleted(true);
+            setTimeout(() => {
+                router.push("/signin");
+            }, 2000); // Redirect to Signin page after 3 seconds
         } catch (err) {
             setError("Something went wrong. Please try again.");
         } finally {

@@ -9,6 +9,7 @@ export default function SignupCharity() {
         charity,
         error,
         loading,
+        isCompleted,
         handleSubmit,
         handleInputChange,
         handleAvatarChange,
@@ -29,171 +30,199 @@ export default function SignupCharity() {
             {/* Right Form Section */}
             <div className="flex justify-center w-1/2 p-10">
                 <div className="bg-white rounded-lg w-full mx-auto p-10">
-                    {/* Sign Up Heading */}
-                    <h2 className="text-2xl font-bold text-left my-4">Sign up</h2>
+                    {isCompleted ? (
+                        <div className="text-center">
+                            <div className="flex justify-center mb-4">
+                                {/* Checkmark Icon */}
+                                <svg
+                                    className="w-12 h-12 text-blue-500"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    viewBox="0 0 24 24"
+                                    fill="currentColor"
+                                >
+                                    <path
+                                        fillRule="evenodd"
+                                        d="M2.25 12a9.75 9.75 0 1119.5 0 9.75 9.75 0 01-19.5 0zm15.03-3.72a.75.75 0 00-1.06-1.06l-5.72 5.72-2.22-2.22a.75.75 0 00-1.06 1.06l2.75 2.75c.3.3.79.3 1.06 0l6.25-6.25z"
+                                        clipRule="evenodd"
+                                    />
+                                </svg>
+                            </div>
+                            <h2 className="text-2xl font-bold text-gray-700">
+                                Registration Successful!
+                            </h2>
+                            <p className="text-sm text-gray-600 mt-2">
+                                Please check your email to verify your account before signing in.
+                            </p>
+                        </div>
+                    ) : (
+                        <>
+                        {/* Sign Up Heading */}
+                        <h2 className="text-2xl font-bold text-left my-4">Sign up</h2>
 
-                    {/* Name Input */}
-                    <div className="relative w-full my-6">
-                        <label
-                            htmlFor="name"
-                            className="absolute -top-2.5 left-4 bg-white px-1 text-sm text-gray-500"
-                        >
-                            Name <span className="text-red-500">*</span>
-                        </label>
-                        <input
-                            type="text"
-                            id="name"
-                            placeholder=" "
-                            value={charity.name}
-                            onChange={handleInputChange("name")}
-                            className="w-full border-2 border-gray-500 rounded-md h-12 px-4 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
-                            required
-                        />
-                    </div>
-
-                    {/* Address Input */}
-                    <div className="relative w-full my-6">
-                        <label
-                            htmlFor="address"
-                            className="absolute -top-2.5 left-4 bg-white px-1 text-sm text-gray-500"
-                        >
-                            Address <span className="text-red-500">*</span>
-                        </label>
-                        <input
-                            type="text"
-                            id="address"
-                            placeholder=" "
-                            value={charity.address}
-                            onChange={handleInputChange("address")}
-                            className="w-full border-2 border-gray-500 rounded-md h-12 px-4 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
-                            required
-                        />
-                    </div>
-
-                    {/* Tax Code and Type Input */}
-                    <div className="flex justify-between gap-4 my-6">
-                        {/* Tax Code Input */}
-                        <div className="relative w-full">
+                        {/* Name Input */}
+                        <div className="relative w-full my-6">
                             <label
-                                htmlFor="taxCode"
+                                htmlFor="name"
                                 className="absolute -top-2.5 left-4 bg-white px-1 text-sm text-gray-500"
                             >
-                                Tax code <span className="text-red-500">*</span>
+                                Name <span className="text-red-500">*</span>
                             </label>
                             <input
                                 type="text"
-                                id="firstName"
+                                id="name"
                                 placeholder=" "
-                                value={charity.taxCode}
-                                onChange={handleInputChange("taxCode")}    
+                                value={charity.name}
+                                onChange={handleInputChange("name")}
                                 className="w-full border-2 border-gray-500 rounded-md h-12 px-4 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
                                 required
                             />
                         </div>
 
-                        {/* Type Input */}
-                        <div className="relative w-full">
+                        {/* Address Input */}
+                        <div className="relative w-full my-6">
                             <label
-                                htmlFor="type"
+                                htmlFor="address"
                                 className="absolute -top-2.5 left-4 bg-white px-1 text-sm text-gray-500"
                             >
-                                Charity Type <span className="text-red-500">*</span>
+                                Address <span className="text-red-500">*</span>
                             </label>
-                            <select
-                                id="type"
-                                value={charity.type}
-                                onChange={(e) => handleInputChange("type")(e as React.ChangeEvent<HTMLInputElement> & React.ChangeEvent<HTMLSelectElement>)}
+                            <input
+                                type="text"
+                                id="address"
+                                placeholder=" "
+                                value={charity.address}
+                                onChange={handleInputChange("address")}
                                 className="w-full border-2 border-gray-500 rounded-md h-12 px-4 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
                                 required
-                            >
-                                <option value="individual">Individual</option>
-                                <option value="corporation">Corporation</option>
-                                <option value="non-profit">Non-profit organization</option>
-                            </select>
+                            />
                         </div>
-                    </div>
 
-                    {/* Avatar and Introduction Video (Same Line) */}
-                    <div className="flex justify-between gap-4 mt-6">
-                        {/* Avatar Input */}
-                        <div className="relative w-full">
-                            <label
-                                htmlFor="avatar"
-                                className="absolute -top-2.5 left-4 bg-white px-1 text-sm text-gray-500"
-                            >
-                                Avatar
-                            </label>
-                            <div className="border-2 border-gray-500 rounded-lg h-12 px-4 flex items-center cursor-pointer">
+                        {/* Tax Code and Type Input */}
+                        <div className="flex justify-between gap-4 my-6">
+                            {/* Tax Code Input */}
+                            <div className="relative w-full">
+                                <label
+                                    htmlFor="taxCode"
+                                    className="absolute -top-2.5 left-4 bg-white px-1 text-sm text-gray-500"
+                                >
+                                    Tax code <span className="text-red-500">*</span>
+                                </label>
+                                <input
+                                    type="text"
+                                    id="firstName"
+                                    placeholder=" "
+                                    value={charity.taxCode}
+                                    onChange={handleInputChange("taxCode")}    
+                                    className="w-full border-2 border-gray-500 rounded-md h-12 px-4 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
+                                    required
+                                />
+                            </div>
+
+                            {/* Type Input */}
+                            <div className="relative w-full">
+                                <label
+                                    htmlFor="type"
+                                    className="absolute -top-2.5 left-4 bg-white px-1 text-sm text-gray-500"
+                                >
+                                    Charity Type <span className="text-red-500">*</span>
+                                </label>
+                                <select
+                                    id="type"
+                                    value={charity.type}
+                                    onChange={(e) => handleInputChange("type")(e as React.ChangeEvent<HTMLInputElement> & React.ChangeEvent<HTMLSelectElement>)}
+                                    className="w-full border-2 border-gray-500 rounded-md h-12 px-4 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
+                                    required
+                                >
+                                    <option value="individual">Individual</option>
+                                    <option value="corporation">Corporation</option>
+                                    <option value="non-profit">Non-profit organization</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        {/* Avatar and Introduction Video (Same Line) */}
+                        <div className="flex justify-between gap-4 mt-6">
+                            {/* Avatar Input */}
+                            <div className="relative w-full">
                                 <label
                                     htmlFor="avatar"
-                                    className="text-gray-500 text-sm cursor-pointer flex-grow"
+                                    className="absolute -top-2.5 left-4 bg-white px-1 text-sm text-gray-500"
                                 >
-                                    {charity.avatar ? charity.avatar : "Choose file"}
+                                    Avatar
                                 </label>
-                                <input
-                                    type="file"
-                                    id="avatar"
-                                    accept="image/*"
-                                    onChange={handleAvatarChange}
-                                    className="hidden"
-                                />
+                                <div className="border-2 border-gray-500 rounded-lg h-12 px-4 flex items-center cursor-pointer">
+                                    <label
+                                        htmlFor="avatar"
+                                        className="text-gray-500 text-sm cursor-pointer flex-grow"
+                                    >
+                                        {charity.avatar ? charity.avatar : "Choose file"}
+                                    </label>
+                                    <input
+                                        type="file"
+                                        id="avatar"
+                                        accept="image/*"
+                                        onChange={handleAvatarChange}
+                                        className="hidden"
+                                    />
+                                </div>
                             </div>
-                        </div>
 
-                        {/* Introduction Video Input */}
-                        <div className="relative w-full">
-                            <label
-                                htmlFor="video"
-                                className="absolute -top-2.5 left-4 bg-white px-1 text-sm text-gray-500"
-                            >
-                                Introduction Video
-                            </label>
-                            <div className="border-2 border-gray-500 rounded-lg h-12 px-4 flex items-center cursor-pointer">
+                            {/* Introduction Video Input */}
+                            <div className="relative w-full">
                                 <label
                                     htmlFor="video"
-                                    className="text-gray-500 text-sm cursor-pointer flex-grow"
+                                    className="absolute -top-2.5 left-4 bg-white px-1 text-sm text-gray-500"
                                 >
-                                    {charity.video ? charity.video : "Choose file"}
+                                    Introduction Video
                                 </label>
-                                <input
-                                    type="file"
-                                    id="video"
-                                    accept="video/*"
-                                    onChange={handleVideoChange}
-                                    className="hidden"
-                                />
+                                <div className="border-2 border-gray-500 rounded-lg h-12 px-4 flex items-center cursor-pointer">
+                                    <label
+                                        htmlFor="video"
+                                        className="text-gray-500 text-sm cursor-pointer flex-grow"
+                                    >
+                                        {charity.video ? charity.video : "Choose file"}
+                                    </label>
+                                    <input
+                                        type="file"
+                                        id="video"
+                                        accept="video/*"
+                                        onChange={handleVideoChange}
+                                        className="hidden"
+                                    />
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    {/* Checkbox */}
-                    <div className="flex justify-left text-xs my-2">
-                        <Checkbox 
-                            id="terms"
-                        />
-                        <div className="ml-2">
-                            <span className="text-black">I agree to the </span>
-                            <a href="" className="text-black underline">
-                                Terms of Service
-                            </a>
-                            <span className="text-black"> and </span>
-                            <a href="" className="text-black underline">
-                                Privacy Policy
-                            </a>
+                        {/* Checkbox */}
+                        <div className="flex justify-left text-xs my-2">
+                            <Checkbox 
+                                id="terms"
+                            />
+                            <div className="ml-2">
+                                <span className="text-black">I agree to the </span>
+                                <a href="" className="text-black underline">
+                                    Terms of Service
+                                </a>
+                                <span className="text-black"> and </span>
+                                <a href="" className="text-black underline">
+                                    Privacy Policy
+                                </a>
+                            </div>
                         </div>
-                    </div>
 
-                    {/* Submit Button */}
-                    <button 
-                        type="submit" 
-                        className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 my-4"
-                        onClick={handleSubmit}
-                    >
-                        {loading ? "Signing up..." : "Sign Up"}
-                    </button>
+                        {/* Submit Button */}
+                        <button 
+                            type="submit" 
+                            className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 my-4"
+                            onClick={handleSubmit}
+                        >
+                            {loading ? "Signing up..." : "Sign Up"}
+                        </button>
 
-                    {/* Error Message */}
-                    {error && <p className="text-red-500 text-sm">{error}</p>}
+                        {/* Error Message */}
+                        {error && <p className="text-red-500 text-sm">{error}</p>}
+                    </>    
+                )}
                 </div>
             </div>
         </div>

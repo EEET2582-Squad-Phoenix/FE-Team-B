@@ -4,6 +4,7 @@ import { AUTH_REGISTER_URL } from "@/constants/service-url/auth-url-config";
 import { Charity } from "@/types/Charity";
 
 export function useSignupCharity() {
+  const [isCompleted, setIsCompleted] = useState(false);
   const [charity, setCharity] = useState<Partial<Charity>>({
     name: "",
     address: "",
@@ -29,14 +30,14 @@ export function useSignupCharity() {
       setError("You need to fill in all the mandatory fields.");
       setLoading(false);
       return;
-    }
+    } // Check if all mandatory fields are filled
 
     const payload: Partial<Charity> = {
       ...charity,
       email: email || "",
       password: password || "",
       role: "CHARITY",
-    };
+    }; // Prepare the payload
 
     try {
       const response = await fetch(AUTH_REGISTER_URL, {
@@ -45,13 +46,16 @@ export function useSignupCharity() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(payload),
-      });
+      }); // Send registration request
 
       const data = await response.text();
 
       if (response.ok) {
         console.log("Registration successful:", data);
-        router.push("/signin");
+        setIsCompleted(true);
+        setTimeout(() => {
+          router.push("/signin");
+        }, 2000); // Redirect to Signin page after 3 seconds
       } else {
         console.error("Error signing up:", data);
         setError(data);
@@ -66,24 +70,25 @@ export function useSignupCharity() {
 
   const handleInputChange = (field: keyof Charity) => (e: React.ChangeEvent<HTMLInputElement>) => {
     setCharity({ ...charity, [field]: e.target.value });
-  };
+  }; // Handle input change
 
   const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
       setCharity({ ...charity, avatar: e.target.files[0].name });
     }
-  };
+  }; // Handle avatar change
 
   const handleVideoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
       setCharity({ ...charity, video: e.target.files[0].name });
     }
-  };
+  };  // Handle video change
 
   return {
     charity,
     error,
     loading,
+    isCompleted,
     handleSubmit,
     handleInputChange,
     handleAvatarChange,

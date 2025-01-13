@@ -1,8 +1,6 @@
 "use client";
 
 import React from "react";
-import { FcGoogle } from "react-icons/fc";
-import { FaFacebook } from "react-icons/fa";
 import { useSignup } from "@/components/auth/hooks/useSignup";
 
 export default function Signup() {
@@ -71,6 +69,9 @@ export default function Signup() {
                             className="w-full border-2 border-gray-500 rounded-md h-12 px-4 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
                             required
                         />
+                        <p className="mt-1 text-xs text-gray-500">
+                            Must be at least 8 characters long, include an uppercase letter, a number, and a special character.
+                        </p>
                     </div>
 
                     {/* Role Selection */}
@@ -112,26 +113,6 @@ export default function Signup() {
                     >
                         {loading ? "Checking email..." : "Continue"}
                     </button>
-
-                    {/* Divider */}
-                    <div className="relative my-6">
-                        <div className="absolute inset-0 flex items-center">
-                            <div className="w-full border-t"></div>
-                        </div>
-                        <div className="relative flex justify-center text-sm">
-                            <span className="bg-white px-2 text-black">OR CONTINUE WITH</span>
-                        </div>
-                    </div>
-
-                    {/* Social Signin Buttons */}
-                    <div className="flex justify-center gap-4 my-6">
-                        <button className="flex w-full justify-center items-center gap-2 px-4 py-2 border rounded-lg hover:bg-gray-100">
-                            <FcGoogle size={30} />
-                        </button>
-                        <button className="flex w-full justify-center items-center gap-2 px-4 py-2 border rounded-lg hover:bg-gray-100">
-                            <FaFacebook size={30} />
-                        </button>
-                    </div>
                     
                     {/* Error Message */}
                     {error && <p className="text-red-500 text-sm">{error}</p>}
