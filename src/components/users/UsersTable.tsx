@@ -43,13 +43,13 @@ interface UsersTableProps {
 }
 
 const UsersTable = ({ users }: UsersTableProps) => {
-  // const {
-  //   handleDeleteUser,
-  //   handleUpdateUser,
-  //   handleApproveUser,
-  //   handleHighlightUser,
-  //   handleRestoreUser,
-  // } = useUserActions();
+  const {
+    handleDeleteUser,
+    handleUpdateUser,
+    // handleApproveUser,
+    // handleHighlightUser,
+    // handleRestoreUser,
+  } = useUserActions();
 
   // const {
   //   isModalOpen,
@@ -83,10 +83,6 @@ const UsersTable = ({ users }: UsersTableProps) => {
       <div className="text-xl font-bold mb-4">
         Total Users: {userCount}
       </div>
-      {/* // button to increase user count */}
-      <button onClick={() => setUserCount(userCount + 1)}>
-        Add User
-      </button>
       <Table className="max-w-full">
         <TableHeader>
           <TableRow>
@@ -97,6 +93,7 @@ const UsersTable = ({ users }: UsersTableProps) => {
             <TableHead id="category-column">Admin Created</TableHead>
             <TableHead id="status-column">Created At</TableHead>
             <TableHead id="amount-column">Updated At</TableHead>
+            <TableHead id="actions-column">Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -127,63 +124,13 @@ const UsersTable = ({ users }: UsersTableProps) => {
                 {user.updatedAt}
               </TableCell>
               <TableCell>
-                {/* <div className="flex items-center space-x-1">
-                  {user.status === "INACTIVATED" ? (
-                    <>
-                      <ActionButton
-                        icon={ArchiveRestore}
-                        onClick={() => handleRestoreUser(user.id)}
-                        className="text-green-600"
-                      />
-                      <ActionButton
-                        icon={Trash2}
-                        onClick={() => handleDeleteUser(user.id)}
-                        className="text-red-600"
-                      />
-                    </>
-                  ) : (
+                <div className="flex items-center space-x-1">
+                  {(
                     <>
                       <ActionButton
                         icon={Pencil}
-                        onClick={() => handleEditUser(user)}
+                        onClick={() => handleUpdateUser(user)}
                         className="text-blue-600"
-                      />
-                      <ActionButton
-                        icon={CheckCircle}
-                        disabled={user.status !== "UNAPPROVED"}
-                        onClick={() => handleApproveUser(user.id)}
-                        className="text-green-600"
-                      />
-                      <ActionButton
-                        icon={Star}
-                        disabled={user.status !== "ACTIVE"}
-                        onClick={() => handleHighlightUser(user.id)}
-                        className={
-                          user.isHighlighted
-                            ? user.status !== "ACTIVE"
-                              ? "text-gray-400"
-                              : "text-yellow-600"
-                            : user.status !== "ACTIVE"
-                            ? "text-gray-400"
-                            : "text-gray-600"
-                        }
-                      />
-                      <ActionButton
-                        icon={user.status === "HALTED" ? Play : Pause}
-                        disabled={
-                          !["ACTIVE", "HALTED"].includes(user.status)
-                        }
-                        onClick={() => openHaltModal(user)}
-                        className={
-                          user.status === "HALTED"
-                            ? "text-green-600"
-                            : "text-orange-600"
-                        }
-                      />
-                      <ActionButton
-                        icon={Archive}
-                        onClick={() => openDeactivateModal(user)}
-                        className="text-gray-600"
                       />
                       <ActionButton
                         icon={Trash2}
@@ -192,7 +139,7 @@ const UsersTable = ({ users }: UsersTableProps) => {
                       />
                     </>
                   )}
-                </div> */}
+                </div>
               </TableCell>
             </TableRow>
           ))}
