@@ -8,7 +8,7 @@ import {
 
 interface FiltersState {
   search: string;
-  category: ProjectCategoryType[];
+  categories: ProjectCategoryType[];
   status: ProjectStatusType[];
   progress: ProjectProgressType[];
   highlight: boolean[];
@@ -17,7 +17,7 @@ interface FiltersState {
 
 const initialState: FiltersState = {
   search: "",
-  category: [],
+  categories: [],
   status: [],
   progress: [],
   highlight: [],
@@ -32,7 +32,7 @@ export const filtersSlice = createSlice({
       state.search = action.payload;
     },
     setCategory: (state, action: PayloadAction<ProjectCategoryType[]>) => {
-      state.category = action.payload;
+      state.categories = action.payload;
     },
     setStatus: (state, action: PayloadAction<ProjectStatusType[]>) => {
       state.status = action.payload;

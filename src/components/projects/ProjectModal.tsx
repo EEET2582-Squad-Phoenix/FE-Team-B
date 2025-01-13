@@ -59,7 +59,7 @@ export function ProjectModal({
     country: project?.country || "",
     goalAmount: project?.goalAmount || 0,
     raisedAmount: project?.raisedAmount || 0,
-    category: project?.category || [],
+    categories: project?.categories || [],
     isGlobal: project?.isGlobal || false,
     status: project?.status || "ACTIVE", // default status created by admin
     haltedMessage: project?.haltedMessage || undefined,
@@ -78,6 +78,7 @@ export function ProjectModal({
     startDate: project?.startDate
       ? new Date(project.startDate).toISOString()
       : new Date().toISOString(),
+    donorList: project?.donorList || [],
   });
 
   useEffect(() => {
@@ -90,7 +91,7 @@ export function ProjectModal({
 
   const handleChange = <K extends keyof Project>(
     field: K,
-    value: K extends "category"
+    value: K extends "categories"
       ? ProjectCategoryType
       : K extends "status"
       ? ProjectStatusType
@@ -123,8 +124,8 @@ export function ProjectModal({
       errors.push("Country is required");
     }
 
-    if (formData.category.length === 0) {
-      errors.push("At least one category must be selected");
+    if (formData.categories.length === 0) {
+      errors.push("At least one categories must be selected");
     }
 
     if (formData.goalAmount <= 0) {
@@ -162,9 +163,9 @@ export function ProjectModal({
   const handleCategorySelect = (selectedCategory: ProjectCategoryType) => {
     setFormData((prev) => ({
       ...prev,
-      category: prev.category.includes(selectedCategory)
-        ? prev.category.filter((cat) => cat !== selectedCategory)
-        : [...prev.category, selectedCategory],
+      categories: prev.categories.includes(selectedCategory)
+        ? prev.categories.filter((cat) => cat !== selectedCategory)
+        : [...prev.categories, selectedCategory],
     }));
   };
 
@@ -263,7 +264,7 @@ export function ProjectModal({
               </Label>
               <div className="col-span-3">
                 <div className="flex flex-wrap gap-2 mb-2">
-                  {formData.category.map((cat) => (
+                  {formData.categories.map((cat) => (
                     <div
                       key={cat}
                       className="flex items-center bg-blue-100 text-blue-800 rounded-full px-3 py-1"
@@ -292,7 +293,7 @@ export function ProjectModal({
                         <SelectItem
                           key={cat}
                           value={cat}
-                          disabled={formData.category.includes(cat)}
+                          disabled={formData.categories.includes(cat)}
                         >
                           {cat}
                         </SelectItem>

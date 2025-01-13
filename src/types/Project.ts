@@ -1,3 +1,5 @@
+import { Donor } from "./Donor";
+
 export const ProjectStatuses = [
   "UNAPPROVED",
   "ACTIVE",
@@ -48,13 +50,13 @@ export interface Project {
   charityId: string;
   name: string;
   imageURLs?: string[]; // 15
-  videoURLs?: string[]; // 4
+  videoURLs?: string[];
   description?: string;
   country: string;
   goalAmount: number;
   raisedAmount: number;
   isGlobal: boolean;
-  category: ProjectCategoryType[];
+  categories: ProjectCategoryType[];
   status: ProjectStatusType;
   haltedMessage?: HaltMessage;
   isHighlighted: boolean;
@@ -64,6 +66,7 @@ export interface Project {
   updatedAt: string;
   endDate: string;
   deletionReason?: string;
+  donorList: Donor[];
 }
 
 export interface HaltProjectPayload {

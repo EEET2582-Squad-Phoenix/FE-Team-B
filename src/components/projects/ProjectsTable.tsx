@@ -95,7 +95,7 @@ const ProjectsTable = ({ projects }: ProjectsTableProps) => {
             <TableHead id="name-column">Name</TableHead>
             <TableHead id="country-column">Country</TableHead>
             <TableHead id="scope-column">Scope</TableHead>
-            <TableHead id="category-column">Category</TableHead>
+            <TableHead id="categories-column">Category</TableHead>
             <TableHead id="status-column">Status</TableHead>
             <TableHead id="amount-column">Amount</TableHead>
             <TableHead id="duration-column">Duration</TableHead>
@@ -134,8 +134,8 @@ const ProjectsTable = ({ projects }: ProjectsTableProps) => {
                 {project.isGlobal ? <Globe /> : <MapPinned />}
               </TableCell>
               <TableCell>
-                {project.category
-                  ? project.category.map(formatDisplayText).join(", ")
+                {project.categories
+                  ? project.categories.map(formatDisplayText).join(", ")
                   : "N/A"}
               </TableCell>
               <TableCell>
