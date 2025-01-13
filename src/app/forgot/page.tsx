@@ -21,7 +21,7 @@ export default function ForgotPassword() {
             setIsCompleted(true);
             setTimeout(() => {
                 router.push("/signin");
-            }, 3000); // Redirect to Signin page after 3 seconds
+            }, 2000); // Redirect to Signin page after 3 seconds
         } catch (err) {
             setError("Something went wrong. Please try again.");
         } finally {

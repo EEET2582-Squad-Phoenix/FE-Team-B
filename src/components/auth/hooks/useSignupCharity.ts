@@ -55,7 +55,7 @@ export function useSignupCharity() {
         setIsCompleted(true);
         setTimeout(() => {
           router.push("/signin");
-        }, 3000); // Redirect to Signin page after 3 seconds
+        }, 2000); // Redirect to Signin page after 3 seconds
       } else {
         console.error("Error signing up:", data);
         setError(data);
