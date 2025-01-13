@@ -4,6 +4,7 @@ export const PROJECT_SERVICE_URL_A = `${HOST_URL_A}/api/charity-project`;
 
 export const PROJECT_CREATE_URL = `${PROJECT_SERVICE_URL_A}/createProject`;
 export const PROJECT_ALL_URL = `${PROJECT_SERVICE_URL_A}/all`;
+export const PROJECT_PAGINATION_URL = `${PROJECT_SERVICE_URL_A}/allProjects`;
 
 export const PROJECT_UPDATE_URL = `${PROJECT_SERVICE_URL_A}/updateProject`;
 export const PROJECT_APPROVE_URL = `${PROJECT_SERVICE_URL_A}/approve`;
