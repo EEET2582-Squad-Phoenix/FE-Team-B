@@ -3,9 +3,8 @@ import { useState } from "react";
 import { Project } from "@/types/Project";
 import { useAppDispatch } from "@/lib/hooks";
 import {
-  haltProject,
-  resumeProject,
   fetchProjects,
+  toggleHaltProject,
 } from "@/lib/features/projects/projectsSlice";
 
 export const useHaltProjectModal = () => {
@@ -27,7 +26,7 @@ export const useHaltProjectModal = () => {
   ) => {
     try {
       await dispatch(
-        haltProject({ projectId, donorMessage, charityMessage })
+        toggleHaltProject({ projectId, donorMessage, charityMessage })
       ).unwrap();
       dispatch(fetchProjects());
       setIsHaltModalOpen(false);
@@ -43,7 +42,7 @@ export const useHaltProjectModal = () => {
   ) => {
     try {
       await dispatch(
-        resumeProject({ projectId, donorMessage, charityMessage })
+        toggleHaltProject({ projectId, donorMessage, charityMessage })
       ).unwrap();
       dispatch(fetchProjects());
       setIsHaltModalOpen(false);

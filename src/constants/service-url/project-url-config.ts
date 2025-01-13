@@ -8,8 +8,9 @@ export const PROJECT_ALL_URL = `${PROJECT_SERVICE_URL_A}/all`;
 export const PROJECT_UPDATE_URL = `${PROJECT_SERVICE_URL_A}/updateProject`;
 export const PROJECT_APPROVE_URL = `${PROJECT_SERVICE_URL_A}/approve`;
 export const PROJECT_RECOVER_URL = `${PROJECT_SERVICE_URL_A}/recoverProject`;
-export const PROJECT_HALT_URL = `${PROJECT_SERVICE_URL_A}/halt`;
-export const PROJECT_RESUME_URL = `${PROJECT_SERVICE_URL_A}/unhalt`;
+// export const PROJECT_HALT_URL = `${PROJECT_SERVICE_URL_A}/halt`;
+// export const PROJECT_RESUME_URL = `${PROJECT_SERVICE_URL_A}/unhalt`;
+export const PROJECT_TOGGLE_HALTED_URL = `${PROJECT_SERVICE_URL_A}/toggleHalt`;
 
 export const PROJECT_TOGGLE_HIGHLIGHTED_URL = `${PROJECT_SERVICE_URL_A}/toggleHighlighted`;
 export const PROJECT_DEACTIVATE_URL = `${PROJECT_SERVICE_URL_A}/deactivate`;

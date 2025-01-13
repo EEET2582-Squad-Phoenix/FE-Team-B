@@ -18,12 +18,12 @@ interface HaltProjectModalProps {
   onOpenChange: (open: boolean) => void;
   project: Project | null;
   onHalt: (
-    projectId: string,
+    id: string,
     donorMessage: string,
     charityMessage: string
   ) => void;
   onResume: (
-    projectId: string,
+    id: string,
     donorMessage: string,
     charityMessage: string
   ) => void;

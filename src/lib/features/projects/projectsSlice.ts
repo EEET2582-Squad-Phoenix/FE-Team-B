@@ -6,12 +6,11 @@ import {
   PROJECT_ALL_URL,
   PROJECT_APPROVE_URL,
   PROJECT_CREATE_URL,
-  PROJECT_HALT_URL,
   PROJECT_TOGGLE_HIGHLIGHTED_URL,
   PROJECT_UPDATE_URL,
   PROJECT_DEACTIVATE_URL,
   PROJECT_RESTORE_URL,
-  PROJECT_RESUME_URL,
+  PROJECT_TOGGLE_HALTED_URL,
 } from "@/constants/service-url/project-url-config";
 
 const initialState: Project[] = [];
@@ -45,16 +44,17 @@ export const createProject = createAsyncThunk<Project, Project>(
       console.log("createProject called");
       const response = await sendHttpRequest<Project>(PROJECT_CREATE_URL, {
         method: "POST",
-      body: JSON.stringify({
-        name: newProject.name,
-        description: newProject.description,
-        goalAmount: newProject.goalAmount,
-        isGlobal: newProject.isGlobal,
-        country: newProject.country,
-        category: newProject.category,
-        startDate: newProject.startDate,
-        endDate: newProject.endDate,
-      })
+        body: JSON.stringify({
+          name: newProject.name,
+          description: newProject.description,
+          goalAmount: newProject.goalAmount,
+          isGlobal: newProject.isGlobal,
+          country: newProject.country,
+          category: newProject.category,
+          startDate: newProject.startDate,
+          endDate: newProject.endDate,
+          charityId: "e33a3085",
+        }),
       });
       console.log("createProject response", response);
       if (response.status === 201) {
@@ -89,53 +89,29 @@ export const updateProject = createAsyncThunk<Project, Project>(
   }
 );
 
-export const haltProject = createAsyncThunk<Project, HaltProjectPayload>(
-  "projects/haltProject",
+export const toggleHaltProject = createAsyncThunk<Project, HaltProjectPayload>(
+  "projects/toggleHaltProject",
   async ({ projectId, donorMessage, charityMessage }: HaltProjectPayload) => {
     try {
-      console.log("haltProject called");
-      const response = await sendHttpRequest<Project>(PROJECT_HALT_URL, {
-        method: "POST",
-        body: JSON.stringify({
-          projectId,
-          donorMessage,
-          charityMessage,
-        }),
-      });
+      console.log("toggleHaltProject called");
+      const response = await sendHttpRequest<Project>(
+        PROJECT_TOGGLE_HALTED_URL,
+        {
+          method: "POST",
+          body: JSON.stringify({
+            projectId,
+            donorMessage,
+            charityMessage,
+          }),
+        }
+      );
 
-      console.log("haltProject response", response);
+      console.log("toggleHaltProject response", response);
 
       if (response.status === 200) {
         return response.json as Project;
       } else {
         throw new Error(`Failed to halt project: ${response.status}`);
-      }
-    } catch (error) {
-      throw error;
-    }
-  }
-);
-
-export const resumeProject = createAsyncThunk<Project, HaltProjectPayload>(
-  "projects/resumeProject",
-  async ({ projectId, donorMessage, charityMessage }: HaltProjectPayload) => {
-    try {
-      console.log("resumeProject called");
-      const response = await sendHttpRequest<Project>(PROJECT_RESUME_URL, {
-        method: "POST",
-        body: JSON.stringify({
-          projectId,
-          donorMessage,
-          charityMessage,
-        }),
-      });
-
-      console.log("resumeProject response", response);
-
-      if (response.status === 200) {
-        return response.json as Project;
-      } else {
-        throw new Error(`Failed to resume project: ${response.status}`);
       }
     } catch (error) {
       throw error;
@@ -292,9 +268,9 @@ export const projectsSlice = createSlice({
     //     project.status = "ACTIVE";
     //   }
     // },
-    haltProject: (state, action: PayloadAction<string>) => {
+    toggleHaltProject: (state, action: PayloadAction<string>) => {
       const project = state.projects.find(
-        (project) => project.id === action.payload
+        (project) => project.projectId === action.payload
       );
       if (project) {
         project.status = "HALTED";
@@ -328,7 +304,7 @@ export const projectsSlice = createSlice({
         state.error = action.error.message ?? "Failed to create project";
       })
       // HALT PROJECT
-      // .addCase(haltProject.fulfilled, (state, action) => {
+      // .addCase(toggleHaltProject.fulfilled, (state, action) => {
       //   state.status = "succeeded";
       //   const index = state.projects.findIndex(
       //     (project) => project.id === action.payload.id
@@ -337,7 +313,7 @@ export const projectsSlice = createSlice({
       //     state.projects[index] = action.payload;
       //   }
       // })
-      // .addCase(haltProject.rejected, (state, action) => {
+      // .addCase(toggleHaltProject.rejected, (state, action) => {
       //   state.status = "failed";
       //   state.error = action.error.message ?? "Failed to halt project";
       // })
