@@ -37,7 +37,7 @@ const UsersPage = () => {
     // handleSave,
     // handleCategoryChange,
     // handleStatusChange,
-    // handleSearchChange,
+    handleSearchChange,
     // selectedProgress,
     // handleProgressChange,
     // handleHighlightChange,
@@ -90,7 +90,7 @@ const UsersPage = () => {
             placeholder="Search..."
             className="max-w-sm"
             value={searchQuery}
-   
+            onChange={handleSearchChange}
           />
           <Button
             className="bg-blue-500 hover:bg-blue-600"

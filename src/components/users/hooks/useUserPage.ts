@@ -5,14 +5,7 @@ import {
   User
 } from "@/types/User";
 // import { createUser } from "@/lib/features/users/usersSlice";
-// import {
-//   setCategory,
-//   setHighlight,
-//   setIsGlobal,
-//   setProgress,
-//   setSearch,
-//   setStatus,
-// } from "@/lib/features/users/filtersSlice";
+import { setSearch } from "@/lib/features/users/filtersSlice";
 import { filteredUsersSelector } from "@/lib/features/users/selectors";
 
 const useUserPage = () => {
@@ -80,14 +73,14 @@ const useUserPage = () => {
   //   [dispatch]
   // );
 
-  // const handleSearchChange = useCallback(
-  //   (e: React.ChangeEvent<HTMLInputElement>) => {
-  //     const query = e.target.value;
-  //     setSearchQuery(query);
-  //     dispatch(setSearch(query));
-  //   },
-  //   [dispatch]
-  // );
+  const handleSearchChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const query = e.target.value;
+      setSearchQuery(query);
+      dispatch(setSearch(query));
+    },
+    [dispatch]
+  );
 
   // const handleHighlightChange = useCallback(
   //   (highlights: boolean[]) => {
@@ -121,7 +114,7 @@ const useUserPage = () => {
     // handleSave,
     // handleCategoryChange,
     // handleStatusChange,
-    // handleSearchChange,
+    handleSearchChange,
     // handleProgressChange,
   };
 };

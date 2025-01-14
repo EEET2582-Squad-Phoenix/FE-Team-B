@@ -8,8 +8,15 @@ export const userListSelector = (state: RootState): User[] =>
 export const filtersSelector = (state: RootState) => state.filters;
 
 export const filteredUsersSelector = (state: RootState) => {
-  const { search, category, status, progress, highlight, isGlobal } =
-    filtersSelector(state);
+  const { search } = filtersSelector(state);
 
-  return userListSelector(state);
+  return userListSelector(state).filter((user) => {
+    const hasSearchText = (user.email ?? "")
+      .toLowerCase()
+      .includes(search.toLowerCase());
+
+    return (
+      hasSearchText
+    );
+  });
 };
