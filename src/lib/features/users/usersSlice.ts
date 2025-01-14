@@ -57,8 +57,8 @@ export const createUser = createAsyncThunk<any, any>(
         })
 
         console.log("createUser response", response);
-        if (response.status === 201) {
-          return response.json as User;
+        if (response.status === 200) {
+          return response.json as Charity;
         } else {
           throw new Error(`Failed to create charity: ${response.status}`);
         }
@@ -77,8 +77,8 @@ export const createUser = createAsyncThunk<any, any>(
         });
 
         console.log("createUser response", response);
-        if (response.status === 201) {
-          return response.json as User;
+        if (response.status === 200) {
+          return response.json as Donor;
         } else {
           throw new Error(`Failed to create donor: ${response.status}`);
         }
