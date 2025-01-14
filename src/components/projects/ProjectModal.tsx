@@ -123,6 +123,17 @@ export function ProjectModal({
 
   const handleSearch = async () => {
     setSearchError("");
+    if (!searchEmail) {
+      setSearchError("Email is required.");
+      return
+    }else {
+      // Validate email format
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(searchEmail.trim())) {
+        setSearchError("Invalid email format.");
+        return
+      }
+    };
     try {
       const result = await dispatch(fetchCharityDetailsByEmail(searchEmail));
 

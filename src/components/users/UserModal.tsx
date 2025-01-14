@@ -69,7 +69,15 @@ export function UserModal({
   const handleSave = () => {
     const errors: string[] = [];
 
-    if (!formData.email.trim()) errors.push("Email is required.");
+    if (!formData.email.trim()) {
+      errors.push("Email is required.");
+    }else {
+      // Validate email format
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(formData.email.trim())) {
+        errors.push("Invalid email format.");
+      }
+    };
     if (!formData.password.trim()) errors.push("Password is required.");
 
     if (formData.role === "DONOR") {
