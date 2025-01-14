@@ -34,6 +34,10 @@ import {
 } from "@/components/ui/popover";
 import { Calendar } from "../ui/calendar";
 import FileUpload from "../common/FileUpload";
+import { useDispatch } from "react-redux";
+import { fetchCharityDetailsByEmail } from "@/lib/features/users/usersSlice";
+import { AppDispatch } from "@/lib/store";
+import { useAppDispatch } from "@/lib/hooks";
 
 interface ProjectModalProps {
   project?: Project;
@@ -114,6 +118,28 @@ export function ProjectModal({
     handleChange("videoURLs", base64Files);
   };
 
+  const dispatch = useAppDispatch();
+  const [searchEmail, setSearchEmail] = useState("");
+  const [searchError, setSearchError] = useState("");
+  const [charityName, setCharityName] = useState(""); // Store charity name
+
+  const handleSearch = async () => {
+    setSearchError(""); // Clear previous errors
+    try {
+      const result = await dispatch(fetchCharityDetailsByEmail(searchEmail));
+      
+      if (fetchCharityDetailsByEmail.fulfilled.match(result)) {
+        setFormData((prev) => ({ ...prev, charityID: result.payload.id }));
+        setCharityName(result.payload.name);
+      } else {
+        setSearchError("Charity not found.");
+      }
+    } catch (error) {
+      setSearchError("Error searching for charity. Please try again.");
+      console.error("Error:", error);
+    }
+  };
+
   const handleSave = () => {
     const errors: string[] = [];
 
@@ -172,10 +198,44 @@ export function ProjectModal({
         : [...prev.categories, selectedCategory],
     }));
   };
+  
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-3xl max-h-[90vh] flex flex-col">
+        
+        <div className="grid grid-cols-4 items-center gap-4">
+          <Label htmlFor="charityEmail" className="text-right">
+            Charity Email:
+          </Label>
+          <Input
+            id="charityEmail"
+            type="email"
+            value={searchEmail}
+            onChange={(e) => setSearchEmail(e.target.value)}
+            className="col-span-2"
+          />
+          <Button onClick={handleSearch}>Search</Button>
+        </div>
+
+        {charityName && (
+          <div className="grid grid-cols-4 items-center gap-4">
+            <Label htmlFor="charityName" className="text-right">
+              Charity Name:
+            </Label>
+            <Input
+              id="charityName"
+              value={charityName}
+              disabled
+              className="col-span-3 bg-gray-100"
+            />
+          </div>
+        )}
+
+        {searchError && (
+          <div className="text-red-500">{searchError}</div>
+        )}
+
         <DialogHeader>
           <DialogTitle>{project ? "Edit Project" : "New Project"}</DialogTitle>
           <DialogDescription>

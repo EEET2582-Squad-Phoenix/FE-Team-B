@@ -3,6 +3,7 @@ import { User } from "@/types/User";
 import {
   ACCOUNT_ALL_URL,
   ACCOUNT_DELETE_URL,
+  CHARITY_GET_BY_EMAIL_URL,
   CHARITY_SERVICE_URL_B,
   DONOR_SERVICE_URL_B
 } from "@/constants/service-url/user-url-config";
@@ -118,6 +119,32 @@ export const deleteUser = createAsyncThunk(
   }
 );
 
+export const fetchCharityDetailsByEmail = createAsyncThunk<{ id: string; name: string }, string>
+("users/fetchCharityDetailsByEmail", async (email) => {
+
+  try {
+    const response = await sendHttpRequest<Charity>(CHARITY_GET_BY_EMAIL_URL(email),
+      {
+        method: "GET",
+      }
+    );
+
+    if (response.status === 200) {
+      const charity = response.json as Charity;
+      if (charity) {
+        return { id: charity.id, name: charity.name };
+      } else {
+        throw new Error("Charity not found");
+      }
+    } else {
+      throw new Error(
+        "Failed to fetch charity details: ${response.status} - ${response.error}"
+      );
+    }
+  } catch (error) {
+    throw error;
+  }
+});
 
 export const usersSlice = createSlice({
   name: "userList",
