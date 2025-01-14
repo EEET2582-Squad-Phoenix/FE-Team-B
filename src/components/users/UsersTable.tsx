@@ -112,10 +112,10 @@ const UsersTable = ({ users }: UsersTableProps) => {
                 {user.role}
               </TableCell>
               <TableCell>
-                {user.emailVerified.toString()}
+                {user?.emailVerified.toString()}
               </TableCell>
               <TableCell>
-                {user.adminCreated.toString()}
+                {user?.adminCreated.toString()}
               </TableCell>
               <TableCell>
                 {user.createdAt}
