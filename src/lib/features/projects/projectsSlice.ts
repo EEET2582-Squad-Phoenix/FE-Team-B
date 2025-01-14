@@ -78,7 +78,7 @@ export const createProject = createAsyncThunk<Project, Project>(
           categories: newProject.categories,
           startDate: newProject.startDate,
           endDate: newProject.endDate,
-          charityId: "0b35a796",
+          charityID: "0b35a796",
         }),
       });
       console.log("createProject response", response);
@@ -113,6 +113,7 @@ export const updateProject = createAsyncThunk<Project, Project>(
         isGlobal: updatedProject.isGlobal,
         startDate: updatedProject.startDate,
         endDate: updatedProject.endDate,
+        charityID: updatedProject.charityID,
       };
 
       const response = await sendHttpRequest<Project>(PROJECT_UPDATE_URL, {

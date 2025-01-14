@@ -61,7 +61,7 @@ export function ProjectModal({
     raisedAmount: project?.raisedAmount || 0,
     categories: project?.categories || [],
     isGlobal: project?.isGlobal || false,
-    status: project?.status || "ACTIVE", // default status created by admin
+    status: project?.status || "ACTIVE",
     haltedMessage: project?.haltedMessage || undefined,
     isHighlighted: project?.isHighlighted || false,
     fundStatus: project?.fundStatus || "ONGOING",
@@ -74,7 +74,7 @@ export function ProjectModal({
     endDate: project?.endDate
       ? new Date(project.endDate).toISOString()
       : new Date().toISOString(),
-    charityId: project?.charityId || "043717fa", // static charityId while implementing user module
+    charityID: project?.charityID || "043717fa", // static charityID while implementing user module
     startDate: project?.startDate
       ? new Date(project.startDate).toISOString()
       : new Date().toISOString(),

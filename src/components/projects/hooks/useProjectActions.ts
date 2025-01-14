@@ -22,7 +22,7 @@ export const useProjectActions = () => {
         toast.success("Project deleted successfully!");
       })
       .catch((error) => {
-        toast.error(`Failed to delete project: ${error.message}`);
+        toast.error(error.message);
       });
   };
 
@@ -34,7 +34,7 @@ export const useProjectActions = () => {
         toast.success("Project updated successfully!");
       })
       .catch((error) => {
-        toast.error(`Failed to update project: ${error.message}`);
+        toast.error(error.message);
       });
   };
 
@@ -46,7 +46,7 @@ export const useProjectActions = () => {
         toast.success("Project approved successfully!");
       })
       .catch((error) => {
-        toast.error(`Failed to approve project: ${error.message}`);
+        toast.error(error.message);
       });
   };
 
@@ -58,7 +58,7 @@ export const useProjectActions = () => {
         toast.success("Project restored successfully!");
       })
       .catch((error) => {
-        toast.error(`Failed to restore project: ${error.message}`);
+        toast.error(error.message);
       });
   };
 
@@ -70,7 +70,7 @@ export const useProjectActions = () => {
         toast.success("Project highlighted successfully!");
       })
       .catch((error) => {
-        toast.error(error); 
+        toast.error(error.message);
       });
   };
 

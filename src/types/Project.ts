@@ -47,7 +47,7 @@ export interface HaltMessage {
 
 export interface Project {
   id: string;
-  charityId: string;
+  charityID: string;
   name: string;
   thumbnailUrl?: string;
   imageURLs?: string[];
