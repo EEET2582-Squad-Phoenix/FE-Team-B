@@ -128,6 +128,10 @@ export function ProjectModal({
       errors.push("At least one categories must be selected");
     }
 
+    if (!formData.description.trim()) {
+      errors.push("Description is required");
+    }
+
     if (formData.goalAmount <= 0) {
       errors.push("Goal amount must be greater than 0");
     }
@@ -223,7 +227,7 @@ export function ProjectModal({
 
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="description" className="text-right">
-                Description
+                Description *
               </Label>
               <Input
                 id="description"

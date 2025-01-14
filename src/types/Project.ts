@@ -52,7 +52,7 @@ export interface Project {
   thumbnailUrl?: string;
   imageURLs?: string[];
   videoURLs?: string[];
-  description?: string;
+  description: string;
   country: string;
   goalAmount: number;
   raisedAmount: number;
