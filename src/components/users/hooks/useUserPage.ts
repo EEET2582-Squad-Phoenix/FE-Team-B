@@ -2,10 +2,11 @@ import { useState, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch } from "@/lib/store";
 import {
-  User
+  User,
+  UserRoleType
 } from "@/types/User";
 // import { createUser } from "@/lib/features/users/usersSlice";
-import { setSearch } from "@/lib/features/users/filtersSlice";
+import { setSearch, setRole } from "@/lib/features/users/filtersSlice";
 import { filteredUsersSelector } from "@/lib/features/users/selectors";
 
 const useUserPage = () => {
@@ -17,9 +18,9 @@ const useUserPage = () => {
   // const [selectedCategories, setSelectedCategories] = useState<
   //   UserCategoryType[]
   // >([]);
-  // const [selectedStatuses, setSelectedStatuses] = useState<UserStatusType[]>(
-  //   []
-  // );
+  const [selectedRoles, setSelectedRoles] = useState<UserRoleType[]>(
+    []
+  );
   const [searchQuery, setSearchQuery] = useState("");
   // const [selectedProgress, setSelectedProgress] = useState<
   //   UserProgressType[]
@@ -57,13 +58,13 @@ const useUserPage = () => {
   //   [dispatch]
   // );
 
-  // const handleStatusChange = useCallback(
-  //   (statuses: UserStatusType[]) => {
-  //     setSelectedStatuses(statuses);
-  //     dispatch(setStatus(statuses));
-  //   },
-  //   [dispatch]
-  // );
+  const handleRoleChange = useCallback(
+    (roles: UserRoleType[]) => {
+      setSelectedRoles(roles);
+      dispatch(setRole(roles));
+    },
+    [dispatch]
+  );
 
   // const handleProgressChange = useCallback(
   //   (progress: UserProgressType[]) => {
@@ -103,17 +104,17 @@ const useUserPage = () => {
     isModalOpen,
     setIsModalOpen,
     // selectedCategories,
-    // selectedStatuses,
+    selectedRoles,
     searchQuery,
     // selectedProgress,
-    selectedHighlights,
-    selectedGlobals,
+    // selectedHighlights,
+    // selectedGlobals,
     // handleHighlightChange,
     // handleGlobalChange,
     addNewUserHandler,
     // handleSave,
     // handleCategoryChange,
-    // handleStatusChange,
+    handleRoleChange,
     handleSearchChange,
     // handleProgressChange,
   };

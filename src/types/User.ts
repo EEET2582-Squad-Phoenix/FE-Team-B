@@ -2,6 +2,9 @@
 
 export const UserRoles = ["DONOR", "CHARITY", "ADMIN"] as const;
 
+
+export type UserRoleType = "DONOR" | "CHARITY" | "ADMIN";
+
 export type UserRole = (typeof UserRoles)[number];
 
 export interface User {

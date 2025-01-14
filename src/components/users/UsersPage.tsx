@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import UsersTable from "./UsersTable";
 import { UserModal } from "./UserModal";
-import StatusFilter from "../table/StatusFilter";
+import RoleFilter from "../table/RoleFilter";
 import CategoryFilter from "../table/CategoryFilter";
 import useUserPage from "./hooks/useUserPage";
 import ProgressFilter from "../table/ProgressFilter";
@@ -31,19 +31,19 @@ const UsersPage = () => {
     isModalOpen,
     setIsModalOpen,
     // selectedCategories,
-    // selectedStatuses,
+    selectedRoles,
     searchQuery,
     addNewUserHandler,
     // handleSave,
     // handleCategoryChange,
-    // handleStatusChange,
+    handleRoleChange,
     handleSearchChange,
     // selectedProgress,
     // handleProgressChange,
     // handleHighlightChange,
     // handleGlobalChange,
-    selectedHighlights,
-    selectedGlobals,
+    // selectedHighlights,
+    // selectedGlobals,
   } = useUserPage();
 
   if (status === "loading") {
@@ -58,28 +58,10 @@ const UsersPage = () => {
     <div className="flex gap-6 mt-6">
       {/* Left Sidebar */}
       <div className="w-64 space-y-6 shrink-0">
-        {/* <StatusFilter
-          onStatusChange={handleStatusChange}
-          selectedStatuses={selectedStatuses}
+        <RoleFilter
+          onRoleChange={handleRoleChange}
+          selectedRoles={selectedRoles}
         />
-        <CategoryFilter
-          onCategoryChange={handleCategoryChange}
-          selectedCategories={selectedCategories}
-        />
-
-        <HighlightFilter
-          onHighlightChange={handleHighlightChange}
-          selectedHighlights={selectedHighlights}
-        />
-        <IsGlobalFilter
-          onGlobalChange={handleGlobalChange}
-          selectedGlobals={selectedGlobals}
-        />
-
-        <ProgressFilter
-          onProgressChange={handleProgressChange}
-          selectedProgress={selectedProgress}
-        /> */}
       </div>
 
       {/* Main Content */}
