@@ -22,10 +22,10 @@ export const useHaltProjectModal = () => {
 
   const handleHaltProject = async (
     projectId: string,
-    donorMessage: string,
-    charityMessage: string
+    donorReason: string,
+    charityReason: string
   ) => {
-    dispatch(toggleHaltProject({ projectId, donorMessage, charityMessage }))
+    dispatch(toggleHaltProject({ projectId, donorReason, charityReason }))
       .unwrap()
       .then(() => {
         dispatch(fetchProjects());
@@ -39,10 +39,10 @@ export const useHaltProjectModal = () => {
 
   const handleResumeProject = async (
     projectId: string,
-    donorMessage: string,
-    charityMessage: string
+    donorReason: string,
+    charityReason: string
   ) => {
-    dispatch(toggleHaltProject({ projectId, donorMessage, charityMessage }))
+    dispatch(toggleHaltProject({ projectId, donorReason, charityReason }))
       .unwrap()
       .then(() => {
         dispatch(fetchProjects());

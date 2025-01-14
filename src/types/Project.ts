@@ -41,15 +41,16 @@ export const ProjectProgress = ["ONGOING", "FULL"] as const;
 export type ProjectProgressType = "ONGOING" | "FULL";
 
 export interface HaltMessage {
-  charityMessage: string;
-  donorMessage: string;
+  charityReason: string;
+  donorReason: string;
 }
 
 export interface Project {
   id: string;
   charityId: string;
   name: string;
-  imageURLs?: string[]; // 15
+  thumbnailUrl?: string;
+  imageURLs?: string[];
   videoURLs?: string[];
   description?: string;
   country: string;
@@ -69,8 +70,22 @@ export interface Project {
   donorList: Donor[];
 }
 
+// export interface UpdateProjectPayload {
+//   id: string;
+//   name: string;
+//   imageURLs?: string[];
+//   videoURLs?: string[];
+//   description?: string;
+//   country: string;
+//   goalAmount: number;
+//   categories: ProjectCategoryType[];
+//   isGlobal: boolean;
+//   startDate: string;
+//   endDate: string;
+// }
+
 export interface HaltProjectPayload {
   projectId: string;
-  donorMessage?: string;
-  charityMessage?: string;
+  donorReason?: string;
+  charityReason?: string;
 }

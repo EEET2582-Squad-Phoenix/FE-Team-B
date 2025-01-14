@@ -48,39 +48,16 @@ export const fetchProjects = createAsyncThunk<Project[], void>(
 
       if (response.status === 200) {
         const projects = response.json.data.map((project) => ({
-          id: project._id, // Map _id to id
-          charityId: project.charityID,
-          name: project.name,
-          imageURLs: project.imageURLs,
-          videoURLs: project.videoURLs,
-          description: project.description,
-          country: project.country,
-          goalAmount: project.goalAmount,
-          raisedAmount: project.raisedAmount,
-          isGlobal: project.isGlobal,
-          categories: project.categories,
-          status: project.status,
-          haltedMessage: project.haltedMessage,
-          isHighlighted: project.isHighlighted,
-          fundStatus: project.fundStatus,
-          startDate: project.startDate,
-          createdAt: project.createdAt,
-          updatedAt: project.updatedAt,
-          endDate: project.endDate,
-          deletionReason: project.deletionReason,
-          donorList: project.donorList,
+          id: project.projectId,
+          ...project,
         }));
         console.log("Fetched projects:", projects);
         return projects;
       } else {
         console.error("Error fetching projects:", response);
-        // throw new Error(
-        //   `Failed to fetch projects: ${response.status} - ${response.error}`
-        // );
       }
     } catch (error) {
       console.error("Error fetching projects:", error);
-      // throw new Error(`Failed to fetch projects: ${error}`);
     }
   }
 );
@@ -123,22 +100,36 @@ export const updateProject = createAsyncThunk<Project, Project>(
   async (updatedProject: Project, { rejectWithValue }) => {
     try {
       console.log("updateProject called", updatedProject);
+
+      const requestBody = {
+        projectId: updatedProject.id,
+        name: updatedProject.name,
+        imageURLs: updatedProject.imageURLs,
+        videoURLs: updatedProject.videoURLs,
+        description: updatedProject.description,
+        country: updatedProject.country,
+        goalAmount: updatedProject.goalAmount,
+        categories: updatedProject.categories,
+        isGlobal: updatedProject.isGlobal,
+        startDate: updatedProject.startDate,
+        endDate: updatedProject.endDate,
+      };
+
       const response = await sendHttpRequest<Project>(PROJECT_UPDATE_URL, {
         method: "PUT",
-        body: JSON.stringify({
-          ...updatedProject,
-          projectId: updatedProject.id,
-        }),
+        body: JSON.stringify(requestBody),
       });
       console.log("updateProject response", response);
       if (response.status === 200) {
         return response.json as Project;
       } else {
-        console.error("Error fetching projects:", response);
-        return rejectWithValue(`Failed to update project: ${response.status}`);
+        console.error("Error updating project:", response);
+        return rejectWithValue(
+          `Failed to update project: ${response.status} - ${response.error}`
+        );
       }
     } catch (error) {
-      console.error("Error updating projects:", error);
+      console.error("Error updating project:", error);
       return rejectWithValue(`Failed to update project: ${error}`);
     }
   }
@@ -146,7 +137,7 @@ export const updateProject = createAsyncThunk<Project, Project>(
 
 export const toggleHaltProject = createAsyncThunk<Project, HaltProjectPayload>(
   "projects/toggleHaltProject",
-  async ({ projectId, donorMessage, charityMessage }: HaltProjectPayload) => {
+  async ({ projectId, donorReason, charityReason }: HaltProjectPayload) => {
     try {
       console.log("toggleHaltProject called");
       const response = await sendHttpRequest<Project>(
@@ -155,8 +146,8 @@ export const toggleHaltProject = createAsyncThunk<Project, HaltProjectPayload>(
           method: "POST",
           body: JSON.stringify({
             projectId,
-            donorMessage,
-            charityMessage,
+            donorReason,
+            charityReason,
           }),
         }
       );
@@ -225,7 +216,6 @@ export const toggleHighlightProject = createAsyncThunk(
   "projects/toggleHighlightProject",
   async (projectId: string, { rejectWithValue }) => {
     try {
-      console.log("toggleHighlightProject called");
       const response = await sendHttpRequest<Project>(
         PROJECT_TOGGLE_HIGHLIGHTED_URL,
         {
@@ -233,20 +223,16 @@ export const toggleHighlightProject = createAsyncThunk(
           body: JSON.stringify({ projectId }),
         }
       );
-      console.log("toggleHighlightProject response", response);
 
       if (response.status === 200) {
         return projectId;
-      } else if (response.status === 400) {
-        // Instead of using alert(), reject with the error message
-        return rejectWithValue(response.error);
       } else {
-        console.error("Error", response);
-        return rejectWithValue("Failed to toggle highlight project");
+        return rejectWithValue(response.error);
       }
     } catch (error) {
-      console.error("toggleHighlightProject error", error);
-      return rejectWithValue("An unexpected error occurred");
+      return rejectWithValue(
+        "An unexpected error occurred: " + (error.message || error)
+      );
     }
   }
 );

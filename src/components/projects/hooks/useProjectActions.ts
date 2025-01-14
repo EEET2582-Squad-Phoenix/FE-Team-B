@@ -70,7 +70,7 @@ export const useProjectActions = () => {
         toast.success("Project highlighted successfully!");
       })
       .catch((error) => {
-        toast.error(error);
+        toast.error(error); 
       });
   };
 
