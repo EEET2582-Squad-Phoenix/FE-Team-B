@@ -3,15 +3,15 @@ import { HaltProjectPayload, Project } from "@/types/Project";
 import sendHttpRequest from "@/utils/http-call/HttpRequest";
 import {
   PROJECT_DELETE_URL,
-  PROJECT_ALL_URL,
+  // PROJECT_ALL_URL,
   PROJECT_APPROVE_URL,
   PROJECT_CREATE_URL,
-  PROJECT_HALT_URL,
   PROJECT_TOGGLE_HIGHLIGHTED_URL,
   PROJECT_UPDATE_URL,
   PROJECT_DEACTIVATE_URL,
   PROJECT_RESTORE_URL,
-  PROJECT_RESUME_URL,
+  PROJECT_TOGGLE_HALTED_URL,
+  PROJECT_PAGINATION_URL,
 } from "@/constants/service-url/project-url-config";
 
 const initialState: Project[] = [];
@@ -22,18 +22,42 @@ interface ProjectListState {
   projects: Project[];
 }
 
-export const fetchProjects = createAsyncThunk<Project[]>(
+// export const fetchProjects = createAsyncThunk<Project[]>(
+//   "projects/fetchProjects",
+//   async () => {
+//     try {
+//       const response = await sendHttpRequest<Project[]>(PROJECT_PAGINATION_URL);
+//       if (response.status === 200) {
+//         console.log("Fetch projects called", response.json);
+//         return response.json as Project[];
+//       }
+//       throw new Error(`Failed to fetch projects: ${response.status}`);
+//     } catch (error) {
+//       throw error;
+//     }
+//   }
+// );
+
+export const fetchProjects = createAsyncThunk<Project[], void>(
   "projects/fetchProjects",
   async () => {
     try {
-      const response = await sendHttpRequest<Project[]>(PROJECT_ALL_URL);
+      const response = await sendHttpRequest<{ data: Project[] }>(
+        PROJECT_PAGINATION_URL
+      );
+
       if (response.status === 200) {
-        console.log("Fetch projects called", response.json);
-        return response.json as Project[];
+        const projects = response.json.data.map((project) => ({
+          id: project.projectId,
+          ...project,
+        }));
+        console.log("Fetched projects:", projects);
+        return projects;
+      } else {
+        console.error("Error fetching projects:", response);
       }
-      throw new Error(`Failed to fetch projects: ${response.status}`);
     } catch (error) {
-      throw error;
+      console.error("Error fetching projects:", error);
     }
   }
 );
@@ -45,15 +69,27 @@ export const createProject = createAsyncThunk<Project, Project>(
       console.log("createProject called");
       const response = await sendHttpRequest<Project>(PROJECT_CREATE_URL, {
         method: "POST",
-        body: JSON.stringify(newProject),
+        body: JSON.stringify({
+          name: newProject.name,
+          description: newProject.description,
+          goalAmount: newProject.goalAmount,
+          isGlobal: newProject.isGlobal,
+          country: newProject.country,
+          categories: newProject.categories,
+          startDate: newProject.startDate,
+          endDate: newProject.endDate,
+          charityID: "0b35a796",
+        }),
       });
       console.log("createProject response", response);
       if (response.status === 201) {
         return response.json as Project;
       } else {
+        console.error("Error creating projects:", response);
         throw new Error(`Failed to create project: ${response.status}`);
       }
     } catch (error) {
+      console.error("Error creating projects:", error);
       throw error;
     }
   }
@@ -61,72 +97,69 @@ export const createProject = createAsyncThunk<Project, Project>(
 
 export const updateProject = createAsyncThunk<Project, Project>(
   "projects/updateProject",
-  async (updatedProject: Project) => {
+  async (updatedProject: Project, { rejectWithValue }) => {
     try {
       console.log("updateProject called", updatedProject);
+
+      const requestBody = {
+        projectId: updatedProject.id,
+        name: updatedProject.name,
+        imageURLs: updatedProject.imageURLs,
+        videoURLs: updatedProject.videoURLs,
+        description: updatedProject.description,
+        country: updatedProject.country,
+        goalAmount: updatedProject.goalAmount,
+        categories: updatedProject.categories,
+        isGlobal: updatedProject.isGlobal,
+        startDate: updatedProject.startDate,
+        endDate: updatedProject.endDate,
+        charityID: updatedProject.charityID,
+      };
+
       const response = await sendHttpRequest<Project>(PROJECT_UPDATE_URL, {
         method: "PUT",
-        body: JSON.stringify(updatedProject),
+        body: JSON.stringify(requestBody),
       });
       console.log("updateProject response", response);
       if (response.status === 200) {
         return response.json as Project;
       } else {
-        throw new Error(`Failed to update project: ${response.status}`);
+        console.error("Error updating project:", response);
+        return rejectWithValue(
+          `Failed to update project: ${response.status} - ${response.error}`
+        );
       }
     } catch (error) {
-      throw error;
+      console.error("Error updating project:", error);
+      return rejectWithValue(`Failed to update project: ${error}`);
     }
   }
 );
 
-export const haltProject = createAsyncThunk<Project, HaltProjectPayload>(
-  "projects/haltProject",
-  async ({ projectId, donorMessage, charityMessage }: HaltProjectPayload) => {
+export const toggleHaltProject = createAsyncThunk<Project, HaltProjectPayload>(
+  "projects/toggleHaltProject",
+  async ({ projectId, donorReason, charityReason }: HaltProjectPayload) => {
     try {
-      console.log("haltProject called");
-      const response = await sendHttpRequest<Project>(PROJECT_HALT_URL, {
-        method: "POST",
-        body: JSON.stringify({
-          projectId,
-          donorMessage,
-          charityMessage,
-        }),
-      });
+      console.log("toggleHaltProject called");
+      const response = await sendHttpRequest<Project>(
+        PROJECT_TOGGLE_HALTED_URL,
+        {
+          method: "POST",
+          body: JSON.stringify({
+            projectId,
+            donorReason,
+            charityReason,
+          }),
+        }
+      );
 
-      console.log("haltProject response", response);
+      console.log("toggleHaltProject response", response);
 
       if (response.status === 200) {
         return response.json as Project;
       } else {
+        console.error("Error toggling project projects:", response);
         throw new Error(`Failed to halt project: ${response.status}`);
-      }
-    } catch (error) {
-      throw error;
-    }
-  }
-);
-
-export const resumeProject = createAsyncThunk<Project, HaltProjectPayload>(
-  "projects/resumeProject",
-  async ({ projectId, donorMessage, charityMessage }: HaltProjectPayload) => {
-    try {
-      console.log("resumeProject called");
-      const response = await sendHttpRequest<Project>(PROJECT_RESUME_URL, {
-        method: "POST",
-        body: JSON.stringify({
-          projectId,
-          donorMessage,
-          charityMessage,
-        }),
-      });
-
-      console.log("resumeProject response", response);
-
-      if (response.status === 200) {
-        return response.json as Project;
-      } else {
-        throw new Error(`Failed to resume project: ${response.status}`);
       }
     } catch (error) {
       throw error;
@@ -148,6 +181,7 @@ export const deleteProject = createAsyncThunk(
       if (response.status === 200) {
         return projectId;
       } else {
+        console.error("Error fetching projects:", response);
         throw new Error(`Failed to delete project: ${response.status}`);
       }
     } catch (error) {
@@ -170,6 +204,7 @@ export const approveProject = createAsyncThunk(
       if (response.status === 200) {
         return projectId;
       } else {
+        console.error("Error", response);
         throw new Error(`Failed to delete project: ${response.status}`);
       }
     } catch (error) {
@@ -180,10 +215,8 @@ export const approveProject = createAsyncThunk(
 
 export const toggleHighlightProject = createAsyncThunk(
   "projects/toggleHighlightProject",
-  async (projectId: string) => {
+  async (projectId: string, { rejectWithValue }) => {
     try {
-      console.log("toggleHighlightProject called");
-
       const response = await sendHttpRequest<Project>(
         PROJECT_TOGGLE_HIGHLIGHTED_URL,
         {
@@ -191,16 +224,16 @@ export const toggleHighlightProject = createAsyncThunk(
           body: JSON.stringify({ projectId }),
         }
       );
-      console.log("toggleHighlightProject response", response);
+
       if (response.status === 200) {
         return projectId;
       } else {
-        throw new Error(
-          `Failed to toggle highlight project: ${response.status}`
-        );
+        return rejectWithValue(response.error);
       }
     } catch (error) {
-      throw error;
+      return rejectWithValue(
+        "An unexpected error occurred: " + (error.message || error)
+      );
     }
   }
 );
@@ -283,7 +316,7 @@ export const projectsSlice = createSlice({
     //     project.status = "ACTIVE";
     //   }
     // },
-    haltProject: (state, action: PayloadAction<string>) => {
+    toggleHaltProject: (state, action: PayloadAction<string>) => {
       const project = state.projects.find(
         (project) => project.id === action.payload
       );
@@ -319,7 +352,7 @@ export const projectsSlice = createSlice({
         state.error = action.error.message ?? "Failed to create project";
       })
       // HALT PROJECT
-      // .addCase(haltProject.fulfilled, (state, action) => {
+      // .addCase(toggleHaltProject.fulfilled, (state, action) => {
       //   state.status = "succeeded";
       //   const index = state.projects.findIndex(
       //     (project) => project.id === action.payload.id
@@ -328,7 +361,7 @@ export const projectsSlice = createSlice({
       //     state.projects[index] = action.payload;
       //   }
       // })
-      // .addCase(haltProject.rejected, (state, action) => {
+      // .addCase(toggleHaltProject.rejected, (state, action) => {
       //   state.status = "failed";
       //   state.error = action.error.message ?? "Failed to halt project";
       // })

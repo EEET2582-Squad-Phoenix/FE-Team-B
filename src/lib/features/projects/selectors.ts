@@ -8,7 +8,7 @@ export const projectListSelector = (state: RootState): Project[] =>
 export const filtersSelector = (state: RootState) => state.filters;
 
 export const filteredProjectsSelector = (state: RootState) => {
-  const { search, category, status, progress, highlight, isGlobal } =
+  const { search, categories, status, progress, highlight, isGlobal } =
     filtersSelector(state);
 
   return projectListSelector(state).filter((project) => {
@@ -17,9 +17,9 @@ export const filteredProjectsSelector = (state: RootState) => {
       .includes(search.toLowerCase());
 
     const hasCategory =
-      category.length === 0 ||
-      project.category.some((projectCategory) =>
-        category.includes(projectCategory)
+      categories.length === 0 ||
+      project.categories.some((projectCategory) =>
+        categories.includes(projectCategory)
       );
 
     const hasStatus = status.length === 0 || status.includes(project.status);

@@ -3,10 +3,10 @@ import { useState } from "react";
 import { Project } from "@/types/Project";
 import { useAppDispatch } from "@/lib/hooks";
 import {
-  haltProject,
-  resumeProject,
   fetchProjects,
+  toggleHaltProject,
 } from "@/lib/features/projects/projectsSlice";
+import { toast } from "react-toastify";
 
 export const useHaltProjectModal = () => {
   const dispatch = useAppDispatch();
@@ -22,34 +22,36 @@ export const useHaltProjectModal = () => {
 
   const handleHaltProject = async (
     projectId: string,
-    donorMessage: string,
-    charityMessage: string
+    donorReason: string,
+    charityReason: string
   ) => {
-    try {
-      await dispatch(
-        haltProject({ projectId, donorMessage, charityMessage })
-      ).unwrap();
-      dispatch(fetchProjects());
-      setIsHaltModalOpen(false);
-    } catch (error) {
-      console.error("Failed to halt project:", error);
-    }
+    dispatch(toggleHaltProject({ projectId, donorReason, charityReason }))
+      .unwrap()
+      .then(() => {
+        dispatch(fetchProjects());
+        setIsHaltModalOpen(false);
+        toast.success("Project halted successfully!");
+      })
+      .catch((error) => {
+        toast.error(`Failed to halt project: ${error.message}`);
+      });
   };
 
   const handleResumeProject = async (
     projectId: string,
-    donorMessage: string,
-    charityMessage: string
+    donorReason: string,
+    charityReason: string
   ) => {
-    try {
-      await dispatch(
-        resumeProject({ projectId, donorMessage, charityMessage })
-      ).unwrap();
-      dispatch(fetchProjects());
-      setIsHaltModalOpen(false);
-    } catch (error) {
-      console.error("Failed to resume project:", error);
-    }
+    dispatch(toggleHaltProject({ projectId, donorReason, charityReason }))
+      .unwrap()
+      .then(() => {
+        dispatch(fetchProjects());
+        setIsHaltModalOpen(false);
+        toast.success("Project resumed successfully!");
+      })
+      .catch((error) => {
+        toast.error(`Failed to resume project: ${error.message}`);
+      });
   };
 
   return {

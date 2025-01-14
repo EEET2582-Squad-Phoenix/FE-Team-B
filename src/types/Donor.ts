@@ -5,8 +5,11 @@ export interface Donor {
     role: "DONOR";
     firstName: string;
     lastName: string;
+    avatarUrl: string | null;
+    introVidUrl: string | null;
     address: string;
     language: string;
-    avatar: string | null;
-    video: string | null;
+    monthlyDonation: number;
+
+    stripeCustomerId: string;
 }

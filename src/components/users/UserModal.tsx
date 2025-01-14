@@ -8,7 +8,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
+import {Input} from "@/components/ui/input"
 import { Label } from "@/components/ui/label";
 import {
   Select,
@@ -21,6 +21,8 @@ import {
   User,
   UserRoles,
   UserRole,
+  Donor,
+  Charity,
 } from "@/types/User";
 
 interface UserModalProps {
@@ -29,14 +31,13 @@ interface UserModalProps {
   onOpenChange: (open: boolean) => void;
   onSave: (user: User) => void;
 }
-
 export function UserModal({
   user,
   open,
   onOpenChange,
   onSave,
 }: UserModalProps) {
-  const [formData, setFormData] = useState<User>({
+  const [formData, setFormData] = useState<User & Partial<Donor> & Partial<Charity>>({
     id: user?.id || "",
     email: user?.email || "",
     password: user?.password || "",
@@ -45,45 +46,41 @@ export function UserModal({
     adminCreated: true,
     createdAt: user?.createdAt || new Date().toISOString(),
     updatedAt: user?.updatedAt || new Date().toISOString(),
+    // Donor-specific fields
+    firstName: user?.role === "DONOR" ? (user as Donor).firstName || "" : "",
+    lastName: user?.role === "DONOR" ? (user as Donor).lastName || "" : "",
+    avatarUrl: "",
+    introVidUrl: null,
+    address: "",
+    // Charity-specific fields
+    name: user?.role === "CHARITY" ? (user as Charity).name || "" : "",
+    taxCode: "",
+    logoUrl: null,
+    type: user?.role === "CHARITY" ? (user as Charity).type : "INDIVIDUAL",
   });
 
-  // Update form data when user or open state changes
-  useEffect(() => {
-    setFormData({
-      id: user?.id || "",
-      email: user?.email || "",
-      password: user?.password || "",
-      role: user?.role || "DONOR",
-      emailVerified: user?.emailVerified || false,
-      adminCreated: true,
-      createdAt: user?.createdAt || new Date().toISOString(),
-      updatedAt: user?.updatedAt || new Date().toISOString(),
-    });
-  }, [user, open]);
-
-  // Generic change handler for form fields with explicit type handling for special cases
-  const handleChange = <K extends keyof User>(
+  const handleChange = <K extends keyof (User & Donor & Charity)>(
     field: K,
-    value: K extends "role"
-      ? UserRole : string
+    value: (User & Donor & Charity)[K]
   ) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
-  // Validation and saving
   const handleSave = () => {
-    // Validate required fields
     const errors: string[] = [];
 
-    if (!formData.email.trim()) {
-      errors.push("User email is required");
+    if (!formData.email.trim()) errors.push("Email is required.");
+    if (!formData.password.trim()) errors.push("Password is required.");
+
+    if (formData.role === "DONOR") {
+      if (!formData.firstName?.trim()) errors.push("First name is required.");
+      if (!formData.lastName?.trim()) errors.push("Last name is required.");
+    } else if (formData.role === "CHARITY") {
+      if (!formData.name?.trim()) errors.push("Charity name is required.");
+      if (!formData.address?.trim()) errors.push("Charity address is required.");
+      if (!formData.taxCode?.trim()) errors.push("Tax code is required.");
     }
 
-    if (!formData.password.trim()) {
-      errors.push("User password is required");
-    }
-
-    // Display all validation errors
     if (errors.length > 0) {
       alert(errors.join("\n"));
       return;
@@ -105,52 +102,34 @@ export function UserModal({
           </DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4">
-          {/* ID field (optional, disabled for existing users) */}
-          {user && (
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="id" className="text-right">
-                ID
-              </Label>
-              <Input
-                id="id"
-                value={formData.id}
-                onChange={(e) => handleChange("id", e.target.value)}
-                className="col-span-3 bg-gray-100 border-gray-300 "
-                disabled
-              />
-            </div>
-          )}
-
+          {/* Common Fields */}
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="email" className="text-right">
               Email *
             </Label>
             <Input
+              type="email"
               id="email"
+              className="col-span-3 bg-gray-100 border-gray-300 "
               value={formData.email}
               onChange={(e) => handleChange("email", e.target.value)}
-              className="col-span-3 bg-gray-100 border-gray-300 "
-              placeholder="Enter user email"
-              required
             />
           </div>
-
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="password" className="text-right">
               Password *
             </Label>
             <Input
+              type="password"
               id="password"
+              className="col-span-3 bg-gray-100 border-gray-300 "
               value={formData.password}
               onChange={(e) => handleChange("password", e.target.value)}
-              className="col-span-3 bg-gray-100 border-gray-300 "
-              placeholder="Enter user password"
             />
           </div>
-
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="role" className="text-right">
-              Role
+              Role *
             </Label>
             <Select
               value={formData.role}
@@ -170,37 +149,102 @@ export function UserModal({
               </SelectContent>
             </Select>
           </div>
-
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="emailverified" className="text-right">
-              Email verified
-            </Label>
-            <Select
-              value={formData.emailVerified.toString()}
-              onValueChange={(value) =>
-                handleChange("emailVerified", value)
-              }
-            >
-              <SelectTrigger className="col-span-3 bg-gray-100 border-gray-300">
-                <SelectValue placeholder="Select a status" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="true">True</SelectItem>
-                <SelectItem value="false">False</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-
+  
+          {/* Donor-Specific Fields */}
+          {formData.role === "DONOR" && (
+            <>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="firstName" className="text-right">
+                  First Name *
+                </Label>
+                <Input
+                  type="text"
+                  id="firstName"
+                  className="col-span-3 bg-gray-100 border-gray-300 "
+                  value={formData.firstName || ""}
+                  onChange={(e) => handleChange("firstName", e.target.value)}
+                />
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="lastName" className="text-right">
+                  Last Name *
+                </Label>
+                <Input
+                  type="text"
+                  id="lastName"
+                  className="col-span-3 bg-gray-100 border-gray-300 "
+                  value={formData.lastName || ""}
+                  onChange={(e) => handleChange("lastName", e.target.value)}
+                />
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="address" className="text-right">
+                  Address *
+                </Label>
+                <Input
+                  type="text"
+                  id="address"
+                  className="col-span-3 bg-gray-100 border-gray-300 "
+                  value={formData.address || ""}
+                  onChange={(e) => handleChange("address", e.target.value)}
+                />
+              </div>
+            </>
+          )}
+  
+          {/* Charity-Specific Fields */}
+          {formData.role === "CHARITY" && (
+            <>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="name" className="text-right">
+                  Charity Name *
+                </Label>
+                <Input
+                  type="text"
+                  id="name"
+                  className="col-span-3 bg-gray-100 border-gray-300 "
+                  value={formData.name || ""}
+                  onChange={(e) => handleChange("name", e.target.value)}
+                />
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="address" className="text-right">
+                  Address *
+                </Label>
+                <Input
+                  type="text"
+                  id="address"
+                  className="col-span-3 bg-gray-100 border-gray-300 "
+                  value={formData.address || ""}
+                  onChange={(e) => handleChange("address", e.target.value)}
+                />
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="taxCode" className="text-right">
+                  Tax Code *
+                </Label>
+                <Input
+                  type="text"
+                  id="taxCode"
+                  className="col-span-3 bg-gray-100 border-gray-300 "
+                  value={formData.taxCode || ""}
+                  onChange={(e) => handleChange("taxCode", e.target.value)}
+                />
+              </div>
+            </>
+          )}
         </div>
         <DialogFooter>
-          <Button
+          <button
+            type="button"
+            className="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
             onClick={handleSave}
-            className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
           >
-            {user ? "Update User" : "Save User"}
-          </Button>
+            Save User
+          </button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
   );
+  
 }

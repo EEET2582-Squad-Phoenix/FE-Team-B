@@ -2,6 +2,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import projectReducer from "./features/projects/projectsSlice";
 import userReducer from "./features/users/usersSlice";
 import filtersReducer from "./features/projects/filtersSlice";
+import userFiltersReducer from "./features/users/filtersSlice";
 
 export const makeStore = () => {
   return configureStore({
@@ -9,6 +10,7 @@ export const makeStore = () => {
       projects: projectReducer,
       users: userReducer,
       filters: filtersReducer,
+      userFilters: userFiltersReducer,
     },
   });
 };

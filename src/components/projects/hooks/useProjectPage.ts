@@ -7,7 +7,10 @@ import {
   ProjectProgressType,
   ProjectStatusType,
 } from "@/types/Project";
-import { createProject } from "@/lib/features/projects/projectsSlice";
+import {
+  createProject,
+  fetchProjects,
+} from "@/lib/features/projects/projectsSlice";
 import {
   setCategory,
   setHighlight,
@@ -17,6 +20,7 @@ import {
   setStatus,
 } from "@/lib/features/projects/filtersSlice";
 import { filteredProjectsSelector } from "@/lib/features/projects/selectors";
+import { toast } from "react-toastify";
 
 const useProjectPage = () => {
   const dispatch: AppDispatch = useDispatch();
@@ -44,17 +48,16 @@ const useProjectPage = () => {
 
   const handleSave = useCallback(
     async (newProject: Project) => {
-      try {
-        await dispatch(createProject(newProject));
-        setIsModalOpen(false);
-      } catch (error) {
-        console.error("Error creating project:", error);
-        if (error instanceof Error) {
-          alert(`Error creating project: ${error.message}`);
-        } else {
-          alert("Error creating project");
-        }
-      }
+      dispatch(createProject(newProject))
+        .unwrap()
+        .then(() => {
+          dispatch(fetchProjects());
+          setIsModalOpen(false);
+          toast.success("Project created successfully!");
+        })
+        .catch((error) => {
+          toast.error(`Failed to create project: ${error.message}`);
+        });
     },
     [dispatch]
   );

@@ -3,8 +3,12 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Menu, X } from "lucide-react";
-import { useRouter , usePathname} from "next/navigation";
-import { AUTH_GET_ME_URL , AUTH_LOGOUT_URL } from "@/constants/service-url/auth-url-config";
+import { useRouter, usePathname } from "next/navigation";
+import {
+  AUTH_GET_ME_URL,
+  AUTH_LOGOUT_URL,
+} from "@/constants/service-url/auth-url-config";
+import { DONATE_AS_GUEST_URL } from "@/constants/service-url/app-url-config";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -49,7 +53,7 @@ const Navbar = () => {
   };
 
   const isDashboard = pathname.includes("/dashboard");
-  
+
   return (
     <nav className="bg-blue-500 fixed h-16 top-0 w-full z-10">
       <div className="lg:mx-8 mx-4 px-4 sm:px-6 lg:px-8">
@@ -79,20 +83,25 @@ const Navbar = () => {
 
             <div className="flex items-center space-x-4">
               {isLoggedIn && isDashboard ? (
-                <button onClick={handleLogout} className="bg-red-500 text-white py-2 px-3 rounded-md">
+                <button
+                  onClick={handleLogout}
+                  className="bg-red-500 text-white py-2 px-3 rounded-md"
+                >
                   Logout
                 </button>
               ) : (
                 <Link href="/signin">
-                <button className="bg-yellow-400 text-black py-2 px-3 rounded-md">
-                  Sign in
-                </button>
+                  <button className="bg-yellow-400 text-black py-2 px-3 rounded-md">
+                    Sign in
+                  </button>
                 </Link>
               )}
-              
-              <button className="bg-teal-400 text-black py-2 px-3 rounded-md">
-                Donate as guest
-              </button>
+
+              <Link href={DONATE_AS_GUEST_URL}>
+                <button className="bg-teal-400 text-black py-2 px-3 rounded-md w-full">
+                  Donate as guest
+                </button>
+              </Link>
             </div>
           </div>
 
@@ -114,7 +123,7 @@ const Navbar = () => {
 
         {/* Mobile menu */}
         {isMenuOpen && (
-          <div className="md:hidden">
+          <div className="md:hidden bg-blue-500 fixed top-16 left-0 w-full h-screen">
             <div className="text-center px-2 pt-2 pb-3 space-y-3">
               <Link
                 href=""
@@ -143,9 +152,11 @@ const Navbar = () => {
                     </button>
                   </Link>
                 )}
-                <button className="bg-teal-400 text-black py-2 px-3 rounded-md">
-                  Donate as guest
-                </button>
+                <Link href={DONATE_AS_GUEST_URL}>
+                  <button className="bg-teal-400 text-black py-2 px-3 rounded-md">
+                    Donate as guest
+                  </button>
+                </Link>
               </div>
             </div>
           </div>

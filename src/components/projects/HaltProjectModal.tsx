@@ -17,16 +17,8 @@ interface HaltProjectModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   project: Project | null;
-  onHalt: (
-    projectId: string,
-    donorMessage: string,
-    charityMessage: string
-  ) => void;
-  onResume: (
-    projectId: string,
-    donorMessage: string,
-    charityMessage: string
-  ) => void;
+  onHalt: (id: string, donorReason: string, charityReason: string) => void;
+  onResume: (id: string, donorReason: string, charityReason: string) => void;
 }
 
 export function HaltProjectModal({
@@ -36,11 +28,11 @@ export function HaltProjectModal({
   onHalt,
   onResume,
 }: HaltProjectModalProps) {
-  const [donorMessage, setDonorMessage] = useState(
-    project?.haltedMessage?.donorMessage || ""
+  const [donorReason, setDonorReason] = useState(
+    project?.haltedMessage?.donorReason || ""
   );
-  const [charityMessage, setCharityMessage] = useState(
-    project?.haltedMessage?.charityMessage || ""
+  const [charityReason, setCharityReason] = useState(
+    project?.haltedMessage?.charityReason || ""
   );
 
   const isHalted = project?.status === "HALTED";
@@ -49,9 +41,9 @@ export function HaltProjectModal({
     e.preventDefault();
     if (project) {
       const handler = isHalted ? onResume : onHalt;
-      handler(project.id, donorMessage, charityMessage);
-      setDonorMessage("");
-      setCharityMessage("");
+      handler(project.id, donorReason, charityReason);
+      setDonorReason("");
+      setCharityReason("");
       onOpenChange(false);
     }
   };
@@ -75,22 +67,22 @@ export function HaltProjectModal({
         <form onSubmit={handleSubmit}>
           <div className="grid gap-4 py-4">
             <div className="grid gap-2">
-              <Label htmlFor="donorMessage">Message to donors</Label>
+              <Label htmlFor="donorReason">Message to donors</Label>
               <Input
-                id="donorMessage"
+                id="donorReason"
                 placeholder="Enter message to donors"
-                value={donorMessage}
-                onChange={(e) => setDonorMessage(e.target.value)}
+                value={donorReason}
+                onChange={(e) => setDonorReason(e.target.value)}
                 className="col-span-3"
               />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="charityMessage">Message to charities</Label>
+              <Label htmlFor="charityReason">Message to charities</Label>
               <Input
-                id="charityMessage"
+                id="charityReason"
                 placeholder="Enter message to charities"
-                value={charityMessage}
-                onChange={(e) => setCharityMessage(e.target.value)}
+                value={charityReason}
+                onChange={(e) => setCharityReason(e.target.value)}
                 className="col-span-3"
               />
             </div>

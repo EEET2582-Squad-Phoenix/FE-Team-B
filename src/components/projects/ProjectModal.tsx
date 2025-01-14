@@ -34,6 +34,8 @@ import {
 } from "@/components/ui/popover";
 import { Calendar } from "../ui/calendar";
 import FileUpload from "../common/FileUpload";
+import { fetchCharityDetailsByEmail } from "@/lib/features/users/usersSlice";
+import { useAppDispatch } from "@/lib/hooks";
 
 interface ProjectModalProps {
   project?: Project;
@@ -59,9 +61,9 @@ export function ProjectModal({
     country: project?.country || "",
     goalAmount: project?.goalAmount || 0,
     raisedAmount: project?.raisedAmount || 0,
-    category: project?.category || [],
+    categories: project?.categories || [],
     isGlobal: project?.isGlobal || false,
-    status: project?.status || "ACTIVE", // default status created by admin
+    status: project?.status || "ACTIVE",
     haltedMessage: project?.haltedMessage || undefined,
     isHighlighted: project?.isHighlighted || false,
     fundStatus: project?.fundStatus || "ONGOING",
@@ -74,10 +76,11 @@ export function ProjectModal({
     endDate: project?.endDate
       ? new Date(project.endDate).toISOString()
       : new Date().toISOString(),
-    charityId: project?.charityId || "043717fa", // static charityId while implementing user module
+    charityID: project?.charityID || "",
     startDate: project?.startDate
       ? new Date(project.startDate).toISOString()
       : new Date().toISOString(),
+    donorList: project?.donorList || [],
   });
 
   useEffect(() => {
@@ -90,7 +93,7 @@ export function ProjectModal({
 
   const handleChange = <K extends keyof Project>(
     field: K,
-    value: K extends "category"
+    value: K extends "categories"
       ? ProjectCategoryType
       : K extends "status"
       ? ProjectStatusType
@@ -113,6 +116,28 @@ export function ProjectModal({
     handleChange("videoURLs", base64Files);
   };
 
+  const dispatch = useAppDispatch();
+  const [searchEmail, setSearchEmail] = useState("");
+  const [searchError, setSearchError] = useState("");
+  const [charityName, setCharityName] = useState(""); // Store charity name
+
+  const handleSearch = async () => {
+    setSearchError("");
+    try {
+      const result = await dispatch(fetchCharityDetailsByEmail(searchEmail));
+
+      if (fetchCharityDetailsByEmail.fulfilled.match(result)) {
+        setFormData((prev) => ({ ...prev, charityID: result.payload.id }));
+        setCharityName(result.payload.name);
+      } else {
+        setSearchError("Charity not found.");
+      }
+    } catch (error) {
+      setSearchError("Error searching for charity. Please try again.");
+      console.error("Error:", error);
+    }
+  };
+
   const handleSave = () => {
     const errors: string[] = [];
 
@@ -123,8 +148,12 @@ export function ProjectModal({
       errors.push("Country is required");
     }
 
-    if (formData.category.length === 0) {
-      errors.push("At least one category must be selected");
+    if (formData.categories.length === 0) {
+      errors.push("At least one categories must be selected");
+    }
+
+    if (!formData.description.trim()) {
+      errors.push("Description is required");
     }
 
     if (formData.goalAmount <= 0) {
@@ -140,6 +169,10 @@ export function ProjectModal({
       errors.push("Start date is required");
     }
 
+    if (!formData.charityID) {
+      errors.push("Charity ID is required");
+    }
+
     if (!formData.endDate) {
       errors.push("End date is required");
     } else if (new Date(formData.endDate) <= new Date(formData.startDate)) {
@@ -153,7 +186,7 @@ export function ProjectModal({
 
     const updatedFormData = {
       ...formData,
-      country: formData.country.toUpperCase(), // to match validation in BE
+      country: formData.country.toUpperCase(),
     };
 
     onSave(updatedFormData);
@@ -162,15 +195,45 @@ export function ProjectModal({
   const handleCategorySelect = (selectedCategory: ProjectCategoryType) => {
     setFormData((prev) => ({
       ...prev,
-      category: prev.category.includes(selectedCategory)
-        ? prev.category.filter((cat) => cat !== selectedCategory)
-        : [...prev.category, selectedCategory],
+      categories: prev.categories.includes(selectedCategory)
+        ? prev.categories.filter((cat) => cat !== selectedCategory)
+        : [...prev.categories, selectedCategory],
     }));
   };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-3xl max-h-[90vh] flex flex-col">
+        <div className="grid grid-cols-4 items-center gap-4">
+          <Label htmlFor="charityEmail" className="text-right">
+            Charity Email:
+          </Label>
+          <Input
+            id="charityEmail"
+            type="email"
+            value={searchEmail}
+            onChange={(e) => setSearchEmail(e.target.value)}
+            className="col-span-2"
+          />
+          <Button onClick={handleSearch}>Search</Button>
+        </div>
+
+        {charityName && (
+          <div className="grid grid-cols-4 items-center gap-4">
+            <Label htmlFor="charityName" className="text-right">
+              Charity Name:
+            </Label>
+            <Input
+              id="charityName"
+              value={charityName}
+              disabled
+              className="col-span-3 bg-gray-100"
+            />
+          </div>
+        )}
+
+        {searchError && <div className="text-red-500">{searchError}</div>}
+
         <DialogHeader>
           <DialogTitle>{project ? "Edit Project" : "New Project"}</DialogTitle>
           <DialogDescription>
@@ -222,7 +285,7 @@ export function ProjectModal({
 
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="description" className="text-right">
-                Description
+                Description *
               </Label>
               <Input
                 id="description"
@@ -263,7 +326,7 @@ export function ProjectModal({
               </Label>
               <div className="col-span-3">
                 <div className="flex flex-wrap gap-2 mb-2">
-                  {formData.category.map((cat) => (
+                  {formData.categories.map((cat) => (
                     <div
                       key={cat}
                       className="flex items-center bg-blue-100 text-blue-800 rounded-full px-3 py-1"
@@ -292,7 +355,7 @@ export function ProjectModal({
                         <SelectItem
                           key={cat}
                           value={cat}
-                          disabled={formData.category.includes(cat)}
+                          disabled={formData.categories.includes(cat)}
                         >
                           {cat}
                         </SelectItem>
