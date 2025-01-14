@@ -10,8 +10,8 @@ export function useSignupDonor() {
     lastName: "",
     address: "",
     language: "Vietnamese",
-    avatar: null,
-    video: null,
+    avatarUrl: null,
+    introVidUrl: null,
   });
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -74,13 +74,13 @@ export function useSignupDonor() {
 
   const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
-      setDonor({ ...donor, avatar: e.target.files[0].name });
+      setDonor({ ...donor, avatarUrl: e.target.files[0].name });
     }
   }; // Handle avatar change
 
   const handleVideoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
-      setDonor({ ...donor, video: e.target.files[0].name });
+      setDonor({ ...donor, introVidUrl: e.target.files[0].name });
     }
   }; // Handle video change
 

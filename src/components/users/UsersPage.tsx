@@ -1,61 +1,79 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import UsersTable from "./UsersTable";
-import { userListSelector } from "@/lib/features/users/selectors";
-import { useDispatch, useSelector } from "react-redux";
-import { User } from "@/types/User";
 import { UserModal } from "./UserModal";
-import { addUser } from "@/lib/features/users/usersSlice";
-import { v4 as uuidv4 } from "uuid";
+import RoleFilter from "../table/RoleFilter";
+import CategoryFilter from "../table/CategoryFilter";
+import useUserPage from "./hooks/useUserPage";
+import ProgressFilter from "../table/ProgressFilter";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState, AppDispatch } from "@/lib/store";
+import { fetchUsers } from "@/lib/features/users/usersSlice";
+import HighlightFilter from "../table/HighlightFilter";
+import IsGlobalFilter from "../table/IsGlobalFilter";
 
 const UsersPage = () => {
-  const userList = useSelector(userListSelector);
-  const dispatch = useDispatch();
+  const dispatch: AppDispatch = useDispatch();
+  const status = useSelector((state: RootState) => state.users.status);
+  const error = useSelector((state: RootState) => state.users.error);
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  useEffect(() => {
+    if (status === "idle") {
+      dispatch(fetchUsers());
+    }
+  }, [status, dispatch]);
 
-  const addNewUserHandler = () => {
-    setIsModalOpen(true);
-  };
+  const {
+    userList,
+    isModalOpen,
+    setIsModalOpen,
+    // selectedCategories,
+    selectedRoles,
+    searchQuery,
+    addNewUserHandler,
+    handleSave,
+    // handleCategoryChange,
+    handleRoleChange,
+    handleSearchChange,
+    // selectedProgress,
+    // handleProgressChange,
+    // handleHighlightChange,
+    // handleGlobalChange,
+    // selectedHighlights,
+    // selectedGlobals,
+  } = useUserPage();
 
-  const handleSave = (newUser: User) => {
-    // Generate a unique ID if not provided
-    const userToSave = {
-      ...newUser,
-      id: newUser.id || uuidv4(),
-      role: newUser.role || "DONOR",
-    };
+  if (status === "loading") {
+    return <div>Loading...</div>;
+  }
 
-    dispatch(addUser(userToSave));
-    setIsModalOpen(false);
-  };
+  if (status === "failed") {
+    return <div>Error: {error}</div>;
+  }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mt-6">
+    <div className="flex gap-6 mt-6">
       {/* Left Sidebar */}
-      <div className="space-y-6">
-        <div className="bg-white p-4 rounded-lg shadow">
-          <h3 className="font-medium mb-3">Role</h3>
-          <div className="space-y-2">
-            <label className="flex items-center space-x-2">
-              <input type="checkbox" defaultChecked />
-              <span>Donor</span>
-            </label>
-            <label className="flex items-center space-x-2">
-              <input type="checkbox" />
-              <span>Charity</span>
-            </label>
-          </div>
-        </div>
+      <div className="w-64 space-y-6 shrink-0">
+        <RoleFilter
+          onRoleChange={handleRoleChange}
+          selectedRoles={selectedRoles}
+        />
       </div>
 
       {/* Main Content */}
-      <div className="md:col-span-3">
+      <div className="flex-grow">
         <div className="flex justify-between items-center mb-4">
-          <Input type="search" placeholder="Search..." className="max-w-sm" />
+          <Input
+            type="search"
+            placeholder="Search..."
+            className="max-w-sm"
+            value={searchQuery}
+            onChange={handleSearchChange}
+          />
           <Button
             className="bg-blue-500 hover:bg-blue-600"
             onClick={addNewUserHandler}
@@ -65,7 +83,7 @@ const UsersPage = () => {
         </div>
 
         <div className="bg-white rounded-lg shadow overflow-x-auto">
-          <UsersTable usersData={userList} />
+          <UsersTable users={userList} />
         </div>
       </div>
 
