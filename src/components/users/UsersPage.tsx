@@ -34,7 +34,7 @@ const UsersPage = () => {
     selectedRoles,
     searchQuery,
     addNewUserHandler,
-    // handleSave,
+    handleSave,
     // handleCategoryChange,
     handleRoleChange,
     handleSearchChange,
@@ -78,7 +78,7 @@ const UsersPage = () => {
             className="bg-blue-500 hover:bg-blue-600"
             onClick={addNewUserHandler}
           >
-            + NEW PROJECT
+            + NEW USER
           </Button>
         </div>
 
@@ -88,12 +88,11 @@ const UsersPage = () => {
       </div>
 
       {/* User Modal */}
-      {/* <UserModal
+      <UserModal
         open={isModalOpen}
         onOpenChange={setIsModalOpen}
         onSave={handleSave}
-        onApprove={() => {}}
-      /> */}
+      />
     </div>
   );
 };
