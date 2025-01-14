@@ -1,9 +1,14 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { User } from "@/types/User";
 import {
-  ACCOUNT_ALL_URL
+  ACCOUNT_ALL_URL,
+  CHARITY_SERVICE_URL_B,
+  DONOR_SERVICE_URL_B
 } from "@/constants/service-url/user-url-config";
 import sendHttpRequest from "@/utils/http-call/HttpRequest";
+import { Donor } from "@/types/Donor";
+import { Charity } from "@/types/Charity";
+import { emit } from "process";
 
 const initialState: User[] = [];
 
@@ -23,6 +28,63 @@ export const fetchUsers = createAsyncThunk<User[]>(
         return response.json as User[];
       }
       throw new Error(`Failed to fetch users: ${response.status}`);
+    } catch (error) {
+      throw error;
+    }
+  }
+);
+
+export const createUser = createAsyncThunk<any, any>(
+  "projects/createUser",
+  async (newUser) => {
+    try {
+      console.log("createUser called");
+
+      if(newUser.role === "CHARITY"){
+        const response = await sendHttpRequest<Charity>(CHARITY_SERVICE_URL_B, {
+          method: "POST",
+          body: JSON.stringify(
+          {
+            email: newUser.email,
+            password: newUser.password,
+            name: newUser.name,
+            address: newUser.address,
+            taxCode: newUser.taxCode,
+            logoUrl: newUser.logoUrl,
+            introVidUrl: newUser.introVidUrl,
+            charityType: newUser.charityType
+          }),
+        })
+
+        console.log("createUser response", response);
+        if (response.status === 201) {
+          return response.json as User;
+        } else {
+          throw new Error(`Failed to create charity: ${response.status}`);
+        }
+      }else {
+        const response = await sendHttpRequest<Donor>(DONOR_SERVICE_URL_B, {
+          method: "POST",
+          body: JSON.stringify({
+            email: newUser.email,
+            password: newUser.password,
+            firstName: newUser.firstName,
+            lastName: newUser.lastName,
+            avatarUrl: newUser.avatarUrl,
+            introVidUrl: newUser.introVidUrl,
+            address: newUser.address
+          }),
+        });
+
+        console.log("createUser response", response);
+        if (response.status === 201) {
+          return response.json as User;
+        } else {
+          throw new Error(`Failed to create donor: ${response.status}`);
+        }
+      }
+
+     
     } catch (error) {
       throw error;
     }
@@ -50,7 +112,7 @@ export const usersSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      // FETCH PROJECTS
+      // FETCH USERS
       .addCase(fetchUsers.pending, (state) => {
         state.status = "loading";
       })
@@ -64,16 +126,25 @@ export const usersSlice = createSlice({
       .addCase(fetchUsers.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message ?? "Failed to fetch users";
+      })
+      // CREATE USER
+      .addCase(createUser.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.users.push(action.payload);
+      })
+      .addCase(createUser.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message ?? "Failed to create user";
       });
   }
 });
 
 export const {
   // addUser,
-  // deleteProject,
-  // updateProject,
-  // highlightProject,
-  // approveProject,
+  // deleteUser,
+  // updateUser,
+  // highlightUser,
+  // approveUser,
 } = usersSlice.actions;
 
 export default usersSlice.reducer;

@@ -5,7 +5,7 @@ import {
   User,
   UserRoleType
 } from "@/types/User";
-// import { createUser } from "@/lib/features/users/usersSlice";
+import { createUser } from "@/lib/features/users/usersSlice";
 import { setSearch, setRole } from "@/lib/features/users/filtersSlice";
 import { filteredUsersSelector } from "@/lib/features/users/selectors";
 
@@ -33,22 +33,22 @@ const useUserPage = () => {
     setIsModalOpen(true);
   }, []);
 
-  // const handleSave = useCallback(
-  //   async (newUser: User) => {
-  //     try {
-  //       await dispatch(createUser(newUser));
-  //       setIsModalOpen(false);
-  //     } catch (error) {
-  //       console.error("Error creating user:", error);
-  //       if (error instanceof Error) {
-  //         alert(`Error creating user: ${error.message}`);
-  //       } else {
-  //         alert("Error creating user");
-  //       }
-  //     }
-  //   },
-  //   [dispatch]
-  // );
+  const handleSave = useCallback(
+    async (newUser: any) => {
+      try {
+        await dispatch(createUser(newUser));
+        setIsModalOpen(false);
+      } catch (error) {
+        console.error("Error creating user:", error);
+        if (error instanceof Error) {
+          alert(`Error creating user: ${error.message}`);
+        } else {
+          alert("Error creating user");
+        }
+      }
+    },
+    [dispatch]
+  );
 
   // const handleCategoryChange = useCallback(
   //   (categories: UserCategoryType[]) => {
@@ -112,7 +112,7 @@ const useUserPage = () => {
     // handleHighlightChange,
     // handleGlobalChange,
     addNewUserHandler,
-    // handleSave,
+    handleSave,
     // handleCategoryChange,
     handleRoleChange,
     handleSearchChange,

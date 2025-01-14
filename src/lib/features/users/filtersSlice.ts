@@ -9,7 +9,7 @@ interface FiltersState {
 
 const initialState: FiltersState = {
   search: "",
-  role: ["DONOR", "CHARITY", "ADMIN"], // Default roles
+  role: ["DONOR", "CHARITY"], // Default roles
 };
 
 export const userFiltersSlice = createSlice({
