@@ -34,9 +34,7 @@ import {
 } from "@/components/ui/popover";
 import { Calendar } from "../ui/calendar";
 import FileUpload from "../common/FileUpload";
-import { useDispatch } from "react-redux";
 import { fetchCharityDetailsByEmail } from "@/lib/features/users/usersSlice";
-import { AppDispatch } from "@/lib/store";
 import { useAppDispatch } from "@/lib/hooks";
 
 interface ProjectModalProps {
@@ -78,7 +76,7 @@ export function ProjectModal({
     endDate: project?.endDate
       ? new Date(project.endDate).toISOString()
       : new Date().toISOString(),
-    charityID: project?.charityID || "043717fa", // static charityID while implementing user module
+    charityID: project?.charityID || "",
     startDate: project?.startDate
       ? new Date(project.startDate).toISOString()
       : new Date().toISOString(),
@@ -124,10 +122,10 @@ export function ProjectModal({
   const [charityName, setCharityName] = useState(""); // Store charity name
 
   const handleSearch = async () => {
-    setSearchError(""); // Clear previous errors
+    setSearchError("");
     try {
       const result = await dispatch(fetchCharityDetailsByEmail(searchEmail));
-      
+
       if (fetchCharityDetailsByEmail.fulfilled.match(result)) {
         setFormData((prev) => ({ ...prev, charityID: result.payload.id }));
         setCharityName(result.payload.name);
@@ -171,6 +169,10 @@ export function ProjectModal({
       errors.push("Start date is required");
     }
 
+    if (!formData.charityID) {
+      errors.push("Charity ID is required");
+    }
+
     if (!formData.endDate) {
       errors.push("End date is required");
     } else if (new Date(formData.endDate) <= new Date(formData.startDate)) {
@@ -184,7 +186,7 @@ export function ProjectModal({
 
     const updatedFormData = {
       ...formData,
-      country: formData.country.toUpperCase(), // to match validation in BE
+      country: formData.country.toUpperCase(),
     };
 
     onSave(updatedFormData);
@@ -198,12 +200,10 @@ export function ProjectModal({
         : [...prev.categories, selectedCategory],
     }));
   };
-  
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-3xl max-h-[90vh] flex flex-col">
-        
         <div className="grid grid-cols-4 items-center gap-4">
           <Label htmlFor="charityEmail" className="text-right">
             Charity Email:
@@ -232,9 +232,7 @@ export function ProjectModal({
           </div>
         )}
 
-        {searchError && (
-          <div className="text-red-500">{searchError}</div>
-        )}
+        {searchError && <div className="text-red-500">{searchError}</div>}
 
         <DialogHeader>
           <DialogTitle>{project ? "Edit Project" : "New Project"}</DialogTitle>
