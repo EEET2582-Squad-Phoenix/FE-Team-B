@@ -19,4 +19,4 @@ export const CHARITY_GET_BY_EMAIL_URL = (email: string) => `${CHARITY_SERVICE_UR
 
 export const ACCOUNT_SERVICE_URL = `${HOST_URL_B}/account`;
 export const ACCOUNT_ALL_URL = `${ACCOUNT_SERVICE_URL}/all`;
-export const ACCOUNT_DELETE_URL = (id: string) => `${ACCOUNT_SERVICE_URL}/delete/${id}`;
+export const ACCOUNT_DELETE_URL = (id: string) => `${HOST_URL_B}/admin/account/delete/${id}`;
