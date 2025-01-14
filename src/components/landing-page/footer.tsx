@@ -2,10 +2,15 @@ import Link from "next/link";
 
 export default function Footer() {
     return (
-        <footer className="py-5 bg-blue-600 text-white text-center">
+        <footer className="py-5 bg-blue-500 text-white text-center">
             <div className="container mx-auto">
                 <div className="flex items-center justify-center space-x-6">
                     <Link href="/" className="flex-shrink-0 flex items-center">
+                        <img
+                            src="/Charitan+.png"
+                            alt="logo"
+                            className="h-8 w-auto"
+                        />
                         <span className="text-2xl font-semibold text-yellow-400 mr-2">
                         Charitan
                         </span>

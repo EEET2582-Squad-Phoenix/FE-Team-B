@@ -53,9 +53,14 @@ const Navbar = () => {
   return (
     <nav className="bg-blue-500 fixed h-16 top-0 w-full z-10">
       <div className="lg:mx-8 mx-4 px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
+        <div className="flex items-center justify-between h-16">          
           {/* Logo section */}
           <Link href="/" className="flex-shrink-0 flex items-center">
+            <img
+              src="/Charitan+.png"
+              alt="logo"
+              className="h-8 w-auto"
+            />
             <span className="text-2xl font-semibold text-yellow-400 mr-2">
               Charitan
             </span>
