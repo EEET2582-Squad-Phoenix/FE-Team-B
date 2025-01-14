@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { User } from "@/types/User";
 import {
   ACCOUNT_ALL_URL,
+  ACCOUNT_DELETE_URL,
   CHARITY_SERVICE_URL_B,
   DONOR_SERVICE_URL_B
 } from "@/constants/service-url/user-url-config";
@@ -35,7 +36,7 @@ export const fetchUsers = createAsyncThunk<User[]>(
 );
 
 export const createUser = createAsyncThunk<any, any>(
-  "projects/createUser",
+  "users/createUser",
   async (newUser) => {
     try {
       console.log("createUser called");
@@ -91,6 +92,32 @@ export const createUser = createAsyncThunk<any, any>(
   }
 );
 
+export const deleteUser = createAsyncThunk(
+  "users/deleteUser",
+  async (userId: string) => {
+    try {
+      console.log("deleteUser called");
+
+      // Call the ACCOUNT_DELETE_URL function with userId to get the full URL
+      const deleteUrl = ACCOUNT_DELETE_URL(userId);
+
+      const response = await sendHttpRequest<User>(deleteUrl, {
+        method: "DELETE",
+        body: JSON.stringify({ userId }),
+      });
+
+      console.log("deleteUser response", response);
+      if (response.status === 200) {
+        return userId;
+      } else {
+        throw new Error(`Failed to delete user: ${response.status}`);
+      }
+    } catch (error) {
+      throw error;
+    }
+  }
+);
+
 
 export const usersSlice = createSlice({
   name: "userList",
@@ -100,9 +127,15 @@ export const usersSlice = createSlice({
     users: initialState,
   } as UserListState,
   reducers: {
-    addUser: (state, action: PayloadAction<User>) => {
-          state.users.push(action.payload);
+    addUser: (state, action: PayloadAction<any>) => {
+      state.users.push(action.payload);
     },
+
+    // deleteUser: (state, action: PayloadAction<string>) => {
+    //   state.users = state.users.filter(
+    //     (user) => user.id !== action.payload
+    //   );
+    // },
     // highlightUser: (state, action: PayloadAction<string>) => {
     //   const user = state.find((user) => user.id === action.payload);
     //   if (user) {
@@ -135,12 +168,21 @@ export const usersSlice = createSlice({
       .addCase(createUser.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message ?? "Failed to create user";
+      })
+      // DELETE PROJECT
+      .addCase(deleteUser.fulfilled, (state, action) => {
+        state.users = state.users.filter(
+          (user) => user.id !== action.payload
+        );
+      })
+      .addCase(deleteUser.rejected, (state, action) => {
+        state.error = action.payload as string;
       });
   }
 });
 
 export const {
-  // addUser,
+  addUser,
   // deleteUser,
   // updateUser,
   // highlightUser,

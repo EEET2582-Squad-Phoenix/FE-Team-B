@@ -1,9 +1,9 @@
 import { useDispatch } from "react-redux";
-// import {
-//   addUser,
-//   updateUser,
-//   deleteUser,
-// } from "@/lib/features/users/usersSlice";
+import {
+  addUser,
+  // updateUser,
+  deleteUser,
+} from "@/lib/features/users/usersSlice";
 import { User } from "@/types/User";
 import { AppDispatch } from "@/lib/store";
 
@@ -19,7 +19,7 @@ export const useUserActions = () => {
   };
 
   const handleDeleteUser = (id: string) => {
-    // dispatch(deleteUser(id));
+    dispatch(deleteUser(id));
   };
 
   const handleEditUser = (id: string) => {
